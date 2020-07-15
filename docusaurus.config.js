@@ -66,7 +66,7 @@ module.exports = {
       {
         docs: {
           // Specify the doc ID to display as the `docs/` root page
-          homePageId: 'server',
+          homePageId: 'simplewebauthn/intro',
           sidebarPath: require.resolve('./sidebars.js'),
         },
         theme: {

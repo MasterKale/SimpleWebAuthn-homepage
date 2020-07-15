@@ -1,7 +1,17 @@
 module.exports = {
-  someSidebar: {
-    Packages: ['server', 'browser', 'types'],
-    Docusaurus: ['doc1', 'doc2', 'doc3'],
-    Features: ['mdx'],
+  firstSidebar: {
+    SimpleWebAuthn: [
+      'simplewebauthn/intro',
+      'simplewebauthn/philosophy',
+    ],
+    Packages: [
+      'packages/server',
+      'packages/browser',
+      'packages/types',
+    ],
+    'Advanced Guides': [
+      'advanced/example-project',
+      'advanced/supported-devices',
+    ],
   },
 };
