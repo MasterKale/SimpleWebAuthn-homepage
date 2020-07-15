@@ -8,32 +8,30 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: <>Easy to Use</>,
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
+    title: <>Simple to Use</>,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        It's in the title! SimpleWebAuthn aims to make it as easy as possible to add advanced
+        WebAuthn-powered security to your websites so that you can move on to the fun stuff.
       </>
     ),
   },
   {
-    title: <>Focus on What Matters</>,
-    imageUrl: 'img/undraw_docusaurus_tree.svg',
+    title: <>First-Class TypeScript Support</>,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Everything is authored in 100% TypeScript! And the <strong>typescript-types</strong> package
+        contains event more type declarations for easier use in your own TypeScript project.
       </>
     ),
   },
   {
-    title: <>Powered by React</>,
-    imageUrl: 'img/undraw_docusaurus_react.svg',
+    title: <>FIDO Conformant</>,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        SimpleWebAuthn passes FIDO Conformance Server Tests with flying colors! You can rest easy
+        knowing that when you need to take things to the next level, SimpleWebAuthn will grow with
+        you.
       </>
     ),
   },
