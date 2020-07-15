@@ -3,7 +3,7 @@ module.exports = {
   tagline: 'A collection of TypeScript-first libraries for simpler WebAuthn integration. Supports modern browsers and Node.',
   url: 'https://simplewebauthn.dev',
   baseUrl: '/',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo_favicon.png',
   organizationName: 'MasterKale', // Usually your GitHub org/user name.
   projectName: 'SimpleWebAuthn', // Usually your repo name.
   themeConfig: {
