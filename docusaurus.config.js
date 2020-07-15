@@ -30,28 +30,28 @@ module.exports = {
     footer: {
       style: 'dark',
       links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: '@simplewebauthn/browser',
-              to: 'docs/browser/',
-            },
-            {
-              label: '@simplewebauthn/server',
-              to: 'docs/server/',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/MasterKale/SimpleWebAuthn',
-            },
-          ],
-        },
+        // {
+        //   title: 'Docs',
+        //   items: [
+        //     {
+        //       label: '@simplewebauthn/browser',
+        //       to: 'docs/browser/',
+        //     },
+        //     {
+        //       label: '@simplewebauthn/server',
+        //       to: 'docs/server/',
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: 'More',
+        //   items: [
+        //     {
+        //       label: 'GitHub',
+        //       href: 'https://github.com/MasterKale/SimpleWebAuthn',
+        //     },
+        //   ],
+        // },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Matthew Miller. Built with Docusaurus.`,
     },
