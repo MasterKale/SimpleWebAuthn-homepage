@@ -1,5 +1,5 @@
 ---
 id: server
-title: '@SimpleWebAuthn/Server'
+title: '@simplewebauthn/server'
 sidebar_label: Server
 ---

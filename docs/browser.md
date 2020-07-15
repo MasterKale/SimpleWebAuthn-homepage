@@ -1,5 +1,5 @@
 ---
 id: browser
-title: '@SimpleWebAuthn/Browser'
+title: '@simplewebauthn/browser'
 sidebar_label: Browser
 ---
