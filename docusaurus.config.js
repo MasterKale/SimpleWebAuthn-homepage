@@ -11,7 +11,7 @@ module.exports = {
       title: 'SimpleWebAuthn',
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo_favicon.png',
       },
       links: [
         {
