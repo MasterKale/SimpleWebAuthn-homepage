@@ -8,7 +8,7 @@ sidebar_label: Installation
 This package is available on **npm** for use in projects that contain a build/bundling step, like
 in a single-page application:
 
-```sh
+```bash
 npm install @simplewebauthn/browser
 ```
 
