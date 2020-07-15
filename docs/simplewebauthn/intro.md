@@ -19,14 +19,3 @@ An additional package is also included that contains shared TypeScript definitio
 In-depth, auto-generated API documentation for all of the packages in this project is available
 here:
 https://docs.simplewebauthn.dev/
-
-## Supported Attestation Formats
-
-SimpleWebAuthn supports [all six WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
-
-- **Packed**
-- **TPM**
-- **Android Key**
-- **Android SafetyNet**
-- **FIDO U2F**
-- **None**
