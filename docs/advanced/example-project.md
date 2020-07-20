@@ -13,7 +13,7 @@ Before going any further, though, it's worth noting that the WebAuthn browser AP
 
 :::tip
 
-Don't fret if you don't already have a setup like this! The example project mocks out enough of this functionality to offer developers a simple WebAuthn sandbox to play around in before they dive in further!
+Don't fret if you don't already have a setup like this! The example project mocks out enough of this functionality to offer developers a simple WebAuthn sandbox to play around with before they dive in further!
 
 :::
 
@@ -44,34 +44,43 @@ First, navigate to the example project directory:
 
 ```bash
 ./SimpleWebAuthn/ $> cd example
-./SimpleWebAuthn/example/ $>
+./example/ $>
 ```
 
 Next, install dependencies with `npm`:
 
 ```bash
-./SimpleWebAuthn/example/ $> npm install
+./example/ $> npm install
 ```
 
 ### Setting up HTTPS support
 
-Websites that want to use WebAuthn _must_ be served over HTTPS, **including during development!** Fortunately it's now simple to generate SSL certificates that can be used during development:
+Websites that want to use WebAuthn _must_ be served over HTTPS, **including during development!** Fortunately it's simple to generate SSL certificates to host the site locally over HTTPS:
 
-#### Let's Encrypt via certbot
+1. [Install mkcert](https://github.com/FiloSottile/mkcert#installation) as per its instructions
+2. Run `mkcert -install` to initialize mkcert
+3. Run the following command from within the **example/** directory to generate SSL certificates for `localhost`:
 
-TBD
+```bash
+./example/ $> mkcert -key-file localhost.key -cert-file localhost.crt localhost
+```
 
-#### mkcert
+This command should generate the following two files:
 
-TBD (might replace Let's Encrypt setup)
+- **example/localhost.key**
+- **example/localhost.crt**
+
+The SSL certificate has been successfully generated if you see these two files. If these files don't exist, make sure you're in the **example/** directory before retrying the last step.
 
 ### Starting the server
 
-Once the certificates are in-place, you can start the server:
+Once the two files above are in-place, you can start the server:
 
 ```bash
-./SimpleWebAuthn/example/ $> npm start
+./example/ $> npm start
 ```
+
+The example server should now be available at [https://localhost](https://localhost)!
 
 ## Server Architecture
 
