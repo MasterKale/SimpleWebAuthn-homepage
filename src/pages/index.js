@@ -1,9 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
-import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import Layout from '@theme/Layout';
+import useThemeContext from '@theme/hooks/useThemeContext';
+
 import styles from './styles.module.css';
 
 const features = [
@@ -37,8 +39,16 @@ const features = [
   },
 ];
 
-function Feature({imageUrl, title, description}) {
-  const imgUrl = useBaseUrl(imageUrl);
+function Feature({ imageUrl, imageUrlDark, title, description }) {
+  const { isDarkTheme } = useThemeContext();
+
+  let imgUrl;
+  if (isDarkTheme && imageUrlDark) {
+    imgUrl = useBaseUrl(imageUrlDark);
+  } else {
+    imgUrl = useBaseUrl(imageUrl);
+  }
+
   return (
     <div className={clsx('col col--4', styles.feature)}>
       {imgUrl && (
