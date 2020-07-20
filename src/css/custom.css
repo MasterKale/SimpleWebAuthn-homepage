@@ -19,9 +19,15 @@
   --ifm-code-font-size: 95%;
 }
 
+/* Works well with the `prism-react-renderer/themes/github` dark theme */
 .docusaurus-highlight-code-line {
-  background-color: rgb(72, 77, 91);
+  background-color: rgb(206, 209, 212);
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
+}
+
+/* Works well with the `prism-react-renderer/themes/vsDark` dark theme */
+html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
 }
