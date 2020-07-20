@@ -10,7 +10,8 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: <>Simple to Use</>,
+    title: 'Simple to Use',
+    imageUrl: 'img/2FA.svg',
     description: (
       <>
         It's in the title! SimpleWebAuthn aims to make it as easy as possible to add advanced
@@ -19,19 +20,22 @@ const features = [
     ),
   },
   {
-    title: <>First-Class TypeScript Support</>,
+    title: 'First-Class TypeScript Support',
+    imageUrl: 'img/TS_logo.svg',
     description: (
       <>
         Everything is authored in 100% TypeScript! And the <strong>typescript-types</strong> package
-        contains event more type declarations for easier use in your own TypeScript project.
+        contains even more type declarations for easier use in your own TypeScript project.
       </>
     ),
   },
   {
-    title: <>FIDO Conformant</>,
+    title: 'FIDO® Conformant',
+    imageUrl: 'img/FIDO_logo_black_RGB.png',
+    imageUrlDark: 'img/FIDO_logo_white_RGB.png',
     description: (
       <>
-        SimpleWebAuthn passes FIDO Conformance Server Tests with flying colors! You can rest easy
+        SimpleWebAuthn passes FIDO® Conformance Server Tests with flying colors! You can rest easy
         knowing that when you need to take things to the next level, SimpleWebAuthn will grow with
         you.
       </>
