@@ -29,7 +29,6 @@ module.exports = {
       ],
     },
     footer: {
-      style: 'dark',
       links: [
         // {
         //   title: 'Docs',
@@ -54,7 +53,8 @@ module.exports = {
         //   ],
         // },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Matthew Miller. Built with Docusaurus.`,
+      copyright: `<strong>Copyright © ${new Date().getFullYear()} Matthew Miller. Built with Docusaurus.</strong>
+      <br>FIDO® is a trademark (registered in numerous countries) of FIDO Alliance, Inc.`,
     },
     prism: {
       theme: require('prism-react-renderer/themes/github'),
