@@ -20,13 +20,29 @@ import SimpleWebAuthnServer from '@simplewebauthn/server';
 const SimpleWebAuthnServer = require('@simplewebauthn/server');
 ```
 
+Documentation below will refer to the following types representing basic data structures. These types are intended only for inspiration, to convey the general types of values you'll need to be capable of persisting in your database:
+
+```ts
+type UserModel = {
+  id: string;
+  username: string;
+  currentChallenge?: string;
+};
+
+type Authenticator = {
+  credentialID: string;
+  publicKey: string;
+  counter: number;
+};
+```
+
 ## Identifying your RP
 
 Start by defining some constants that describe your "Relying Party" (RP) server to authenticators:
 
 ```js
 // Human-readable title for your website
-const serviceName = 'FIDO Conformance Test';
+const serviceName = 'SimpleWebAuthn Example';
 // An identifier unique to your website to ensure that credentials generated
 // here can only be used here
 const rpID = 'localhost';
@@ -35,7 +51,7 @@ const rpID = 'localhost';
 These will be referenced throughout attestations and assertions to ensure that authenticators generate and return credentials specifically for your server.
 
 :::info
-The instructions below are for setting up SimpleWebAuthn for 2FA support. Guides for "Passwordless"
+The following instructions are for setting up SimpleWebAuthn for 2FA support. Guides for "Passwordless"
 and "Usernameless" support can be found under the **Advanced Guides** section.
 :::
 
@@ -43,7 +59,7 @@ and "Usernameless" support can be found under the **Advanced Guides** section.
 
 "Attestation" is analogous to new account registration. Attestation occurs in two steps:
 
-1. Generate a collection of "options" for the browser to pass to a FIDO2 authenticator
+1. Generate a collection of "attestation options" for the browser to pass to a FIDO2 authenticator
 2. Verify the authenticator's response
 
 Attestation uses the following exported methods from this package:
@@ -62,19 +78,6 @@ Each of these steps need to be handled as individual API endpoints:
 One endpoint (`GET`) needs to return the result of a call to `generateAttestationOptions()`:
 
 ```ts
-// Some custom types for inspiration
-type UserModel = {
-  id: string;
-  username: string;
-  currentChallenge?: string;
-};
-
-type Authenticator = {
-  credentialID: string;
-  publicKey: string;
-  counter: number;
-};
-
 // (Pseudocode) Retrieve the user from the database
 // after they've logged in
 const user: UserModel = getUserFromDB(loggedInUserId);
