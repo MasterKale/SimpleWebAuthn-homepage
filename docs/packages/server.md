@@ -46,6 +46,8 @@ const serviceName = 'SimpleWebAuthn Example';
 // An identifier unique to your website to ensure that credentials generated
 // here can only be used here
 const rpID = 'localhost';
+// The URL at which attestations and assertions should occur
+const origin = `https://${rpID}`;
 ```
 
 These will be referenced throughout attestations and assertions to ensure that authenticators generate and return credentials specifically for your server.
@@ -126,7 +128,7 @@ try {
   verification = await verifyAttestationResponse({
     credential: body,
     expectedChallenge,
-    expectedOrigin: `https://${rpID}`,
+    expectedOrigin: origin,
     expectedRPID: rpID,
   });
 } catch (error) {
@@ -151,9 +153,12 @@ const newAuthenticator: Authenticator = {
 // (Pseudocode) Save the authenticator info so that we can
 // get it by user ID later
 saveNewUserAuthenticatorInDB(user, newAuthenticator);
+```
 
-// Return the verification status to the browser to display
-// appropriate UI
+When finished, it's a good idea to return the verification status to the browser to display
+appropriate UI:
+
+```ts
 return { verified };
 ```
 
@@ -177,9 +182,84 @@ Each of these steps need to be handled as individual API endpoints:
 
 ### 1. Generate assertion options
 
+One endpoint (`GET`) needs to return the result of a call to `generateAssertionOptions()`:
+
+```ts
+// (Pseudocode) Retrieve the user from the database
+// after they've logged in
+const user: UserModel = getUserFromDB(loggedInUserId);
+// (Pseudocode) Retrieve any of the user's previously-
+// registered authenticators
+const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
+
+// (Pseudocode) Generate something random and at least
+// 16 characters long
+const challenge: string = getRandomChallenge();
+
+// (Pseudocode) Remember this challenge for this user
+setUserCurrentChallenge(user, challenge);
+
+return generateAssertionOptions({
+  challenge,
+  // Require users to use a previously-registered authenticator
+  allowedCredentialIDs: userAuthenticators.map(data => data.credentialID),
+});
+```
+
+These options can be passed directly into **@simplewebauthn/browser**'s `startAssertion()` method.
+
 ### 2. Verify assertion response
 
-Each of these steps need to be handled as individual API endpoints:
+The second endpoint (`POST`) should accept the value returned by **@simplewebauthn/browser**'s `startAssertion()` method and then verify it:
+
+```ts
+const { body } = req;
+
+// (Pseudocode) Retrieve the logged-in user's challenge to
+// compare it to the one in the attestation response
+const user: UserModel = getUserFromDB(loggedInUserId);
+// (Pseudocode) Get the challenge that was sent to the
+// user's authenticator
+const expectedChallenge: string = getUserCurrentChallenge(user);
+// (Pseudocode} Retrieve an authenticator from the DB that
+// should match the `id` in the returned credential
+const authenticator = getUserAuthenticator(user, body.id);
+
+if (!authenticator) {
+  throw new Error(`Could not find authenticator ${body.id} for user ${user.id}`);
+}
+
+let verification;
+try {
+  verification = await verifyAssertionResponse({
+    credential: body,
+    expectedChallenge,
+    expectedOrigin: origin,
+    expectedRPID: rpID,
+    authenticator,
+  });
+} catch (error) {
+  console.error(error);
+  return res.status(400).send({ error: error.message });
+}
+
+const { verified, authenticatorInfo } = verification;
+```
+
+If `verification.verified` is true, then update the user's authenticator's `counter` property in the DB:
+
+```ts
+const { counter } = authenticatorInfo;
+
+saveUpdatedAuthenticatorCounter(authenticator, counter);
+```
+
+When finished, it's a good idea to return the verification status to the browser to display
+appropriate UI:
+
+```ts
+return { verified };
+```
 
 ## Supported Attestation Formats
 
