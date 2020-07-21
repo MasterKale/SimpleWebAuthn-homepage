@@ -159,12 +159,7 @@ return { verified };
 
 ## Assertion
 
-"Assertion" is analogous to existing account login. Just like attestations, assertions span two steps:
-
-1. Generate a collection of "assertion options" for the browser to pass to a FIDO2 authenticator
-2. Verify the authenticator's response
-
-Attestation uses the following exported methods from this package:
+"Assertion" is analogous to existing account login. Assertions use the following exported methods from this package:
 
 ```ts
 import {
@@ -172,6 +167,13 @@ import {
   verifyAssertionResponse,
 } from '@simplewebauthn/server';
 ```
+
+Just like attestations, assertions span two steps:
+
+1. Generate a collection of "assertion options" for the browser to pass to a FIDO2 authenticator
+2. Verify the authenticator's response
+
+Each of these steps need to be handled as individual API endpoints:
 
 ### 1. Generate assertion options
 
