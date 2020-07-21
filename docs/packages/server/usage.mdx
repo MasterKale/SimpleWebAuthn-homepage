@@ -3,41 +3,35 @@ title: Server - Usage
 sidebar_label: Usage
 ---
 
-import TabItem from '@theme/TabItem';
-import LanguageTabs from '../../LanguageTabs';
-
 ## Importing
 
-<LanguageTabs>
-  <TabItem value="ts">
+```ts
+import {
+  // Registration ("Attestation")
+  generateAttestationOptions,
+  verifyAttestationResponse,
+  // Login ("Assertion")
+  generateAssertionOptions,
+  verifyAssertionResponse,
+} from '@simplewebauthn/server';
+```
 
-  ```ts
-  import {
-    // Registration ("Attestation")
-    generateAttestationOptions,
-    verifyAttestationResponse,
-    // Login ("Assertion")
-    generateAssertionOptions,
-    verifyAssertionResponse,
-  } from '@simplewebauthn/server';
-  ```
+## Identifying your RP
 
-  </TabItem>
-  <TabItem value="js">
+Start by defining some constants that describe your "Relying Party" (RP) server to authenticators:
 
-  ```js
-  const {
-    // Registration ("Attestation")
-    generateAttestationOptions,
-    verifyAttestationResponse,
-    // Login ("Assertion")
-    generateAssertionOptions,
-    verifyAssertionResponse,
-  } = require('@simplewebauthn/server');
-  ```
+```js
+// Human-readable title for your website
+const serviceName = 'FIDO Conformance Test';
+// An identifier unique to your website to ensure that credentials generated
+// here can only be used here
+const rpID = 'localhost';
+```
 
-  </TabItem>
-</LanguageTabs>
+:::info
+The instructions below are for setting up SimpleWebAuthn for 2FA support. Guides for "Passwordless"
+and "Usernameless" support can be found under the **Advanced Guides** section.
+:::
 
 ## Attestation
 
@@ -50,13 +44,100 @@ Each of these steps needs to be handled as individual API endpoints:
 
 ### 1. Generate attestation options
 
-One attestation endpoint needs to return the result of a call to `generateAttestationOptions()`:
+One endpoint (`GET`) needs to return the result of a call to `generateAttestationOptions()`:
 
+```ts
+// Some custom types for inspiration
+type UserModel = {
+  id: string;
+  username: string;
+  currentChallenge?: string;
+};
 
+type Authenticator = {
+  credentialID: string;
+  publicKey: string;
+  counter: number;
+};
+
+// (Pseudocode) Retrieve the user from the database
+// after they've logged in
+const user: UserModel = getUserFromDB(loggedInUserId);
+// (Pseudocode) Retrieve any of the user's previously-
+// registered authenticators
+const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
+
+// (Pseudocode) Generate something random and at least
+// 16 characters long
+const challenge: string = getRandomChallenge();
+
+// (Pseudocode) Remember this challenge for this user
+setUserCurrentChallenge(user, challenge);
+
+return generateAttestationOptions({
+  serviceName,
+  rpID,
+  challenge,
+  userID: user.id,
+  userName: user.username,
+  // Prompt users for additional information about the authenticator.
+  attestationType: 'direct',
+  // Prevent users from re-registering existing authenticators
+  excludedCredentialIDs: userAuthenticators.map(dev => dev.credentialID),
+});
+```
+
+These options can be passed directly into **@simplewebauthn/browser**'s `startAttestation()` method.
 
 ### 2. Verify attestation response
 
-The second attestation endpoint
+The second endpoint (`POST`) should accept the value returned by **@simplewebauthn/browser**'s `startAttestation()` method and then verify it:
+
+```ts
+const { body } = req;
+
+// (Pseudocode) Retrieve the logged-in user's challenge to
+// compare it to the one in the attestation response
+const user: UserModel = getUserFromDB(loggedInUserId);
+// (Pseudocode) Get the challenge that was sent to the
+// user's authenticator
+const expectedChallenge: string = getUserCurrentChallenge(user);
+
+let verification;
+try {
+  verification = await verifyAttestationResponse({
+    credential: body,
+    expectedChallenge,
+    expectedOrigin: `https://${rpID}`,
+    expectedRPID: rpID,
+  });
+} catch (error) {
+  console.error(error);
+  return res.status(400).send({ error: error.message });
+}
+
+const { verified, authenticatorInfo } = verification;
+```
+
+If `verification.verified` is true, then store `authenticatorInfo` in the database:
+
+```ts
+const { base64PublicKey, base64CredentialID, counter } = authenticatorInfo;
+
+const newAuthenticator: Authenticator = {
+  credentialID: base64CredentialID
+  publicKey: base64PublicKey
+  counter,
+};
+
+// (Pseudocode) Save the authenticator info so that we can
+// get it by user ID later
+saveNewUserAuthenticatorInDB(user, newAuthenticator);
+
+// Return the verification status to the browser to display
+// appropriate UI
+return { verified };
+```
 
 ## Assertion
 
