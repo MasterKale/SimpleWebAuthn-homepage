@@ -9,7 +9,7 @@ This package is available on **npm** for use in projects that contain a build/bu
 in a single-page application:
 
 ```bash
-npm install @simplewebauthn/browser
+$> npm install @simplewebauthn/browser
 ```
 
 It can then be imported into a project as usual:
