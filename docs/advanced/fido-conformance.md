@@ -30,7 +30,7 @@ You can now verify FIDO conformance of SimpleWebAuthn by following these steps:
 
 ### Setting up the Example Project
 
-Follow the instructions in the [Example Project's Getting Started section](docs/advnaced/../../example-project.md#getting-started).
+Follow the instructions in the [Example Project's Getting Started section](advanced/example-project.md#getting-started).
 
 :::important
 Make sure the example project is available at [https://localhost](https://localhost) before continuing!
