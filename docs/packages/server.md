@@ -57,12 +57,7 @@ and "Usernameless" support can be found under the **Advanced Guides** section.
 
 ## Attestation
 
-"Attestation" is analogous to new account registration. Attestation occurs in two steps:
-
-1. Generate a collection of "attestation options" for the browser to pass to a FIDO2 authenticator
-2. Verify the authenticator's response
-
-Attestation uses the following exported methods from this package:
+"Attestation" is analogous to new account registration. Attestation support uses the following exported methods from this package:
 
 ```ts
 import {
@@ -70,6 +65,11 @@ import {
   verifyAttestationResponse,
 } from '@simplewebauthn/server';
 ```
+
+Attestation occurs in two steps:
+
+1. Generate a collection of "attestation options" for the browser to pass to a FIDO2 authenticator
+2. Verify the authenticator's response
 
 Each of these steps need to be handled as individual API endpoints:
 
