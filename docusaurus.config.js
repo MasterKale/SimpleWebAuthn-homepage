@@ -72,6 +72,7 @@ module.exports = {
           // Specify the doc ID to display as the `docs/` root page
           homePageId: 'simplewebauthn/intro',
           sidebarPath: require.resolve('./sidebars.js'),
+          editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
