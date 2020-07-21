@@ -319,4 +319,4 @@ MetadataService.initialize({
 });
 ```
 
-Once MetadataService is initialized, `verifyAttestationResponse()` and `verifyAssertionResponse()` will reference MDS metadata statements and error out if receive authenticator responses with unexpected values.
+Once `MetadataService` is initialized, `verifyAttestationResponse()` and `verifyAssertionResponse()` will reference MDS metadata statements and error out if they receive authenticator responses with unexpected values.
