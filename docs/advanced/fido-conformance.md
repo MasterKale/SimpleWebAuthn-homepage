@@ -1,3 +1,138 @@
 ---
 title: FIDO Conformance
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+## Introduction
+
+The FIDO® Alliance offers a suite of tests known as the ["Conformance Self-Validating Testing"](https://fidoalliance.org/certification/functional-certification/conformance/). These tests enable developers to verify their Relying Party's (RP) adherence to FIDO specifications.
+
+The WebAuthn API is built on top of FIDO2, and so implementations of WebAuthn can also aim for FIDO conformance. In doing so, WebAuthn implementers are able to add an additional level of scrutiny of the authenticators that interact with their RP.
+
+As of v0.7.0, the **@simplewebauthn/server** package is FIDO conformant! Support for this additional level of authenticator scrutiny is optional and opt-in - see [usage instructions for `MetadataService`](#) for more information.
+
+## Validating FIDO conformance
+
+It is important that the SimpleWebAuthn project remains FIDO conformant. To enable others to validate conformance and keep the project honest, a step-by-step list of instructions for running FIDO conformance tests against the library are included below.
+
+### Downloading FIDO Conformance Tools
+
+FIDO conformance testing requires downloading the FIDO Conformance Tools application. If you don't already have it, you can submit a download request by filling out the [Test Tool Access Request](https://fidoalliance.org/test-tool-access-request/) form.
+
+:::note
+For the "FIDO Specification" dropdown, select "FIDO2"
+:::
+
+After submitting the form, an email response will (eventually) arrive with a download link and username and password. Navigate to the link, enter the username and password, and then download and install the latest release version for your OS from the **Desktop UAF FIDO2 U2F/** directory.
+
+You can now verify FIDO conformance of SimpleWebAuthn by following these steps:
+
+### Setting up the Example Project
+
+Follow the instructions in the [Example Project's Getting Started section](docs/advnaced/../../example-project.md#getting-started).
+
+:::important
+Make sure the example project is available at [https://localhost](https://localhost) before continuing!
+:::
+
+### Activating additional routes
+
+**Un-comment** the following lines in the example project to activate additional routes:
+
+```javascript title="example/index.js"
+// const { fidoRouteSuffix, fidoConformanceRouter } = require('./fido-conformance');
+// app.use(fidoRouteSuffix, fidoConformanceRouter);
+```
+
+This will add additional routes on the `/fido` route.
+
+### Loading metadata statements
+
+You will next need to load "metadata statements" from the FIDO Conformance Tools to ensure that all required tests pass.
+
+Open up the FIDO Conformance Tools and click the **Run** button on the **FIDO2 Tests** card:
+
+<img alt="FIDO2 Tests card" src={useBaseUrl('img/docs/fido-conformance/fido2-run.png')} />
+
+Next, scroll down and click the **DOWNLOAD SERVER METADATA** button on the right-hand column, under **TESTS CONFIGURATION**:
+
+<img alt="FIDO2 Metadata download button" src={useBaseUrl('img/docs/fido-conformance/metadata.png')} />
+
+This will download a **metadata.zip** folder to your computer. Unzip the JSON files within and place them into the **example/fido-conformance-mds/** directory:
+
+<img alt="Code editor showing placement of metadata JSON files" src={useBaseUrl('img/docs/fido-conformance/editor-metadata-json.png')} />
+
+### Starting the server
+
+Start the server once everything is in place:
+
+```bash
+./example/ $> npm start
+```
+
+An API request will be triggered by the activation of the conformance routes that pulls in additional metadata information required for the **Metadata Service Tests**. When the example server is ready for testing, you should see the following console output:
+
+```
+🚀 Server ready at https://0.0.0.0:443
+ℹ️ Initializing metadata service with 20 local statements
+🔐 FIDO Conformance routes ready
+```
+
+### Initiating conformance tests
+
+To start conformance testing, open up the FIDO Conformance Tools and click the **Run** button on the **FIDO2 Tests** card:
+
+<img alt="FIDO2 Tests card" src={useBaseUrl('img/docs/fido-conformance/fido2-run.png')} />
+
+On the right-hand column, under **SELECT TESTS TO RUN**, check the box next to **Server Tests**:
+
+<img alt="Showing selected FIDO2 server tests" src={useBaseUrl('img/docs/fido-conformance/server-tests.png')} />
+
+Next, scroll down and look for the **Server URL** text box on the right-hand column, under **TESTS CONFIGURATION**:
+
+<img alt="FIDO2 Metadata download button" src={useBaseUrl('img/docs/fido-conformance/metadata.png')} />
+
+Enter the following URL into this text box:
+
+> https://localhost/fido
+
+It's finally time! Click the **Run** button on the bottom-right corner of the window to start conformance testing:
+
+<img alt="FIDO2 Tests run button" src={useBaseUrl('img/docs/fido-conformance/run-button.png')} />
+
+### Confirming results
+
+When the tests are completed, results for **FIDO Conformance Tools v1.3.4** should look like this:
+
+<img alt="FIDO2 test results showing 160 passes and zero failures in approximately 19 seconds" src={useBaseUrl('img/docs/fido-conformance/results.png')} />
+
+
+## Troubleshooting
+
+Below are errors you may see while trying to run tests, and potential solutions to them:
+
+### "Failed to fetch"
+
+You may see a series of "Failed to fetch" errors:
+
+<img alt="FIDO2 test failed to fetch error" src={useBaseUrl('img/docs/fido-conformance/error-failed-to-fetch.png')} />
+
+**Solution:** Make sure the server is available at [https://localhost](https://localhost), and that you've [activated the additional FIDO Conformance-specific routes](#activating-additional-routes).
+
+### "Unexpected token &lt; in JSON at position 0"
+
+You may see a series of "Unexpected token" errors:
+
+<img alt="FIDO2 test failed to fetch error" src={useBaseUrl('img/docs/fido-conformance/error-unexpected-token.png')} />
+
+**Solution:** Make sure that you've [activated the additional FIDO Conformance-specific routes](#activating-additional-routes).
+
+### "Unlisted aaguid...in TOC"
+
+You may see a series of "Unlisted aaguid" errors:
+
+<img alt="FIDO2 test failed to fetch error" src={useBaseUrl('img/docs/fido-conformance/error-unlisted-aaguid.png')} />
+
+**Solution:** Make sure that you've [loaded the metadata statements](#loading-metadata-statements) from the FIDO Conformance Tools
+
