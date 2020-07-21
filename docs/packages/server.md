@@ -20,7 +20,7 @@ import SimpleWebAuthnServer from '@simplewebauthn/server';
 const SimpleWebAuthnServer = require('@simplewebauthn/server');
 ```
 
-Documentation below will refer to the following types representing basic data structures. These types are intended only for inspiration, to convey the general types of values you'll need to be capable of persisting in your database:
+Documentation below will refer to the following TypeScript types. These are intended to be inspirational, a simple means of communicating the...types...of values you'll need to be capable of persisting in your database:
 
 ```ts
 type UserModel = {
@@ -29,6 +29,8 @@ type UserModel = {
   currentChallenge?: string;
 };
 
+// It is strongly advised that authenticators get their own DB
+// table, ideally with a foreign key to a specific UserModel
 type Authenticator = {
   credentialID: string;
   publicKey: string;
@@ -43,8 +45,7 @@ Start by defining some constants that describe your "Relying Party" (RP) server 
 ```js
 // Human-readable title for your website
 const serviceName = 'SimpleWebAuthn Example';
-// An identifier unique to your website to ensure that credentials generated
-// here can only be used here
+// A unique identifier for your website
 const rpID = 'localhost';
 // The URL at which attestations and assertions should occur
 const origin = `https://${rpID}`;
@@ -73,7 +74,7 @@ Attestation occurs in two steps:
 1. Generate a collection of "attestation options" for the browser to pass to a FIDO2 authenticator
 2. Verify the authenticator's response
 
-Each of these steps need to be handled as individual API endpoints:
+Each of these steps need their own API endpoints:
 
 ### 1. Generate attestation options
 
@@ -178,7 +179,7 @@ Just like attestations, assertions span two steps:
 1. Generate a collection of "assertion options" for the browser to pass to a FIDO2 authenticator
 2. Verify the authenticator's response
 
-Each of these steps need to be handled as individual API endpoints:
+Each of these steps need their own API endpoints:
 
 ### 1. Generate assertion options
 
