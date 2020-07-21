@@ -136,3 +136,8 @@ You may see a series of "Unlisted aaguid" errors:
 
 **Solution:** Make sure that you've [loaded the metadata statements](#loading-metadata-statements) from the FIDO Conformance Tools
 
+### Can't copy-paste text
+
+You try in vain to copy-paste error messages, test results, or anything else from the the FIDO Conformance Tools window but nothing ever makes it to the clipboard.
+
+**Solution:** Welcome to conformance testing, fellow macOS user - that's just how it is for now 🙃
