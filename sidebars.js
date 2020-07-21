@@ -5,12 +5,7 @@ module.exports = {
       'simplewebauthn/philosophy',
     ],
     Packages: [
-      {
-        Server: [
-          'packages/server/install',
-          'packages/server/usage',
-        ],
-      },
+      'packages/server',
       {
         Browser: [
           'packages/browser/install',

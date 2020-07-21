@@ -1,6 +1,5 @@
 ---
-title: Server - Usage
-sidebar_label: Usage
+title: Server
 ---
 
 ## Installing
