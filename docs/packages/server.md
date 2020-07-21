@@ -275,13 +275,48 @@ SimpleWebAuthn supports [all six WebAuthn attestation formats](https://w3c.githu
 
 ## MetadataService
 
-Supports FIDO Metadata Service (MDS)
+Metadata statements maintained by the FIDO Alliance can be referenced during attestation and assertion to cross-reference additional information about authenticators that may be used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
 
-Metadata enables a greater degree of certainty that the devices interacting with this server are
-what they claim to be according to their manufacturer.
+This package includes support for [FIDO Metadata Service (MDS)](https://fidoalliance.org/metadata/) metadata statements via `MetadataService`:
 
-Use of MetadataService is _not_ required to use @simplewebauthn/server. If you do choose to use
-it, you'll need to provide at least one MDS endpoint
+```ts
+import {
+  MetadataService,
+} from '@simplewebauthn/server';
+```
 
-See https://mds2.fidoalliance.org/tokens/ to register for a free access token. When they ask for
-an Organization Name, "Self" works just fine.
+This service contains all of the logic necessary to interact with the MDS API, including signed data verification and automatic periodic refreshing of metadata.
+
+:::info
+Use of MetadataService is _not_ required to use @simplewebauthn/server! This is opt-in functionality that enables a more strict adherence to FIDO specifications and may not be appropriate for your use case.
+:::
+
+### Registering for an MDS API token
+
+Requests to the MDS API require an access token. Head to https://mds2.fidoalliance.org/tokens/ to register for a free access token (when asked for an Organization Name, "Self" works just fine.)
+
+You will receive your access token via email.
+
+### Initializing MetadataService
+
+Once you have an access token, you can then point `MetadataService` to the official MDS API:
+
+```ts
+// Use `dotenv` or similar to pull in the API token as an env var
+const mdsAPIToken = process.env.MDS_API_TOKEN;
+
+// Initialize MetadataService with MDS connection info
+MetadataService.initialize({
+  mdsServers: [
+    {
+      url: `https://mds2.fidoalliance.org/?token=${mdsAPIToken}`,
+      rootCertURL: 'https://mds.fidoalliance.org/Root.cer',
+      metadataURLSuffix: `?token=${mdsAPIToken}`,
+    },
+  ],
+}).then(() => {
+  console.log('🔐 MetadataService initialized');
+});
+```
+
+Once MetadataService is initialized, `verifyAttestationResponse()` and `verifyAssertionResponse()` will reference MDS metadata statements and error out if receive authenticator responses with unexpected values.
