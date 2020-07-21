@@ -8,7 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 The FIDO® Alliance offers a suite of tests known as the ["Conformance Self-Validating Testing"](https://fidoalliance.org/certification/functional-certification/conformance/). These tests enable developers to verify their Relying Party's (RP) adherence to FIDO specifications.
 
-The WebAuthn API is built on top of FIDO2, and so implementations of WebAuthn can also aim for FIDO conformance. In doing so, WebAuthn implementers are able to add an additional level of scrutiny of the authenticators that interact with their RP.
+The WebAuthn API is built on top of FIDO2, and so implementations of WebAuthn can also become FIDO conformant. WebAuthn implementers that go this extra mile add an additional level of validation of the authenticators that interact with their RP.
 
 As of v0.7.0, the **@simplewebauthn/server** package is FIDO conformant! Support for this additional level of authenticator scrutiny is optional and opt-in - see [usage instructions for `MetadataService`](#) for more information.
 
