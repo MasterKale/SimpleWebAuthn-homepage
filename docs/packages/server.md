@@ -89,7 +89,7 @@ const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
 // (Pseudocode) Generate something random and at least
 // 16 characters long
-const challenge: string = getRandomChallenge();
+const challenge: string = generateRandomChallenge();
 
 // (Pseudocode) Remember this challenge for this user
 setUserCurrentChallenge(user, challenge);
@@ -194,7 +194,7 @@ const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
 // (Pseudocode) Generate something random and at least
 // 16 characters long
-const challenge: string = getRandomChallenge();
+const challenge: string = generateRandomChallenge();
 
 // (Pseudocode) Remember this challenge for this user
 setUserCurrentChallenge(user, challenge);
