@@ -6,12 +6,7 @@ module.exports = {
     ],
     Packages: [
       'packages/server',
-      {
-        Browser: [
-          'packages/browser/install',
-          'packages/browser/usage',
-        ],
-      },
+      'packages/browser',
       'packages/types',
     ],
     'Advanced Guides': [
