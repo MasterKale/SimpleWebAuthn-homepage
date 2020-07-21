@@ -4,7 +4,7 @@ title: Example Project
 
 ## Introduction
 
-What follows is a more in-depth look at the [example project](https://github.com/MasterKale/SimpleWebAuthn/tree/master/example) available in the repo. This single-file Express server and a few HTML files have been combined with the packages in this repo to demonstrate what it takes to get up and running with WebAuthn. This is intended to be a practical reference for implementing the SimpleWebAuthn libraries to add WebAuthn support to your website.
+What follows is a more in-depth look at the [example project](https://github.com/MasterKale/SimpleWebAuthn/tree/master/example) available in the repo. A single-file Express server and a few HTML files have been combined with the packages in this project to demonstrate what it takes to get up and running with WebAuthn. This is intended to be a practical reference for implementing the SimpleWebAuthn libraries to add WebAuthn support to your website.
 
 Before going any further, though, it's worth noting that the WebAuthn browser API by itself isn't very useful. Developers that want to leverage this API and these libraries are required to have a server with a few things already up and running:
 
@@ -13,7 +13,7 @@ Before going any further, though, it's worth noting that the WebAuthn browser AP
 
 :::tip
 
-Don't fret if you don't already have a setup like this! The example project mocks out enough of this functionality to offer developers a simple WebAuthn sandbox to play around with before they dive in further!
+Don't fret if you don't already have a setup like this! The example project mocks out enough of this functionality to offer you a simple WebAuthn sandbox to play around with before you dive in further.
 
 :::
 
