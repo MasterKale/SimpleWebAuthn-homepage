@@ -3,17 +3,22 @@ title: Server - Usage
 sidebar_label: Usage
 ---
 
-## Importing
+## Installing
+
+This package is available on **npm**:
+
+```bash
+npm install @simplewebauthn/server
+```
+
+It can then be imported into all types of Node projects thanks to its support for both ES Module and CommonJS import patterns:
 
 ```ts
-import {
-  // Registration ("Attestation")
-  generateAttestationOptions,
-  verifyAttestationResponse,
-  // Login ("Assertion")
-  generateAssertionOptions,
-  verifyAssertionResponse,
-} from '@simplewebauthn/server';
+// ES Module (TypeScript, Babel, etc...)
+import SimpleWebAuthnServer from '@simplewebauthn/server';
+
+// CommonJS (NodeJS)
+const SimpleWebAuthnServer = require('@simplewebauthn/server');
 ```
 
 ## Identifying your RP
@@ -28,6 +33,8 @@ const serviceName = 'FIDO Conformance Test';
 const rpID = 'localhost';
 ```
 
+These will be referenced throughout attestations and assertions to ensure that authenticators generate and return credentials specifically for your server.
+
 :::info
 The instructions below are for setting up SimpleWebAuthn for 2FA support. Guides for "Passwordless"
 and "Usernameless" support can be found under the **Advanced Guides** section.
@@ -40,7 +47,16 @@ and "Usernameless" support can be found under the **Advanced Guides** section.
 1. Generate a collection of "options" for the browser to pass to a FIDO2 authenticator
 2. Verify the authenticator's response
 
-Each of these steps needs to be handled as individual API endpoints:
+Attestation uses the following exported methods from this package:
+
+```ts
+import {
+  generateAttestationOptions,
+  verifyAttestationResponse,
+} from '@simplewebauthn/server';
+```
+
+Each of these steps need to be handled as individual API endpoints:
 
 ### 1. Generate attestation options
 
