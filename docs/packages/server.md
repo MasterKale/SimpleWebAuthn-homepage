@@ -282,7 +282,11 @@ Use of MetadataService is _not_ required to use @simplewebauthn/server! This is 
 
 ### Registering for an MDS API token
 
-Requests to the MDS API require an access token. Head to https://mds2.fidoalliance.org/tokens/ to register for a free access token (when asked for an Organization Name, "Self" works just fine.)
+Requests to the MDS API require an access token. Head to https://mds2.fidoalliance.org/tokens/ to register for a free access token.
+
+:::tip
+When asked for an Organization Name, "Self" works just fine.
+:::
 
 You will receive your access token via email.
 
