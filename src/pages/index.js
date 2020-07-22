@@ -24,8 +24,8 @@ const features = [
     imageUrl: 'img/TS_logo.svg',
     description: (
       <>
-        Everything is authored in 100% TypeScript! And the <strong>typescript-types</strong> package
-        contains even more type declarations for easier use in your own TypeScript project.
+        Everything is authored in 100% TypeScript! And a dedicated package for type declarations
+        makes it even simpler to use SimpleWebAuthn in your own TypeScript projects.
       </>
     ),
   },
