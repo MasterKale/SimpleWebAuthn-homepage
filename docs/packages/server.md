@@ -262,17 +262,6 @@ appropriate UI:
 return { verified };
 ```
 
-## Supported Attestation Formats
-
-SimpleWebAuthn supports [all six WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
-
-- **Packed**
-- **TPM**
-- **Android Key**
-- **Android SafetyNet**
-- **FIDO U2F**
-- **None**
-
 ## MetadataService
 
 Metadata statements maintained by the FIDO Alliance can be referenced during attestation and assertion to cross-reference additional information about authenticators that may be used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
@@ -318,6 +307,17 @@ MetadataService.initialize({
   console.log('🔐 MetadataService initialized');
 });
 ```
+
+## Supported Attestation Formats
+
+SimpleWebAuthn supports [all six WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
+
+- **Packed**
+- **TPM**
+- **Android Key**
+- **Android SafetyNet**
+- **FIDO U2F**
+- **None**
 
 Once `MetadataService` is initialized, `verifyAttestationResponse()` will reference MDS metadata statements and error out if it receives authenticator responses with unexpected values.
 
