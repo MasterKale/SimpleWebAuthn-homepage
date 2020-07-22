@@ -55,7 +55,7 @@ These will be referenced throughout attestations and assertions to ensure that a
 
 :::info
 The following instructions are for setting up SimpleWebAuthn for 2FA support. Guides for "Passwordless"
-and "Usernameless" support can be found under the **Advanced Guides** section.
+and "Usernameless" support are coming soon.
 :::
 
 ## Attestation
