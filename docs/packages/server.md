@@ -264,7 +264,7 @@ return { verified };
 
 ## MetadataService
 
-Metadata statements maintained by the FIDO Alliance can be referenced during attestation and assertion to cross-reference additional information about authenticators that may be used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
+Metadata statements maintained by the FIDO Alliance can be referenced during attestation to cross-reference additional information about authenticators that may be used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
 
 This package includes support for [FIDO Metadata Service (MDS)](https://fidoalliance.org/metadata/) metadata statements via `MetadataService`:
 
