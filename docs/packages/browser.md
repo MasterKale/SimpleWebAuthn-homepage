@@ -224,3 +224,9 @@ import { supportsWebauthn } from '@simplewebauthn/browser';
   // ...snip...
 </script>
 ```
+
+## Additional API Documentation
+
+Lower-level API docs for this package are available here:
+
+https://docs.simplewebauthn.dev/modules/_simplewebauthn_browser.html

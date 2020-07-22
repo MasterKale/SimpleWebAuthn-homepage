@@ -320,3 +320,9 @@ MetadataService.initialize({
 ```
 
 Once `MetadataService` is initialized, `verifyAttestationResponse()` will reference MDS metadata statements and error out if it receives authenticator responses with unexpected values.
+
+## Additional API Documentation
+
+Lower-level API docs for this package are available here:
+
+https://docs.simplewebauthn.dev/modules/_simplewebauthn_server.html
