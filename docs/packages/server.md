@@ -108,11 +108,11 @@ return generateAttestationOptions({
 });
 ```
 
-These options can be passed directly into **@simplewebauthn/browser**'s `startAttestation()` method.
+These options can be passed directly into [**@simplewebauthn/browser**'s `startAttestation()`](packages/browser.md#startattestation) method.
 
 ### 2. Verify attestation response
 
-The second endpoint (`POST`) should accept the value returned by **@simplewebauthn/browser**'s `startAttestation()` method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAttestation()`](packages/browser.md#startattestation) method and then verify it:
 
 ```ts
 const { body } = req;
@@ -207,11 +207,11 @@ return generateAssertionOptions({
 });
 ```
 
-These options can be passed directly into **@simplewebauthn/browser**'s `startAssertion()` method.
+These options can be passed directly into [**@simplewebauthn/browser**'s `startAssertion()`](packages/browser.md#startassertion) method.
 
 ### 2. Verify assertion response
 
-The second endpoint (`POST`) should accept the value returned by **@simplewebauthn/browser**'s `startAssertion()` method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAssertion()`](packages/browser.md#startassertion) method and then verify it:
 
 ```ts
 const { body } = req;
