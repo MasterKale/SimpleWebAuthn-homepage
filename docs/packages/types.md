@@ -10,7 +10,7 @@ the Browser and Server packages.
 This package is available on **npm**:
 
 ```bash
-npm install -D @simplewebauthn/typescript-types
+npm install --save-dev @simplewebauthn/typescript-types
 ```
 
 ## Usage
