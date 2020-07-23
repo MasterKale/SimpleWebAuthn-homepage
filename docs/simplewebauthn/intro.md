@@ -18,4 +18,4 @@ An additional package is also included that contains shared TypeScript definitio
 
 In-depth, auto-generated API documentation for all of the packages in this project is available
 here:
-https://docs.simplewebauthn.dev/
+https://api-docs.simplewebauthn.dev/
