@@ -62,7 +62,11 @@ module.exports = {
     prism: {
       theme: require('prism-react-renderer/themes/github'),
       darkTheme: require('prism-react-renderer/themes/vsDark'),
-    }
+    },
+    algolia: {
+      apiKey: '0c7c51fc700e55ff051a454fec072878',
+      indexName: 'simplewebauthn',
+    },
   },
   presets: [
     [
