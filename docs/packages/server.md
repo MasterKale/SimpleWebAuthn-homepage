@@ -88,17 +88,9 @@ const user: UserModel = getUserFromDB(loggedInUserId);
 // registered authenticators
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
-// (Pseudocode) Generate something random and at least
-// 16 characters long
-const challenge: string = generateRandomChallenge();
-
-// (Pseudocode) Remember this challenge for this user
-setUserCurrentChallenge(user, challenge);
-
-return generateAttestationOptions({
+const options = generateAttestationOptions({
   serviceName,
   rpID,
-  challenge,
   userID: user.id,
   userName: user.username,
   // Prompt users for additional information about the authenticator.
@@ -106,9 +98,20 @@ return generateAttestationOptions({
   // Prevent users from re-registering existing authenticators
   excludedCredentialIDs: userAuthenticators.map(dev => dev.credentialID),
 });
+
+// (Pseudocode) Remember the challenge for this user
+setUserCurrentChallenge(user, options.challenge);
+
+return options;
 ```
 
 These options can be passed directly into [**@simplewebauthn/browser**'s `startAttestation()`](packages/browser.md#startattestation) method.
+
+:::tip Support for custom challenges
+
+Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateAttestationOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
+
+:::
 
 ### 2. Verify attestation response
 
@@ -117,11 +120,9 @@ The second endpoint (`POST`) should accept the value returned by [**@simplewebau
 ```ts
 const { body } = req;
 
-// (Pseudocode) Retrieve the logged-in user's challenge to
-// compare it to the one in the attestation response
+// (Pseudocode) Retrieve the logged-in user
 const user: UserModel = getUserFromDB(loggedInUserId);
-// (Pseudocode) Get the challenge that was sent to the
-// user's authenticator
+// (Pseudocode) Get `options.challenge` that was saved above
 const expectedChallenge: string = getUserCurrentChallenge(user);
 
 let verification;
@@ -186,28 +187,30 @@ Each of these steps need their own API endpoints:
 One endpoint (`GET`) needs to return the result of a call to `generateAssertionOptions()`:
 
 ```ts
-// (Pseudocode) Retrieve the user from the database
-// after they've logged in
+// (Pseudocode) Retrieve the logged-in user
 const user: UserModel = getUserFromDB(loggedInUserId);
 // (Pseudocode) Retrieve any of the user's previously-
 // registered authenticators
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
-// (Pseudocode) Generate something random and at least
-// 16 characters long
-const challenge: string = generateRandomChallenge();
-
-// (Pseudocode) Remember this challenge for this user
-setUserCurrentChallenge(user, challenge);
-
-return generateAssertionOptions({
-  challenge,
+const options = generateAssertionOptions({
   // Require users to use a previously-registered authenticator
   allowedCredentialIDs: userAuthenticators.map(data => data.credentialID),
 });
+
+// (Pseudocode) Remember this challenge for this user
+setUserCurrentChallenge(user, options.challenge);
+
+return options;
 ```
 
 These options can be passed directly into [**@simplewebauthn/browser**'s `startAssertion()`](packages/browser.md#startassertion) method.
+
+:::tip Support for custom challenges
+
+Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateAssertionOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
+
+:::
 
 ### 2. Verify assertion response
 
@@ -216,11 +219,9 @@ The second endpoint (`POST`) should accept the value returned by [**@simplewebau
 ```ts
 const { body } = req;
 
-// (Pseudocode) Retrieve the logged-in user's challenge to
-// compare it to the one in the attestation response
+// (Pseudocode) Retrieve the logged-in user
 const user: UserModel = getUserFromDB(loggedInUserId);
-// (Pseudocode) Get the challenge that was sent to the
-// user's authenticator
+// (Pseudocode) Get `options.challenge` that was saved above
 const expectedChallenge: string = getUserCurrentChallenge(user);
 // (Pseudocode} Retrieve an authenticator from the DB that
 // should match the `id` in the returned credential
