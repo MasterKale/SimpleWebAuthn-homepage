@@ -22,6 +22,11 @@ module.exports = {
           position: 'left',
         },
         {
+          href: 'https://debugger.simplewebauthn.dev',
+          label: 'Debugger',
+          position: 'left',
+        },
+        {
           href: 'https://github.com/MasterKale/SimpleWebAuthn',
           label: 'GitHub',
           position: 'right',
