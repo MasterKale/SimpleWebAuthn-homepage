@@ -35,6 +35,8 @@ type Authenticator = {
   credentialID: string;
   publicKey: string;
   counter: number;
+  // ['usb' | 'ble' | 'nfc' | 'internal']
+  transports?: AuthenticatorTransport[];
 };
 ```
 
@@ -44,7 +46,7 @@ Start by defining some constants that describe your "Relying Party" (RP) server 
 
 ```js
 // Human-readable title for your website
-const serviceName = 'SimpleWebAuthn Example';
+const rpName = 'SimpleWebAuthn Example';
 // A unique identifier for your website
 const rpID = 'localhost';
 // The URL at which attestations and assertions should occur
@@ -89,14 +91,20 @@ const user: UserModel = getUserFromDB(loggedInUserId);
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
 const options = generateAttestationOptions({
-  serviceName,
+  rpName,
   rpID,
   userID: user.id,
   userName: user.username,
-  // Prompt users for additional information about the authenticator.
-  attestationType: 'direct',
+  // Don't prompt users for additional information about the authenticator
+  // (Recommended for smoother UX)
+  attestationType: 'indirect',
   // Prevent users from re-registering existing authenticators
-  excludedCredentialIDs: userAuthenticators.map(dev => dev.credentialID),
+  excludeCredentials: devices.map(dev => ({
+    id: dev.credentialID,
+    type: 'public-key',
+    // Optional
+    transports: dev.transports,
+  })),
 });
 
 // (Pseudocode) Remember the challenge for this user
@@ -195,7 +203,13 @@ const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
 const options = generateAssertionOptions({
   // Require users to use a previously-registered authenticator
-  allowedCredentialIDs: userAuthenticators.map(data => data.credentialID),
+  allowCredentials: user.devices.map(dev => ({
+    id: dev.credentialID,
+    type: 'public-key',
+    // Optional
+    transports: dev.transports,
+  })),
+  userVerification: 'preferred',
 });
 
 // (Pseudocode) Remember this challenge for this user
