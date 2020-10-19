@@ -12,6 +12,7 @@ module.exports = {
     'Advanced Guides': [
       'advanced/example-project',
       'advanced/supported-devices',
+      'advanced/safari-browser',
       'advanced/fido-conformance',
     ],
   },
