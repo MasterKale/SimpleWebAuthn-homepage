@@ -329,7 +329,7 @@ MetadataService.initialize({
 
 ## Supported Attestation Formats
 
-SimpleWebAuthn supports [all six WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
+SimpleWebAuthn supports [all current WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
 
 - **Packed**
 - **TPM**
@@ -337,6 +337,7 @@ SimpleWebAuthn supports [all six WebAuthn attestation formats](https://w3c.githu
 - **Android SafetyNet**
 - **FIDO U2F**
 - **None**
+- **Apple**
 
 Once `MetadataService` is initialized, `verifyAttestationResponse()` will reference MDS metadata statements and error out if it receives authenticator responses with unexpected values.
 
