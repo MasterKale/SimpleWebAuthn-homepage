@@ -345,4 +345,4 @@ Once `MetadataService` is initialized, `verifyAttestationResponse()` will refere
 
 Lower-level API docs for this package are available here:
 
-https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_server.html
+https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_server_.html
