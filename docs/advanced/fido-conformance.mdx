@@ -38,11 +38,10 @@ Make sure the example project is available at [https://localhost](https://localh
 
 ### Activating additional routes
 
-**Un-comment** the following lines in the example project to activate additional routes:
+Create a **.env** file and add the following environment variable:
 
-```javascript title="example/index.js"
-// const { fidoRouteSuffix, fidoConformanceRouter } = require('./fido-conformance');
-// app.use(fidoRouteSuffix, fidoConformanceRouter);
+```env title="example/.env"
+ENABLE_CONFORMANCE=true
 ```
 
 This will add additional routes on the `/fido` route.
