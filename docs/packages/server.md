@@ -149,6 +149,10 @@ try {
 const { verified, authenticatorInfo } = verification;
 ```
 
+:::tip Support for multiple origins and RP IDs
+SimpleWebAuthn optionally supports verifying attestations from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
+:::
+
 If `verification.verified` is true, then store `authenticatorInfo` in the database:
 
 ```ts
@@ -261,6 +265,10 @@ try {
 
 const { verified, authenticatorInfo } = verification;
 ```
+
+:::tip Support for multiple origins and RP IDs
+SimpleWebAuthn optionally supports verifying assertions from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
+:::
 
 If `verification.verified` is true, then update the user's authenticator's `counter` property in the DB:
 
