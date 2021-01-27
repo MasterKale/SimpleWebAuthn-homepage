@@ -99,7 +99,7 @@ const options = generateAttestationOptions({
   // (Recommended for smoother UX)
   attestationType: 'indirect',
   // Prevent users from re-registering existing authenticators
-  excludeCredentials: user.authenticators.map(authenticator => ({
+  excludeCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
     type: 'public-key',
     // Optional
@@ -207,7 +207,7 @@ const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
 const options = generateAssertionOptions({
   // Require users to use a previously-registered authenticator
-  allowCredentials: user.authenticators.map(authenticator => ({
+  allowCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
     type: 'public-key',
     // Optional
