@@ -14,7 +14,7 @@ module.exports = {
         alt: 'My Site Logo',
         src: 'img/logo_favicon.png',
       },
-      links: [
+      items: [
         {
           to: 'docs/',
           activeBasePath: 'docs',
@@ -78,8 +78,6 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          // Specify the doc ID to display as the `docs/` root page
-          homePageId: 'simplewebauthn/intro',
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
         },
