@@ -32,8 +32,8 @@ type UserModel = {
 // It is strongly advised that authenticators get their own DB
 // table, ideally with a foreign key to a specific UserModel
 type Authenticator = {
-  credentialID: string;
-  publicKey: string;
+  credentialID: Buffer;
+  credentialPublicKey: Buffer;
   counter: number;
   // ['usb' | 'ble' | 'nfc' | 'internal']
   transports?: AuthenticatorTransport[];
@@ -146,21 +146,21 @@ try {
   return res.status(400).send({ error: error.message });
 }
 
-const { verified, authenticatorInfo } = verification;
+const { verified, attestationInfo } = verification;
 ```
 
 :::tip Support for multiple origins and RP IDs
 SimpleWebAuthn optionally supports verifying attestations from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
 :::
 
-If `verification.verified` is true, then store `authenticatorInfo` in the database:
+If `verification.verified` is true, then save the credential data in `attestationInfo` to the database:
 
 ```ts
-const { base64PublicKey, base64CredentialID, counter } = authenticatorInfo;
+const { credentialPublicKey, credentialID, counter } = attestationInfo;
 
 const newAuthenticator: Authenticator = {
-  credentialID: base64CredentialID
-  publicKey: base64PublicKey
+  credentialID,
+  credentialPublicKey,
   counter,
 };
 
@@ -263,7 +263,7 @@ try {
   return res.status(400).send({ error: error.message });
 }
 
-const { verified, authenticatorInfo } = verification;
+const { verified, assertionInfo } = verification;
 ```
 
 :::tip Support for multiple origins and RP IDs
@@ -273,9 +273,9 @@ SimpleWebAuthn optionally supports verifying assertions from multiple origins an
 If `verification.verified` is true, then update the user's authenticator's `counter` property in the DB:
 
 ```ts
-const { counter } = authenticatorInfo;
+const { newCounter } = assertionInfo;
 
-saveUpdatedAuthenticatorCounter(authenticator, counter);
+saveUpdatedAuthenticatorCounter(authenticator, newCounter);
 ```
 
 When finished, it's a good idea to return the verification status to the browser to display
@@ -353,4 +353,4 @@ Once `MetadataService` is initialized, `verifyAttestationResponse()` will refere
 
 Lower-level API docs for this package are available here:
 
-https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_server_.html
+https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_server.html
