@@ -17,4 +17,4 @@ npm install --save-dev @simplewebauthn/typescript-types
 
 An up-to-date listing of types contained within this package are available here:
 
-https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_typescript_types_.html
+https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_typescript_types.html
