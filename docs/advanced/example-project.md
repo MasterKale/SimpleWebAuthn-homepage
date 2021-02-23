@@ -21,7 +21,7 @@ Don't fret if you don't already have a setup like this! The example project mock
 
 The example server is a Node server, so you'll need the following available on your machine:
 
-- Node v10.0.0+ ([install](https://nodejs.org/))
+- Node v14.0.0+ ([install](https://nodejs.org/))
   - Install the current LTS release if you're new to all of this
   - The `npm` (Node Package Manager) executable comes with an installation of Node
 
@@ -55,25 +55,6 @@ Next, install dependencies with `npm`:
 ./example/ $> npm install
 ```
 
-### Setting up HTTPS support
-
-Websites that want to use WebAuthn _must_ be served over HTTPS, **including during development!** Fortunately it's simple to generate SSL certificates to host the site locally over HTTPS:
-
-1. [Install mkcert](https://github.com/FiloSottile/mkcert#installation) as per its instructions
-2. Run `mkcert -install` to initialize mkcert
-3. Run the following command from within the **example/** directory to generate SSL certificates for `localhost`:
-
-```bash
-./example/ $> mkcert -key-file localhost.key -cert-file localhost.crt localhost
-```
-
-This command should generate the following two files:
-
-- **example/localhost.key**
-- **example/localhost.crt**
-
-The SSL certificate has been successfully generated if you see these two files. If these files don't exist, make sure you're in the **example/** directory before retrying the last step.
-
 ### Starting the server
 
 Once the two files above are in-place, you can start the server:
@@ -82,12 +63,61 @@ Once the two files above are in-place, you can start the server:
 ./example/ $> npm start
 ```
 
-The example server should now be available at [https://localhost](https://localhost)!
+The example server should now be available at [http://localhost:8000](http://localhost:8000)!
 
-## Server Architecture
+## Setting up HTTPS support
 
-TBD
+:::info
+Setting up HTTPS support will enable you to access the example project from other devices on your intranet, including smartphones, so that you can test WebAuthn across multiple environments from the safety of your own network, no internet access needed!
+:::
 
-## Browser Architecture
+:::caution
+The following steps assume you own a custom domain and have full access to its DNS configuration. You must be able to create DNS A and CNAME records for your domain/subdomain to complete the steps below.
 
-TBD
+For the steps below, replace **dev.example.com** with your own domain/subdomain. To clarify, **this setup will *not* expose this server to the internet.**
+:::
+
+:::tip
+Below are a suggested list of steps to host the example project over HTTPS from a development machine. They are not the only way to accomplish this task, so feel free to deviate as you see fit. The end goal is what's important here, not necessarily how you get there.
+:::
+
+WebAuthn must be run from a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), that is from either `http://localhost` or from an `https://` address using a valid SSL certificate. While the example project works fine over localhost right out of the box, additional work is needed to get it running over HTTPS:
+
+1. Determine your intranet IP address. This will likely be an address in the **192.168.1.\*** range
+2. Create an A record for **dev.example.com** in your domain's DNS configuration pointing to the IP address above.
+3. Install EFF's [certbot](https://certbot.eff.org/instructions) according to your local OS
+   1. Select **"None of the Above"** and then **your OS** to see instructions
+   2. Stop once you complete the **"Install Certbot"** step
+4. Run the following `certbot` command and follow its instructions to generate SSL certificates for **dev.example.com**:
+
+```bash
+$> sudo certbot --manual -d dev.example.com --preferred-challenges dns certonly
+```
+
+:::info
+These SSL certificates are only good for 90 days. To renew your local SSL certificates after 90 days, simply re-run the command above.
+:::
+
+5. Copy the resulting **/etc/letsencrypt/live/dev.example.com/fullchain.pem** to **./example/dev.example.com.crt**
+6. Copy the resulting **/etc/letsencrypt/live/dev.example.com/privkey.pem** to **./example/dev.example.com.key**
+7. Create a **.env** file and add the following environment variable:
+
+```env title="example/.env"
+ENABLE_HTTPS=true
+```
+
+8. Open **index.ts** and update `rpID`:
+
+```js title="example/index.ts"
+const rpID = 'dev.example.com';
+```
+
+9. Once everything is in place, start the server:
+
+```sh
+./example $> npm start
+```
+
+Assuming everything is in place, the server will then be accessible at https://dev.example.com.
+
+Additionally, since the **dev.example.com** DNS A record points to your local machine's intranet IP address, any device connected to your intranet will be able to access the example project at https://dev.example.com to test the device's support for WebAuthn.
