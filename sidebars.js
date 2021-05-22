@@ -22,7 +22,8 @@ module.exports = {
     'Cookbooks': [
       'cookbooks/introduction',
       'cookbooks/getting-started',
-      'cookbooks/multi-factor',
+      'cookbooks/second-factor-part-1',
+      'cookbooks/second-factor-part-2',
       'cookbooks/passwordless',
     ]
   },
