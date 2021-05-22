@@ -309,3 +309,17 @@ if (verified && attestationInfo) {
 
 Congratualations! Our new user has now secured their account with a FIDO-compliant device as a second factor.
 
+Before we move onto logging in and using the newly registerd WebAuthn device, we are going to take an in depth look at the response that is returned from the client side method `startAttestation`.
+
+## Attestation Response
+The layout of the attestation object returned from starting attestation can be seen [here](https://www.w3.org/TR/webauthn-2/#attestation-object). SimpleWebAuthn will parse the data into javascript objects during verification.
+
+We will start with the `credentialPublicKey`. A public key is used during asymmetric cryptography, or public-key cryptography, as a way to verify if a value was signed by its partnered private key. When a user registers and authenticates with their WebAuthn compatible authenticator, the server needs to be sure that the entity requesting authentication is who we are expecting. The server will generate a challenge and send that to the authenticator. From there, the authenticator will use a private key to sign the challenge. The server then uses the `credentialPublicKey` to validate the signature and prove that we know who is requesting access. With asymmetric cryptography, it is assumed that anyone and everyone can have access to the _public_ key. However, its imperitive that only the authenticator has access to the unencrypted _private_ key.
+
+Next, lets look at the [`credentialId`](https://www.w3.org/TR/webauthn-2/#credential-id). This value is very important. The `credentialId` is the [public key credential source](https://www.w3.org/TR/webauthn-2/#public-key-credential-source) for the credential. In other words, this data contains the private key and identification properties for this credential, like the rpId and an ID for the credential.
+
+> The WebAuthn specification points out two different potential values for the `credentialId`, one that was just explained and another is just some bytes. This detail is an abstraction that is more important for how an authenticator's firmware was implemented. Relying Parties do not need to distinguish these two Credential ID forms.
+
+But wait a second! I thought that only the authenticator should have access to the private key?! Even though the `credentialId` is made using the public key credential source, it is comepletely safe to hand off to the relying party. The value is created using Key Wrapping, which is a type of _symmetric_ encryption where one private key is used to encrypt another private key. As you might have guessed, this means that we have a second private key at play here! When a device is manufactored, there is a private key embedded on each device. This single private key is used to encrypt and decrypt all of the public key credential sources that are generated while using the authenticator.
+
+Finally, we have the `counter`. [Counters)](https://www.w3.org/TR/webauthn-2/#signature-counter) are a simple but powerful concept. A counter is a value that is incremented upon every assertion done by the device. It is a value to track how many times an authenticator has been used. This is used to mitigated the possibility of an authenticator being cloned by a malicious entity.
