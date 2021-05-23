@@ -2,18 +2,18 @@
 title: Getting Started
 ---
 
-Before we take a look at the in-depth examples, we need to establish how to setup and run the [cookbook project](https://github.com/MasterKale/SimpleWebAuthn/tree/master/examples) available in the repo. In this example, we have a few examples of how SimpleWebAuthn can be used to secure your web application: two-factor, passwordless, and usernameless. It consists of one express server, several server-side routes, and several static files for the client. Each method of authentication listed above will have a set of static files and server-side routes.
+Before we look at the in-depth examples, we need to establish how to set up and run the [cookbook project](https://github.com/MasterKale/SimpleWebAuthn/tree/master/examples) available in the repo. In this example, we have a few examples of how SimpleWebAuthn can be used to secure your web application: two-factor, passwordless, and usernameless. It consists of one express server, several server-side routes, and several static files for the client. Each method of authentication listed above will have a set of static files and server-side routes.
 
-It's worth noting that the WebAuthn browser API by itself isn't very useful. Developers that want to leverage this API and these libraries are required to have a server with a few things already up and running:
+It's worth noting that the WebAuthn browser API isn't beneficial by itself. Developers that want to leverage the WebAuthn API must have the following:
 
 -   A **stateful** and **secure** server capable of temporarily persisting values
 -   A database that can store information linked to individual users
 
 ##### TIP
 
-Don't fret if you don't already have a setup like this! The example projectsmock out enough of this functionality to offer you a simple WebAuthn sandbox to play around with before you dive in further. 
+Don't fret if you don't already have a setup like this! The example projects mock out enough of this functionality to offer you a simple WebAuthn sandbox to play around with before you dive in further. 
 
-***However***, there are many shortcuts taken, some of which will be mentioned, in order to acheive a lightweight example of SimpleWebAuthn. These are not production ready examples in their entirety.
+***However***, there are many shortcuts taken to achieve a lightweight example of SimpleWebAuthn. These are not production-ready examples in their entirety.
 
 ## Getting started
 
@@ -57,7 +57,7 @@ Next, install dependencies with `npm`:
 
 ## Starting the server
 
-Once the two files above are in-place, you can start the server:
+Once the two files above are in place, you can start the server:
 
 ```bash
 ./example/ $\> npm start
