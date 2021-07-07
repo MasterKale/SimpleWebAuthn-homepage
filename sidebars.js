@@ -15,6 +15,16 @@ module.exports = {
       'advanced/edge-browser',
       'advanced/safari-browser',
       'advanced/fido-conformance',
+      'advanced/require-pin-code',
+      'advanced/restrict-devices',
+      'advanced/cross-subdomain',
     ],
+    'Cookbooks': [
+      'cookbooks/introduction',
+      'cookbooks/getting-started',
+      'cookbooks/second-factor-part-1',
+      'cookbooks/second-factor-part-2',
+      'cookbooks/passwordless',
+    ]
   },
 };
