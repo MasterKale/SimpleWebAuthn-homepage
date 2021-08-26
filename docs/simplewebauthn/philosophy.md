@@ -6,12 +6,12 @@ WebAuthn is a browser API that enables the use of physical, cryptographically-se
 
 Website back ends that wish to leverage this technology must be set up to do two things:
 
-1. Provide to the front end a specific collection of values that the hardware authenticator will understand for "registration" and "login".
-2. Parse responses from a hardware authenticator.
+1. Provide to the front end a specific collection of values that the hardware authenticator will understand for "registration" and "authentication".
+2. Parse responses from hardware authenticators.
 
 Website front ends have their own part to play in the process:
 
-1. Pass the server-provided values into `navigator.credentials.create()` and `navigator.credentials.get()` so the user can interact with their compatible authenticator.
+1. Pass the server-provided values into the WebAuthn API's `navigator.credentials.create()` and `navigator.credentials.get()` so the user can interact with their compatible authenticator.
 2. Pass the authenticator's response returned from these methods back to the server.
 
 On the surface, this is a relatively straightforward dance. Unfortunately the values passed into the `navigator.credentials` methods and the responses received from them make heavy use of `ArrayBuffer`'s which are difficult to transmit as JSON between front end and back end. Not only that, there are many complex ways in which authenticator responses must be parsed, and though finalized, [the W3C spec](https://w3c.github.io/webauthn/) is quite complex and is being expanded all the time.
