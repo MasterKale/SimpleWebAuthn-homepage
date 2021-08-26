@@ -9,9 +9,9 @@ The FIDO Alliance [maintains a list of what currently supports WebAuthn](https:/
 Here are combinations of OS's, browsers, and authenticators that have been successfully tested with SimpleWebAuthn:
 
 | OS      | Browser |                                                  Authenticator |
-| :------ | :-----: | -------------------------------------------------------------: |
+| :------ | :-----: | --------------------------------------------------------------:|
 | macOS   | Firefox |           Yubikey Security Key NFC (USB), Yubikey 5Ci, SoloKey |
-| macOS   | Chrome  |                                                       Touch ID |
-| iOS     | Safari  | Yubikey Security Key NFC (NFC), Yubikey 5Ci, Face ID, Touch ID |
-| Android | Chrome  |                                            Fingerprint Scanner |
+| macOS   | Chrome  | Touch ID, Yubikey Security Key NFC (USB), Yubikey 5Ci, SoloKey |
+| iOS     | All     | Face ID, Touch ID, Yubikey Security Key NFC (NFC), Yubikey 5Ci |
+| Android | Chrome  |                                     Fingerprint Scanner, caBLE |
 | Android | Firefox |                                                     Screen PIN |
