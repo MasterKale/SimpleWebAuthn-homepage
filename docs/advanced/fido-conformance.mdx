@@ -33,7 +33,7 @@ You can now verify FIDO conformance of SimpleWebAuthn by following these steps:
 Follow the instructions in the [Example Project's Getting Started section](advanced/example-project.md#getting-started).
 
 :::important
-Make sure the example project is available at [https://localhost](https://localhost) before continuing!
+Make sure the example project is available at [http://localhost:8000](http://localhost:8000) before continuing!
 :::
 
 ### Activating additional routes
@@ -73,7 +73,7 @@ Start the server once everything is in place:
 An API request will be triggered by the activation of the conformance routes that pulls in additional metadata information required for the **Metadata Service Tests**. When the example server is ready for testing, you should see the following console output:
 
 ```
-🚀 Server ready at https://0.0.0.0:443
+🚀 Server ready at http://0.0.0.0:8000
 ℹ️ Initializing metadata service with 20 local statements
 🔐 FIDO Conformance routes ready
 ```
@@ -94,7 +94,7 @@ Next, scroll down and look for the **Server URL** text box on the right-hand col
 
 Enter the following URL into this text box:
 
-> https://localhost/fido
+> http://localhost:8000/fido
 
 It's finally time! Click the **Run** button on the bottom-right corner of the window to start conformance testing:
 
@@ -134,9 +134,3 @@ You may see a series of "Unlisted aaguid" errors:
 <img alt="FIDO2 test failed to fetch error" src={useBaseUrl('img/docs/fido-conformance/error-unlisted-aaguid.png')} />
 
 **Solution:** Make sure that you've [loaded the metadata statements](#loading-metadata-statements) from the FIDO Conformance Tools
-
-### Can't copy-paste text
-
-You try in vain to copy-paste error messages, test results, or anything else from the the FIDO Conformance Tools window but nothing ever makes it to the clipboard.
-
-**Solution:** Welcome to conformance testing, fellow macOS user - that's just how it is for now 🙃
