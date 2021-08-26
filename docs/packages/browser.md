@@ -198,15 +198,15 @@ That said, this general sequence of events should be easily adaptable to the fro
 </script>
 ```
 
-### `supportsWebauthn()`
+### `browserSupportsWebauthn()`
 
-A helper method is included in this package to help preemptively check for the browser's ability to make WebAuthn API calls:
+This helper method is included in this package to help preemptively check for the browser's ability to make WebAuthn API calls:
 
 ```js
-import { supportsWebauthn } from '@simplewebauthn/browser';
+import { browserSupportsWebauthn } from '@simplewebauthn/browser';
 ```
 
-`startRegistration()` and `startAuthentication()` both call this method internally. In some scenarios, though, it may be more desirable to hide UI when the page loads and a call to `supportsWebauthn()` returns false:
+`startRegistration()` and `startAuthentication()` both call this method internally. In some scenarios, though, it may be more desirable to hide UI when the page loads and a call to `browserSupportsWebauthn()` returns false:
 
 ```html
 <script>
@@ -214,11 +214,12 @@ import { supportsWebauthn } from '@simplewebauthn/browser';
   const elemSuccess = document.getElementById('success');
   const elemError = document.getElementById('error');
 
-  const { startRegistration, supportsWebauthn } = SimpleWebAuthnBrowser;
+  const { browserSupportsWebauthn } = SimpleWebAuthnBrowser;
 
-  if (!supportsWebauthn()) {
+  if (!browserSupportsWebauthn()) {
     elemBegin.style.display = 'none';
     elemError.innerText = 'It seems this browser does not support WebAuthn...';
+    return;
   }
 
   // ...snip...
