@@ -33,12 +33,12 @@ The library's methods will be available on the global `SimpleWebAuthnBrowser` ob
 
 The following methods are exported from **@simplewebauthn/browser**:
 
-### `startAttestation()`
+### `startRegistration()`
 
 "Attestation" is analogous to new account registration. Attestation in the front end uses the following exported methods from this package:
 
 ```js
-import { startAttestation } from '@simplewebauthn/browser';
+import { startRegistration } from '@simplewebauthn/browser';
 ```
 
 The front end's primary job during attestation is the following:
@@ -59,7 +59,7 @@ That said, this general sequence of events should be easily adaptable to the fro
 
 ```html
 <script>
-  const { startAttestation } = SimpleWebAuthnBrowser;
+  const { startRegistration } = SimpleWebAuthnBrowser;
 
   // <button>
   const elemBegin = document.getElementById('btnBegin');
@@ -81,7 +81,7 @@ That said, this general sequence of events should be easily adaptable to the fro
     let attResp;
     try {
       // Pass the options to the authenticator and wait for a response
-      attResp = await startAttestation(await resp.json());
+      attResp = await startRegistration(await resp.json());
     } catch (error) {
       // Some basic error handling
       if (error.name === 'InvalidStateError') {
@@ -118,12 +118,12 @@ That said, this general sequence of events should be easily adaptable to the fro
 </script>
 ```
 
-### `startAssertion()`
+### `startAuthentication()`
 
 "Assertion" is analogous to existing account login. Assertion in the front end uses the following exported methods from this package:
 
 ```js
-import { startAssertion } from '@simplewebauthn/browser';
+import { startAuthentication } from '@simplewebauthn/browser';
 ```
 
 The front end's primary job during assertion is the following:
@@ -144,7 +144,7 @@ That said, this general sequence of events should be easily adaptable to the fro
 
 ```html
 <script>
-  const { startAssertion } = SimpleWebAuthnBrowser;
+  const { startAuthentication } = SimpleWebAuthnBrowser;
 
   // <button>
   const elemBegin = document.getElementById('btnBegin');
@@ -166,7 +166,7 @@ That said, this general sequence of events should be easily adaptable to the fro
     let asseResp;
     try {
       // Pass the options to the authenticator and wait for a response
-      asseResp = await startAssertion(await resp.json());
+      asseResp = await startAuthentication(await resp.json());
     } catch (error) {
       // Some basic error handling
       elemError.innerText = error;
@@ -206,7 +206,7 @@ A helper method is included in this package to help preemptively check for the b
 import { supportsWebauthn } from '@simplewebauthn/browser';
 ```
 
-`startAttestation()` and `startAssertion()` both call this method internally. In some scenarios, though, it may be more desirable to hide UI when the page loads and a call to `supportsWebauthn()` returns false:
+`startRegistration()` and `startAuthentication()` both call this method internally. In some scenarios, though, it may be more desirable to hide UI when the page loads and a call to `supportsWebauthn()` returns false:
 
 ```html
 <script>
@@ -214,7 +214,7 @@ import { supportsWebauthn } from '@simplewebauthn/browser';
   const elemSuccess = document.getElementById('success');
   const elemError = document.getElementById('error');
 
-  const { startAttestation, supportsWebauthn } = SimpleWebAuthnBrowser;
+  const { startRegistration, supportsWebauthn } = SimpleWebAuthnBrowser;
 
   if (!supportsWebauthn()) {
     elemBegin.style.display = 'none';
