@@ -226,6 +226,38 @@ import { browserSupportsWebauthn } from '@simplewebauthn/browser';
 </script>
 ```
 
+### `platformAuthenticatorIsAvailable()`
+
+"Platform authenticators" are known by most users by their brand names: **Touch ID**, **Face ID**, **Windows Hello**...this asynchronous method helps you identify opportunities in which these types of authenticators can be used by your users:
+
+```js
+import { platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
+```
+
+These advanced types of authenticators are typically embedded into a user's computer or phone and offer quick confirmation of a user's identity via biometric scan or PIN fallback. As a result of their convenience, you may wish to prioritize user registration of such authenticators when one is available for use:
+
+```html
+<script>
+  const { platformAuthenticatorIsAvailable } = SimpleWebAuthnBrowser;
+
+  (async () => {
+    if (await platformAuthenticatorIsAvailable()) {
+      /**
+       * Prompt the user to use Touch ID/Windows Hello/etc... or security keys to register or
+       * authenticate
+       *
+       * How to decide which name to show for the device's platform authenticator is an exercise
+       * left up to the developer (your best bet is User Agent analysis)
+       */
+    } else {
+      /**
+       * Only prompt the user to use security keys to register or authenticate
+       */
+    }
+  })();
+</script>
+```
+
 ## Additional API Documentation
 
 Lower-level API docs for this package are available here:
