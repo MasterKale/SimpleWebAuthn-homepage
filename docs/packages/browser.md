@@ -35,7 +35,7 @@ The following methods are exported from **@simplewebauthn/browser**:
 
 ### `startRegistration()`
 
-**Registration** is analogous to new account creation. The front end uses the following methods from this package to accomplish this:
+"Registration" is analogous to new account creation. The front end uses the following methods from this package to accomplish this:
 
 ```js
 import { startRegistration } from '@simplewebauthn/browser';
@@ -120,7 +120,7 @@ That said, this general sequence of events should be easily adaptable to the fro
 
 ### `startAuthentication()`
 
-**Authentication** is analogous to existing account login. Authentication in the front end uses the following methods from this package:
+"Authentication" is analogous to existing account login. Authentication in the front end uses the following methods from this package:
 
 ```js
 import { startAuthentication } from '@simplewebauthn/browser';
@@ -129,10 +129,10 @@ import { startAuthentication } from '@simplewebauthn/browser';
 The front end's primary job during authentication is the following:
 
 1. Get authentication options from the Relying Party (your server)
-    - See [@simplewebauthn/server's `generateAssertionOptions()`](packages/server.md#1-generate-authentication-options)
+    - See [@simplewebauthn/server's `generateAuthenticationOptions()`](packages/server.md#1-generate-authentication-options)
 2. Submit authentication options to the authenticator
 3. Submit the authenticator's response to the Relying Party for verification
-    - See [@simplewebauthn/server's `verifyAssertionResponse()`](packages/server.md#2-verify-authentication-response)
+    - See [@simplewebauthn/server's `verifyAuthenticationResponse()`](packages/server.md#2-verify-authentication-response)
 
 Below is all of the front end JavaScript that is needed to fulfill these three steps using this package:
 
@@ -160,7 +160,7 @@ That said, this general sequence of events should be easily adaptable to the fro
     elemError.innerHTML = '';
 
     // GET authentication options from the endpoint that calls
-    // @simplewebauthn/server -> generateAssertionOptions()
+    // @simplewebauthn/server -> generateAuthenticationOptions()
     const resp = await fetch('/generate-authentication-options');
 
     let asseResp;
@@ -174,7 +174,7 @@ That said, this general sequence of events should be easily adaptable to the fro
     }
 
     // POST the response to the endpoint that calls
-    // @simplewebauthn/server -> verifyAssertionResponse()
+    // @simplewebauthn/server -> verifyAuthenticationResponse()
     const verificationResp = await fetch('/verify-authentication', {
       method: 'POST',
       headers: {
