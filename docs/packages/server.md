@@ -313,25 +313,23 @@ Some developers, though, may have more demanding requirements that require a hig
 
 ## MetadataService
 
-Metadata statements maintained by the FIDO Alliance can be referenced during registration to cross-reference additional information about authenticators that may be used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
+Metadata statements maintained by the FIDO Alliance can be referenced during registration to cross-reference additional information about authenticators used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
 
-This package includes support for [FIDO Metadata Service (MDS)](https://fidoalliance.org/metadata/) metadata statements via `MetadataService`:
+SimpleWebauthn includes support for the [FIDO Alliance Metadata Service (version 3.0)](https://fidoalliance.org/metadata/) API via its `MetadataService`:
 
 ```ts
-import {
-  MetadataService,
-} from '@simplewebauthn/server';
+import { MetadataService } from '@simplewebauthn/server';
 ```
 
-This service contains all of the logic necessary to interact with the MDS API, including signed data verification and automatic periodic refreshing of metadata.
+This singleton service contains all of the logic necessary to interact with the MDS API, including signed data verification and automatic periodic refreshing of metadata statements.
 
 :::info
 Use of MetadataService is _not_ required to use @simplewebauthn/server! This is opt-in functionality that enables a more strict adherence to FIDO specifications and may not be appropriate for your use case.
 :::
 
-### Initializing MetadataService
+### `initialize()`
 
-Simply call `initialize()` to enable support for `MetadataService` using the official MDS API:
+Simply call `initialize()` to enable `MetadataService` configured to use the official MDS API:
 
 ```js
 import { MetadataService } from '@simplewebauthn/server';
@@ -344,8 +342,7 @@ MetadataService.initialize().then(() => {
 `MetadataService` can also be initialized with optional URLs to other MDS-compatible servers, any local metadata statements you may maintain, or both:
 
 ```js
-import { MetadataService } from '@simplewebauthn/server';
-import type { MetadataStatement } from '@simplewebauthn/server';
+import { MetadataService, MetadataStatement } from '@simplewebauthn/server';
 
 const statements: MetadataStatement[] = [];
 
