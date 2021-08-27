@@ -303,6 +303,14 @@ appropriate UI:
 return { verified };
 ```
 
+## Advanced functionality
+
+:::caution
+**The following functionality is opt-in and is not required for typical use!** SimpleWebAuthn remains focused on simplifying working with the WebAuthn API, and the functionality covered so far will serve the majority of developers' use cases.
+
+Some developers, though, may have more demanding requirements that require a higher degree of control over the types of  authenticators users may utilize when registering or authenticating. The features below enable such advanced uses of SimpleWebAuthn.
+:::
+
 ## MetadataService
 
 Metadata statements maintained by the FIDO Alliance can be referenced during registration to cross-reference additional information about authenticators that may be used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
