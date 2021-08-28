@@ -7,7 +7,6 @@ module.exports = {
   organizationName: 'MasterKale', // Usually your GitHub org/user name.
   projectName: 'SimpleWebAuthn', // Usually your repo name.
   themeConfig: {
-    sidebarCollapsible: false,
     navbar: {
       title: 'SimpleWebAuthn',
       logo: {
@@ -77,6 +76,7 @@ module.exports = {
     [
       '@docusaurus/preset-classic',
       {
+        sidebarCollapsible: false,
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',

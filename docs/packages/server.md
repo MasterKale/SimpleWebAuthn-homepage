@@ -29,12 +29,22 @@ type UserModel = {
   currentChallenge?: string;
 };
 
-// It is strongly advised that authenticators get their own DB
-// table, ideally with a foreign key to a specific UserModel
+/**
+ * It is strongly advised that authenticators get their own DB
+ * table, ideally with a foreign key to a specific UserModel.
+ *
+ * "SQL" tags below are suggestions for column data types and
+ * how best to store data received during registration for use
+ * in subsequent authentications.
+ */
 type Authenticator = {
+  // SQL: Encode to base64url then store as `TEXT`. Index this column
   credentialID: Buffer;
+  // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...
   credentialPublicKey: Buffer;
+  // SQL: Consider `BIGINT` since some authenticators return atomic timestamps as counters
   counter: number;
+  // SQL: `VARCHAR(255)` and store string array as a CSV string
   // ['usb' | 'ble' | 'nfc' | 'internal']
   transports?: AuthenticatorTransport[];
 };
@@ -49,38 +59,38 @@ Start by defining some constants that describe your "Relying Party" (RP) server 
 const rpName = 'SimpleWebAuthn Example';
 // A unique identifier for your website
 const rpID = 'localhost';
-// The URL at which attestations and assertions should occur
+// The URL at which registrations and authentications should occur
 const origin = `https://${rpID}`;
 ```
 
-These will be referenced throughout attestations and assertions to ensure that authenticators generate and return credentials specifically for your server.
+These will be referenced throughout registrations and authentications to ensure that authenticators generate and return credentials specifically for your server.
 
 :::info
 The following instructions are for setting up SimpleWebAuthn for 2FA support. Guides for "Passwordless"
 and "Usernameless" support are coming soon.
 :::
 
-## Attestation
+## Registration
 
-"Attestation" is analogous to new account registration. Attestation support uses the following exported methods from this package:
+"Registration" is analogous to new account creation. Registration uses the following exported methods from this package:
 
 ```ts
 import {
-  generateAttestationOptions,
-  verifyAttestationResponse,
+  generateRegistrationOptions,
+  verifyRegistrationResponse,
 } from '@simplewebauthn/server';
 ```
 
-Attestation occurs in two steps:
+Registration occurs in two steps:
 
-1. Generate a collection of "attestation options" for the browser to pass to a FIDO2 authenticator
+1. Generate registration options for the browser to pass to a supported authenticator
 2. Verify the authenticator's response
 
 Each of these steps need their own API endpoints:
 
-### 1. Generate attestation options
+### 1. Generate registration options
 
-One endpoint (`GET`) needs to return the result of a call to `generateAttestationOptions()`:
+One endpoint (`GET`) needs to return the result of a call to `generateRegistrationOptions()`:
 
 ```ts
 // (Pseudocode) Retrieve the user from the database
@@ -90,7 +100,7 @@ const user: UserModel = getUserFromDB(loggedInUserId);
 // registered authenticators
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
-const options = generateAttestationOptions({
+const options = generateRegistrationOptions({
   rpName,
   rpID,
   userID: user.id,
@@ -113,17 +123,17 @@ setUserCurrentChallenge(user, options.challenge);
 return options;
 ```
 
-These options can be passed directly into [**@simplewebauthn/browser**'s `startAttestation()`](packages/browser.md#startattestation) method.
+These options can be passed directly into [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.md#startregistration) method.
 
 :::tip Support for custom challenges
 
-Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateAttestationOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
+Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateRegistrationOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
 
 :::
 
-### 2. Verify attestation response
+### 2. Verify registration response
 
-The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAttestation()`](packages/browser.md#startattestation) method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.md#startregistration) method and then verify it:
 
 ```ts
 const { body } = req;
@@ -135,7 +145,7 @@ const expectedChallenge: string = getUserCurrentChallenge(user);
 
 let verification;
 try {
-  verification = await verifyAttestationResponse({
+  verification = await verifyRegistrationResponse({
     credential: body,
     expectedChallenge,
     expectedOrigin: origin,
@@ -146,17 +156,17 @@ try {
   return res.status(400).send({ error: error.message });
 }
 
-const { verified, attestationInfo } = verification;
+const { verified, registrationInfo } = verification;
 ```
 
 :::tip Support for multiple origins and RP IDs
-SimpleWebAuthn optionally supports verifying attestations from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
+SimpleWebAuthn optionally supports verifying registrations from multiple origins and RP IDs! Simply pass in an **array** of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
 :::
 
-If `verification.verified` is true, then save the credential data in `attestationInfo` to the database:
+If `verification.verified` is true, then save the credential data in `registrationInfo` to the database:
 
 ```ts
-const { credentialPublicKey, credentialID, counter } = attestationInfo;
+const { credentialPublicKey, credentialID, counter } = registrationInfo;
 
 const newAuthenticator: Authenticator = {
   credentialID,
@@ -176,27 +186,45 @@ appropriate UI:
 return { verified };
 ```
 
-## Assertion
+### Supported Attestation Formats
 
-"Assertion" is analogous to existing account login. Assertions use the following exported methods from this package:
+If `attestationType` is set to `"direct"` when generating registration options, the authenticator will return a more complex response containing an "attestation statement". This statement includes additional verifiable information about the authenticator.
+
+Attestation statements are returned in one of several different formats. SimpleWebAuthn supports [all current WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
+
+- **Packed**
+- **TPM**
+- **Android Key**
+- **Android SafetyNet**
+- **Apple**
+- **FIDO U2F**
+- **None**
+
+:::info
+Attestation statements are an advanced aspect of WebAuthn. You can ignore this concept if you're not particular about the kinds of authenticators your users can use for registration and authentication.
+:::
+
+## Authentication
+
+"Authentication" is analogous to existing account login. Authentication uses the following exported methods from this package:
 
 ```ts
 import {
-  generateAssertionOptions,
-  verifyAssertionResponse,
+  generateAuthenticationOptions,
+  verifyAuthenticationResponse,
 } from '@simplewebauthn/server';
 ```
 
-Just like attestations, assertions span two steps:
+Just like registration, authentication span two steps:
 
-1. Generate a collection of "assertion options" for the browser to pass to a FIDO2 authenticator
+1. Generate authentication options for the browser to pass to a FIDO2 authenticator
 2. Verify the authenticator's response
 
 Each of these steps need their own API endpoints:
 
-### 1. Generate assertion options
+### 1. Generate authentication options
 
-One endpoint (`GET`) needs to return the result of a call to `generateAssertionOptions()`:
+One endpoint (`GET`) needs to return the result of a call to `generateAuthenticationOptions()`:
 
 ```ts
 // (Pseudocode) Retrieve the logged-in user
@@ -205,7 +233,7 @@ const user: UserModel = getUserFromDB(loggedInUserId);
 // registered authenticators
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
-const options = generateAssertionOptions({
+const options = generateAuthenticationOptions({
   // Require users to use a previously-registered authenticator
   allowCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
@@ -222,17 +250,17 @@ setUserCurrentChallenge(user, options.challenge);
 return options;
 ```
 
-These options can be passed directly into [**@simplewebauthn/browser**'s `startAssertion()`](packages/browser.md#startassertion) method.
+These options can be passed directly into [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.md#startAuthentication) method.
 
 :::tip Support for custom challenges
 
-Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateAssertionOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
+Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateAuthenticationOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
 
 :::
 
-### 2. Verify assertion response
+### 2. Verify authentication response
 
-The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAssertion()`](packages/browser.md#startassertion) method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.md#startAuthentication) method and then verify it:
 
 ```ts
 const { body } = req;
@@ -251,7 +279,7 @@ if (!authenticator) {
 
 let verification;
 try {
-  verification = await verifyAssertionResponse({
+  verification = await verifyAuthenticationResponse({
     credential: body,
     expectedChallenge,
     expectedOrigin: origin,
@@ -263,17 +291,17 @@ try {
   return res.status(400).send({ error: error.message });
 }
 
-const { verified, assertionInfo } = verification;
+const { verified, authenticationInfo } = verification;
 ```
 
 :::tip Support for multiple origins and RP IDs
-SimpleWebAuthn optionally supports verifying assertions from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
+SimpleWebAuthn optionally supports verifying authentications from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
 :::
 
 If `verification.verified` is true, then update the user's authenticator's `counter` property in the DB:
 
 ```ts
-const { newCounter } = assertionInfo;
+const { newCounter } = authenticationInfo;
 
 saveUpdatedAuthenticatorCounter(authenticator, newCounter);
 ```
@@ -285,69 +313,126 @@ appropriate UI:
 return { verified };
 ```
 
+## Advanced functionality
+
+:::caution
+**The following functionality is opt-in and is not required for typical use!** SimpleWebAuthn remains focused on simplifying working with the WebAuthn API, and the functionality covered so far will serve the majority of developers' use cases.
+
+Some developers, though, may have more demanding requirements that require a higher degree of control over the types of  authenticators users may utilize when registering or authenticating. The features below enable such advanced uses of SimpleWebAuthn.
+:::
+
 ## MetadataService
 
-Metadata statements maintained by the FIDO Alliance can be referenced during attestation to cross-reference additional information about authenticators that may be used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
+Metadata statements maintained by the FIDO Alliance can be referenced during registration to cross-reference additional information about authenticators used with SimpleWebAuthn. These statements contain cryptographically-signed "guarantees" about authenticators and what they are capable of, according to their manufacturer.
 
-This package includes support for [FIDO Metadata Service (MDS)](https://fidoalliance.org/metadata/) metadata statements via `MetadataService`:
+SimpleWebauthn includes support for the [FIDO Alliance Metadata Service (version 3.0)](https://fidoalliance.org/metadata/) API via its `MetadataService`:
 
 ```ts
-import {
-  MetadataService,
-} from '@simplewebauthn/server';
+import { MetadataService } from '@simplewebauthn/server';
 ```
 
-This service contains all of the logic necessary to interact with the MDS API, including signed data verification and automatic periodic refreshing of metadata.
+This singleton service contains all of the logic necessary to interact with the MDS API, including signed data verification and automatic periodic refreshing of metadata statements.
 
 :::info
 Use of MetadataService is _not_ required to use @simplewebauthn/server! This is opt-in functionality that enables a more strict adherence to FIDO specifications and may not be appropriate for your use case.
 :::
 
-### Registering for an MDS API token
+### `initialize()`
 
-Requests to the MDS API require an access token. Head to https://mds2.fidoalliance.org/tokens/ to register for a free access token.
+Simply call `initialize()` to enable `MetadataService` configured to use the official MDS API:
 
-:::tip
-When asked for an Organization Name, "Self" works just fine.
-:::
+```js
+import { MetadataService } from '@simplewebauthn/server';
 
-You will receive your access token via email.
+MetadataService.initialize().then(() => {
+  console.log('🔐 MetadataService initialized');
+});
+```
 
-### Initializing MetadataService
+`MetadataService` can also be initialized with optional URLs to other MDS-compatible servers, any local metadata statements you may maintain, or both:
 
-Once you have an access token, you can then point `MetadataService` to the official MDS API:
+```js
+import { MetadataService, MetadataStatement } from '@simplewebauthn/server';
 
-```ts
-// Use `dotenv` or similar to pull in the API token as an env var
-const mdsAPIToken = process.env.MDS_API_TOKEN;
+const statements: MetadataStatement[] = [];
 
-// Initialize MetadataService with MDS connection info
+// Load in statements from JSON files
+try {
+  const mdsMetadataPath = './metadata-statements';
+  const mdsMetadataFilenames = fs.readdirSync(mdsMetadataPath);
+  for (const statementPath of mdsMetadataFilenames) {
+    if (statementPath.endsWith('.json')) {
+      const contents = fs.readFileSync(`${mdsMetadataPath}/${statementPath}`, 'utf-8');
+      statements.push(JSON.parse(contents));
+    }
+  }
+} catch (err) {
+  // pass
+}
+
 MetadataService.initialize({
-  mdsServers: [
-    {
-      url: `https://mds2.fidoalliance.org/?token=${mdsAPIToken}`,
-      rootCertURL: 'https://mds.fidoalliance.org/Root.cer',
-      metadataURLSuffix: `?token=${mdsAPIToken}`,
-    },
-  ],
+  mdsServers: ['https://mds-compatible-server.example.com'],
+  statements: statements,
 }).then(() => {
   console.log('🔐 MetadataService initialized');
 });
 ```
 
-## Supported Attestation Formats
+Once `MetadataService` is initialized, `verifyRegistrationResponse()` will reference MDS metadata statements and error out if it receives authenticator responses with unexpected values.
 
-SimpleWebAuthn supports [all current WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
+:::caution
+Make sure to set `attestationType` to `"direct"` when calling `generateRegistrationOptions()` to leverage the full power of metadata statements!
+:::
 
-- **Packed**
-- **TPM**
-- **Android Key**
-- **Android SafetyNet**
-- **FIDO U2F**
-- **None**
-- **Apple**
+## SettingsService
 
-Once `MetadataService` is initialized, `verifyAttestationResponse()` will reference MDS metadata statements and error out if it receives authenticator responses with unexpected values.
+The `SettingsService` singleton offers various methods for customizing SimpleWebAuthn's functionality.
+
+### `setRootCertificates()`
+
+Some registration response attestation statements can be validated via root certificates prescribed by the company responsible for the format. It is possible to use `SettingsService` to register custom root certificates that will be used for validating certificate paths in subsequent registrations with matching attestation formats:
+
+```ts
+import { SettingsService } from '@simplewebauthn/server';
+
+// A Buffer, or PEM-formatted certificate string
+const appleCustomRootCert: Buffer | string = '...';
+SettingsService.setRootCertificates({
+  identifier: 'apple',
+  certificates: [appleCustomRootCert],
+});
+```
+
+The following values for `identifier` are supported:
+
+```
+"android-key" | "android-safetynet" | "apple" | "fido-u2f" | "packed" | "tpm" | "mds"
+```
+
+If root certificates have not been registered for an attestation statement format (or you set an empty array to one [e.g. `[]`]) then certificate path validation will not occur.
+
+:::info
+This method can come in handy when an attestation format requires use of a root certificate that SimpleWebAuthn has not yet been updated to use.
+:::
+
+SimpleWebAuthn includes known root certificates for the following such attestation formats:
+
+- `"android-key"`
+- `"android-safetynet"`
+- `"apple"`
+- `"mds"` (for use with `MetadataService` to validate MDS BLOBs)
+
+### `getRootCertificates()`
+
+This method returns existing root certificates for a specific identifier:
+
+```js
+import { SettingsService } from '@simplewebauthn/server';
+
+const appleCerts: string[] = SettingsService.getRootCertificates({ identifier: 'apple' });
+```
+
+The returned certificates will be PEM-formatted strings;
 
 ## Additional API Documentation
 
