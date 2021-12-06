@@ -24,8 +24,13 @@ import SimpleWebAuthnBrowser from '@simplewebauthn/browser';
 The Browser package can also be installed using a traditional `<script>` tag. Copy-paste the code below into your HTML page's `<head>` element to begin:
 
 ```html
-<script src="https://unpkg.com/@simplewebauthn/browser/dist/simplewebauthn-browser.min.js"></script>
+<script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
 ```
+
+**NOTE:** If using this in production, we recommend that you...
+
+1. Visit the URL in the above `<script>` tag to get the exact-version URL that it redirects you to.
+2. Enter that versioned URL into the [SRI Hash Generator](https://www.srihash.org/) to create a version of that script tag that includes a subresource integrity checksum, to ensure you are always getting the exact, unmodified version of that file that you requested.
 
 The library's methods will be available on the global `SimpleWebAuthnBrowser` object.
 
