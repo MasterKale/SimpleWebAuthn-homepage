@@ -30,7 +30,7 @@ The Browser package can also be installed using a traditional `<script>` tag. Co
 **NOTE:** If using this in production, we recommend that you...
 
 1. Visit the URL in the above `<script>` tag to get the exact-version URL that it redirects you to.
-2. Enter that versioned URL into the [SRI Hash Generator](https://www.srihash.org/) to create a version of that script tag that includes a subresource integrity checksum, to ensure you are always getting the exact, unmodifier version of that file that you requested.
+2. Enter that versioned URL into the [SRI Hash Generator](https://www.srihash.org/) to create a version of that script tag that includes a subresource integrity checksum, to ensure you are always getting the exact, unmodified version of that file that you requested.
 
 The library's methods will be available on the global `SimpleWebAuthnBrowser` object.
 
