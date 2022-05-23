@@ -9,9 +9,10 @@
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-beta.5",
-    "@docusaurus/mdx-loader": "^2.0.0-beta.5",
-    "@docusaurus/preset-classic": "^2.0.0-beta.5",
+    "@docusaurus/core": "^2.0.0-beta.20",
+    "@docusaurus/mdx-loader": "^2.0.0-beta.20",
+    "@docusaurus/preset-classic": "^2.0.0-beta.20",
+    "@docusaurus/theme-common": "^2.0.0-beta.20",
     "@mdx-js/react": "^1.6.22",
     "clsx": "^1.1.1",
     "prism-react-renderer": "^1.2.1",

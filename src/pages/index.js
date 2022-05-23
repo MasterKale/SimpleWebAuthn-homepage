@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
-import useThemeContext from '@theme/hooks/useThemeContext';
+import { useColorMode } from '@docusaurus/theme-common';
 
 import styles from './styles.module.css';
 
@@ -44,7 +44,9 @@ const features = [
 ];
 
 function Feature({ imageUrl, imageUrlDark, title, description }) {
-  const { isDarkTheme } = useThemeContext();
+  const { colorMode } = useColorMode();
+
+  const isDarkTheme = colorMode === 'dark';
 
   let imgUrl;
   if (isDarkTheme && imageUrlDark) {

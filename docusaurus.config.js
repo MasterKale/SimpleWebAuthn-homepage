@@ -68,7 +68,8 @@ module.exports = {
       darkTheme: require('prism-react-renderer/themes/vsDark'),
     },
     algolia: {
-      apiKey: '0c7c51fc700e55ff051a454fec072878',
+      appId: 'E0FZF1RZXD',
+      apiKey: '1493c1848b6dea84a2a52014d5e68c10',
       indexName: 'simplewebauthn',
     },
   },
@@ -76,7 +77,6 @@ module.exports = {
     [
       '@docusaurus/preset-classic',
       {
-        sidebarCollapsible: false,
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
