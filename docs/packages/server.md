@@ -131,6 +131,24 @@ Power users can optionally generate and pass in their own unique challenges as `
 
 :::
 
+### 1a. Supported Attestation Formats
+
+If `attestationType` is set to `"direct"` when generating registration options, the authenticator will return a more complex response containing an "attestation statement". This statement includes additional verifiable information about the authenticator.
+
+Attestation statements are returned in one of several different formats. SimpleWebAuthn supports [all current WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
+
+- **Packed**
+- **TPM**
+- **Android Key**
+- **Android SafetyNet**
+- **Apple**
+- **FIDO U2F**
+- **None**
+
+:::info
+Attestation statements are an advanced aspect of WebAuthn. You can ignore this concept if you're not particular about the kinds of authenticators your users can use for registration and authentication.
+:::
+
 ### 2. Verify registration response
 
 The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.md#startregistration) method and then verify it:
@@ -156,16 +174,26 @@ try {
   return res.status(400).send({ error: error.message });
 }
 
-const { verified, registrationInfo } = verification;
+const { verified } = verification;
 ```
 
 :::tip Support for multiple origins and RP IDs
 SimpleWebAuthn optionally supports verifying registrations from multiple origins and RP IDs! Simply pass in an **array** of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
 :::
 
-If `verification.verified` is true, then save the credential data in `registrationInfo` to the database:
+When finished, it's a good idea to return the verification status to the browser to display
+appropriate UI:
 
 ```ts
+return { verified };
+```
+
+### 3. Post-registration responsibilities
+
+Assuming `verification.verified` is true then RP's must, at the very least, save the credential data in `registrationInfo` to the database:
+
+```ts
+const { registrationInfo } = verification;
 const { credentialPublicKey, credentialID, counter } = registrationInfo;
 
 const newAuthenticator: Authenticator = {
@@ -179,29 +207,18 @@ const newAuthenticator: Authenticator = {
 saveNewUserAuthenticatorInDB(user, newAuthenticator);
 ```
 
-When finished, it's a good idea to return the verification status to the browser to display
-appropriate UI:
+**Values:**
 
-```ts
-return { verified };
-```
+- `credentialID` (`bytes`): A unique identifier for the credential
+- `credentialPublicKey` (`bytes`): The public key bytes, used for subsequent authentication signature verification
+- `counter` (`number`): The number of times the authenticator has been used on this site so far
 
-### Supported Attestation Formats
+:::info Regarding `counter`
+Tracking the ["signature counter"](https://www.w3.org/TR/webauthn/#signature-counter) allows Relying Parties to potentially identify misbehaving authenticators, or cloned authenticators. The counter on subsequent authentications should only ever increment; if your stored counter is greater than zero, and a subsequent authentication response's counter is the same or lower, then perhaps the authenticator just used to authenticate is in a compromised state.
 
-If `attestationType` is set to `"direct"` when generating registration options, the authenticator will return a more complex response containing an "attestation statement". This statement includes additional verifiable information about the authenticator.
+It's also not unexpected for certain high profile authenticators, like Touch ID on macOS, to always return `0` (zero) for the signature counter. In this case there is nothing an RP can really do to detect a cloned authenticator, especially in the context of [multi-device credentials](https://fidoalliance.org/apple-google-and-microsoft-commit-to-expanded-support-for-fido-standard-to-accelerate-availability-of-passwordless-sign-ins/).
 
-Attestation statements are returned in one of several different formats. SimpleWebAuthn supports [all current WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
-
-- **Packed**
-- **TPM**
-- **Android Key**
-- **Android SafetyNet**
-- **Apple**
-- **FIDO U2F**
-- **None**
-
-:::info
-Attestation statements are an advanced aspect of WebAuthn. You can ignore this concept if you're not particular about the kinds of authenticators your users can use for registration and authentication.
+**@simplewebauthn/server** knows how to properly check the signature counter on subsequent authentications. RP's should only need to remember to store the value after registration, and then feed it back into `startAuthentication()` when the user attempts a subsequent login. RP's should remember to update the credential's counter value in the database afterwards. See [Post-authentication responsibilities](packages/server.md#3-post-authentication-responsibilities) below for how to do so.
 :::
 
 ## Authentication
@@ -291,19 +308,7 @@ try {
   return res.status(400).send({ error: error.message });
 }
 
-const { verified, authenticationInfo } = verification;
-```
-
-:::tip Support for multiple origins and RP IDs
-SimpleWebAuthn optionally supports verifying authentications from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
-:::
-
-If `verification.verified` is true, then update the user's authenticator's `counter` property in the DB:
-
-```ts
-const { newCounter } = authenticationInfo;
-
-saveUpdatedAuthenticatorCounter(authenticator, newCounter);
+const { verified } = verification;
 ```
 
 When finished, it's a good idea to return the verification status to the browser to display
@@ -311,6 +316,21 @@ appropriate UI:
 
 ```ts
 return { verified };
+```
+
+:::tip Support for multiple origins and RP IDs
+SimpleWebAuthn optionally supports verifying authentications from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
+:::
+
+### 3. Post-authentication responsibilities
+
+Assuming `verification.verified` is true, then update the user's authenticator's `counter` property in the DB:
+
+```ts
+const { authenticationInfo } = verification;
+const { newCounter } = authenticationInfo;
+
+saveUpdatedAuthenticatorCounter(authenticator, newCounter);
 ```
 
 ## Advanced functionality
