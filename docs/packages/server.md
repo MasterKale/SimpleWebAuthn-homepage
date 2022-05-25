@@ -131,6 +131,24 @@ Power users can optionally generate and pass in their own unique challenges as `
 
 :::
 
+### 1a. Supported Attestation Formats
+
+If `attestationType` is set to `"direct"` when generating registration options, the authenticator will return a more complex response containing an "attestation statement". This statement includes additional verifiable information about the authenticator.
+
+Attestation statements are returned in one of several different formats. SimpleWebAuthn supports [all current WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
+
+- **Packed**
+- **TPM**
+- **Android Key**
+- **Android SafetyNet**
+- **Apple**
+- **FIDO U2F**
+- **None**
+
+:::info
+Attestation statements are an advanced aspect of WebAuthn. You can ignore this concept if you're not particular about the kinds of authenticators your users can use for registration and authentication.
+:::
+
 ### 2. Verify registration response
 
 The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.md#startregistration) method and then verify it:
@@ -201,24 +219,6 @@ Tracking the ["signature counter"](https://www.w3.org/TR/webauthn/#signature-cou
 It's also not unexpected for certain high profile authenticators, like Touch ID on macOS, to always return `0` (zero) for the signature counter. In this case there is nothing an RP can really do to detect a cloned authenticator, especially in the context of [multi-device credentials](https://fidoalliance.org/apple-google-and-microsoft-commit-to-expanded-support-for-fido-standard-to-accelerate-availability-of-passwordless-sign-ins/).
 
 **@simplewebauthn/server** knows how to properly check the signature counter on subsequent authentications. RP's should only need to remember to store the value after registration, and then feed it back into `startAuthentication()` when the user attempts a subsequent login. RP's should also remember to update the credential's counter value in the database after subsequent authentications. See [Post-authentication responsibilities](packages/server.md#3-post-authentication-responsibilities) below for how to do so.
-:::
-
-### Supported Attestation Formats
-
-If `attestationType` is set to `"direct"` when generating registration options, the authenticator will return a more complex response containing an "attestation statement". This statement includes additional verifiable information about the authenticator.
-
-Attestation statements are returned in one of several different formats. SimpleWebAuthn supports [all current WebAuthn attestation formats](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats), including:
-
-- **Packed**
-- **TPM**
-- **Android Key**
-- **Android SafetyNet**
-- **Apple**
-- **FIDO U2F**
-- **None**
-
-:::info
-Attestation statements are an advanced aspect of WebAuthn. You can ignore this concept if you're not particular about the kinds of authenticators your users can use for registration and authentication.
 :::
 
 ## Authentication
