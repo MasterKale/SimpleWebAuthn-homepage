@@ -198,9 +198,9 @@ saveNewUserAuthenticatorInDB(user, newAuthenticator);
 :::info Regarding `counter`
 Tracking the ["signature counter"](https://www.w3.org/TR/webauthn/#signature-counter) allows Relying Parties to potentially identify misbehaving authenticators, or cloned authenticators. The counter on subsequent authentications should only ever increment; if your stored counter is greater than zero, and a subsequent authentication response's counter is the same or lower, then perhaps the authenticator just used to authenticate is in a compromised state.
 
-Unfortunately it's not uncommon for an authenticator to always return a constant `0` (zero) value for the signature counter. In this case there is nothing an RP can really do to detect a cloned authenticator, especially in the context of [multi-device credentials](https://fidoalliance.org/apple-google-and-microsoft-commit-to-expanded-support-for-fido-standard-to-accelerate-availability-of-passwordless-sign-ins/).
+It's also not unexpected for certain high profile authenticators, like Touch ID on macOS, to always return `0` (zero) for the signature counter. In this case there is nothing an RP can really do to detect a cloned authenticator, especially in the context of [multi-device credentials](https://fidoalliance.org/apple-google-and-microsoft-commit-to-expanded-support-for-fido-standard-to-accelerate-availability-of-passwordless-sign-ins/).
 
-**@simplewebauthn/server** already knows how to properly check the signature counter on subsequent authentications. RP's should only need to remember to store the value after registration, and then eventually feed it back into [`startAuthentication()`](packages/browser.md#startAuthentication) when the user attempts to log in.
+**@simplewebauthn/server** knows how to properly check the signature counter on subsequent authentications. RP's should only need to remember to store the value after registration, and then feed it back into `startAuthentication()` when the user attempts a subsequent login. RP's should also remember to update the credential's counter value in the database after subsequent authentications. See [Post-authentication responsibilities](packages/server.md#3-post-authentication-responsibilities) below for how to do so.
 :::
 
 ### Supported Attestation Formats
