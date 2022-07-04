@@ -123,7 +123,7 @@ setUserCurrentChallenge(user, options.challenge);
 return options;
 ```
 
-These options can be passed directly into [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.md#startregistration) method.
+These options can be passed directly into [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.mdx#startregistration) method.
 
 :::tip Support for custom challenges
 
@@ -151,7 +151,7 @@ Attestation statements are an advanced aspect of WebAuthn. You can ignore this c
 
 ### 2. Verify registration response
 
-The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.md#startregistration) method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startRegistration()`](packagesx#startregistration) method and then verify it:
 
 ```ts
 const { body } = req;
@@ -267,7 +267,7 @@ setUserCurrentChallenge(user, options.challenge);
 return options;
 ```
 
-These options can be passed directly into [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.md#startAuthentication) method.
+These options can be passed directly into [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.mdx#startAuthentication) method.
 
 :::tip Support for custom challenges
 
@@ -277,7 +277,7 @@ Power users can optionally generate and pass in their own unique challenges as `
 
 ### 2. Verify authentication response
 
-The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.md#startAuthentication) method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.mdx#startAuthentication) method and then verify it:
 
 ```ts
 const { body } = req;
