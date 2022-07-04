@@ -151,7 +151,7 @@ Attestation statements are an advanced aspect of WebAuthn. You can ignore this c
 
 ### 2. Verify registration response
 
-The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startRegistration()`](packagesx#startregistration) method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.mdx#startregistration) method and then verify it:
 
 ```ts
 const { body } = req;
