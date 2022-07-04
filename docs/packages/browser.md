@@ -231,6 +231,16 @@ import { browserSupportsWebauthn } from '@simplewebauthn/browser';
 </script>
 ```
 
+### `browserSupportsWebAuthnAutofill()`
+
+This helper method checks for a browser's support for "[Conditional UI](https://github.com/w3c/webauthn/wiki/Explainer:-WebAuthn-Conditional-UI)". When this feature is present, the browser is capable of presenting a list of the user's discoverable credentials in the browser's native autofill prompt.
+
+```js
+import { browserSupportsWebAuthnAutofill } from '@simplewebauthn/browser';
+```
+
+This method is automatically called by `startAuthentication()` when `true` is passed as a second argument, but it may still be independently useful in, for example, single-page applications that may seek to initiate authentication after page load.
+
 ### `platformAuthenticatorIsAvailable()`
 
 "Platform authenticators" are known by most users by their brand names: **Touch ID**, **Face ID**, **Windows Hello**...this asynchronous method helps you identify opportunities in which these types of authenticators can be used by your users:
