@@ -2,6 +2,8 @@
 title: Browser
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 ## Installing
 
 ### npm
@@ -202,6 +204,65 @@ That said, this general sequence of events should be easily adaptable to the fro
   });
 </script>
 ```
+
+#### Browser autofill, a.k.a. Conditional UI
+
+A second `useBrowserAutofill` argument can be set to `true` to set up support for credential selection via the browser's native autofill popup:
+
+```html
+<head>
+  <!-- ... -->
+  <script>
+    const { startAuthentication } = SimpleWebAuthnBrowser;
+
+    fetch('/generate-authentication-options')
+      .then((options) => {
+        // Note the `true` argument here
+        startAuthentication(options, true)
+          .then(authResp => sendToServerForVerificationAndLogin)
+          .catch(err => handleError);
+      });
+  </script>
+</head>
+<body>
+  <!-- ... -->
+  <label for="username">Username</label>
+  <input type="text" name="username" autocomplete="webauthn">
+```
+
+:::info
+The `"webauthn"` value in the `autocomplete` attribute is **required** for autofill to work. `startAuthentication()` will error out if an `<input>` with this autocomplete value cannot be found on the page.
+
+`"webauthn"` **can** be combined with other typical `autocomplete` values, including `"username"` and `"password"`, and the order doesn't matter. The following are all valid:
+
+```
+autocomplete="webauthn"
+autocomplete="webauthn username"
+autocomplete="webauthn password"
+autocomplete="username webauthn"
+autocomplete="password webauthn"
+```
+:::
+
+:::caution
+**Guidance from platform vendors indicates that it is important to initialize WebAuthn's Conditional UI experience as soon as possible.** Placing this logic in `<head>` should give browsers enough time to query authenticators for any discoverable credentials to display to the user. It may also work to delay painting UI For N milliseconds to achieve the same thing in something like a single-page app that would trigger this experience some time after page load. It's still early days for this capability, though, and different browsers may have different quirks while the feature evolves.
+
+This new "pending" WebAuthn request will be automatically cancelled on a subsequent execution of `startAuthentication()` in, for example, a click handler that triggers the browser's typical "modal" WebAuthn experience.
+
+Conditional UI is still a nascent capability, but this method should be pretty reliable since the API is largely settled. This new logic has been successfully tested in both **Chrome Canary v103** and **Safari 16.0 in the macOS Ventura beta**.
+:::
+
+When supported, users can quickly authenticate by selecting a credential when interacting with the `<input>`:
+
+**Chrome Canary v103:**
+
+<img alt="Conditional UI prompt in Chrome Canary v103" src={useBaseUrl('img/docs/conditional-ui/chrome-canary-103.png')} />
+
+**Safari 16.0:**
+
+<img alt="Conditional UI prompt in Chrome Canary v103" src={useBaseUrl('img/docs/conditional-ui/safari-macos-ventura.jpg')} />
+
+The selection of a credential from this popup will resolve the Promise returned by `startAuthentication()`, at which point the response can be submitted to the server for verification like usual. If verification succeeds, then the user can be logged in.
 
 ### `browserSupportsWebauthn()`
 
