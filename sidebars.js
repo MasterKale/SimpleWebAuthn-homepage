@@ -1,5 +1,5 @@
 module.exports = {
-  firstSidebar: {
+  docsSidebar: {
     SimpleWebAuthn: [
       'simplewebauthn/intro',
       'simplewebauthn/philosophy',
@@ -10,6 +10,7 @@ module.exports = {
       'packages/types',
     ],
     'Advanced Guides': [
+      'advanced/passkeys',
       'advanced/example-project',
       'advanced/supported-devices',
       'advanced/edge-browser',
