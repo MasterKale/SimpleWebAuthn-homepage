@@ -10,7 +10,7 @@ module.exports = {
     navbar: {
       title: 'SimpleWebAuthn',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'SimpleWebAuthn Logo',
         src: 'img/logo_favicon.png',
       },
       items: [

@@ -6,7 +6,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Introduction
 
-The FIDO® Alliance offers a suite of tests known as the ["Conformance Self-Validating Testing"](https://fidoalliance.org/certification/functional-certification/conformance/). These tests enable developers to verify their Relying Party's (RP) adherence to FIDO specifications.
+The FIDO® Alliance offers a suite of tests known as the ["Conformance Self-Validation Testing"](https://fidoalliance.org/certification/functional-certification/conformance/). These tests enable developers to verify their Relying Party's (RP) adherence to FIDO specifications.
 
 The WebAuthn API is built on top of FIDO2, and so implementations of WebAuthn can also become FIDO conformant. WebAuthn implementers that go this extra mile add an additional level of validation of the authenticators that interact with their RP.
 
@@ -117,7 +117,7 @@ You may see a series of "Failed to fetch" errors:
 
 <img alt="FIDO2 test failed to fetch error" src={useBaseUrl('img/docs/fido-conformance/error-failed-to-fetch.png')} />
 
-**Solution:** Make sure the server is available at [https://localhost](https://localhost), and that you've [activated the additional FIDO Conformance-specific routes](#activating-additional-routes).
+**Solution:** Make sure the server is available at [http://localhost:8000](http://localhost:8000), and that you've [activated the additional FIDO Conformance-specific routes](#activating-additional-routes).
 
 ### "Unexpected token &lt; in JSON at position 0"
 

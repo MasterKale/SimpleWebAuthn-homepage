@@ -14,8 +14,8 @@ const features = [
     imageUrl: 'img/2FA.svg',
     description: (
       <>
-        It's in the title! SimpleWebAuthn aims to make it as easy as possible to add advanced
-        WebAuthn-powered security to your websites so that you can move on to the fun stuff.
+        It's in the title! SimpleWebAuthn makes it as easy as possible to add WebAuthn-powered
+        passkeys to your websites so that you can move on to the fun stuff.
       </>
     ),
   },
