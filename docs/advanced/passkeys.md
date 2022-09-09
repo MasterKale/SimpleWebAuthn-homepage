@@ -72,7 +72,7 @@ No changes are required.
 
 ### startAuthentication()
 
-No changes are required here.
+No changes are required.
 
 ...Unless you are interested in leveraging a new capability coming to WebAuthn in almost all modern browsers that's known as "Conditional UI". Conditional UI gives the browser a chance to find and suggest to the user credentials that they can select to then present to you for authentication, all via the browser's native autofill API.
 
