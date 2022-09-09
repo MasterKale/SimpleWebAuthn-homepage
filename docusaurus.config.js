@@ -10,7 +10,7 @@ module.exports = {
     navbar: {
       title: 'SimpleWebAuthn',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'SimpleWebAuthn Logo',
         src: 'img/logo_favicon.png',
       },
       items: [
@@ -80,6 +80,7 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
+          sidebarCollapsed: false,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
