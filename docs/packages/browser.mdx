@@ -264,15 +264,15 @@ When supported, users can quickly authenticate by selecting a credential when in
 
 The selection of a credential from this popup will resolve the Promise returned by `startAuthentication()`, at which point the response can be submitted to the server for verification like usual. If verification succeeds, then the user can be logged in.
 
-### `browserSupportsWebauthn()`
+### `browserSupportsWebAuthn()`
 
 This helper method is included in this package to help preemptively check for the browser's ability to make WebAuthn API calls:
 
 ```js
-import { browserSupportsWebauthn } from '@simplewebauthn/browser';
+import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 ```
 
-`startRegistration()` and `startAuthentication()` both call this method internally. In some scenarios, though, it may be more desirable to hide UI when the page loads and a call to `browserSupportsWebauthn()` returns false:
+`startRegistration()` and `startAuthentication()` both call this method internally. In some scenarios, though, it may be more desirable to hide UI when the page loads and a call to `browserSupportsWebAuthn()` returns false:
 
 ```html
 <script>
@@ -280,9 +280,9 @@ import { browserSupportsWebauthn } from '@simplewebauthn/browser';
   const elemSuccess = document.getElementById('success');
   const elemError = document.getElementById('error');
 
-  const { browserSupportsWebauthn } = SimpleWebAuthnBrowser;
+  const { browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 
-  if (!browserSupportsWebauthn()) {
+  if (!browserSupportsWebAuthn()) {
     elemBegin.style.display = 'none';
     elemError.innerText = 'It seems this browser does not support WebAuthn...';
     return;
