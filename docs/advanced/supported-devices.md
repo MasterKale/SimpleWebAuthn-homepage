@@ -12,6 +12,7 @@ Here are combinations of OS's, browsers, and authenticators that have been succe
 | :------ | :-----: | --------------------------------------------------------------:|
 | macOS   | Firefox |           Yubikey Security Key NFC (USB), Yubikey 5Ci, SoloKey |
 | macOS   | Chrome  | Touch ID, Yubikey Security Key NFC (USB), Yubikey 5Ci, SoloKey |
+| macOS   | Safari  |                                                     Yubikey 5C |
 | iOS     | All     | Face ID, Touch ID, Yubikey Security Key NFC (NFC), Yubikey 5Ci |
 | Android | Chrome  |                                     Fingerprint Scanner, caBLE |
 | Android | Firefox |                                                     Screen PIN |
