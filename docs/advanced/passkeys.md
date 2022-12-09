@@ -42,10 +42,12 @@ const options = generateRegistrationOptions({
     // "Discoverable credentials" used to be called "resident keys". The
     // old name persists in the options passed to `navigator.credentials.create()`.
     residentKey: 'required',
-    userVerification: 'required',
+    userVerification: 'preferred',
   },
 });
 ```
+
+User verification is `"preferred"` here because it smooths out potential frictions if a user attempts to use passkeys on a device without a biometric sensor. See ["A note about user verification" on passkeys.dev](https://passkeys.dev/docs/use-cases/bootstrapping/#a-note-about-user-verification) for more context. The actual enforcement of user verification being required for proper passwordless support happens below during response verification.
 
 ### verifyRegistrationResponse()
 
@@ -70,9 +72,11 @@ Signs that a passkey were created include the following values returned from thi
 ```ts
 const options = generateAuthenticationOptions({
   // ...
-  userVerification: 'required',
+  userVerification: 'preferred',
 });
 ```
+
+User verification is `"preferred"` here because it smooths out potential frictions if a user attempts to use passkeys on a device without a biometric sensor. See ["A note about user verification" on passkeys.dev](https://passkeys.dev/docs/use-cases/bootstrapping/#a-note-about-user-verification) for more context. The actual enforcement of user verification being required for proper passwordless support happens below during response verification.
 
 ### verifyAuthenticationResponse()
 
