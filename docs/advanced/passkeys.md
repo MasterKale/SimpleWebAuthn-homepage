@@ -39,17 +39,13 @@ import { generateRegistrationOptions } from '@simplewebauthn/server';
 const options = generateRegistrationOptions({
   // ...
   authenticatorSelection: {
+    // "Discoverable credentials" used to be called "resident keys". The
+    // old name persists in the options passed to `navigator.credentials.create()`.
     residentKey: 'required',
     userVerification: 'required',
   },
 });
 ```
-
-"Discoverable credentials" used to be called "resident keys". The old name persists in the options passed to `navigator.credentials.create()`.
-
-:::caution Regarding Android
-Android does not currently support the creation of discoverable credentials, and `residentKey: 'required'` will cause all current Android devices to fail WebAuthn registration. Support for this and other modern FIDO2 capabilities will launch as part of Google's own passkeys implementation sometime later this year.
-:::
 
 ### verifyRegistrationResponse()
 
