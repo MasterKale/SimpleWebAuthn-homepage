@@ -169,7 +169,7 @@ const expectedChallenge: string = getUserCurrentChallenge(user);
 let verification;
 try {
   verification = await verifyRegistrationResponse({
-    credential: body,
+    response: body,
     expectedChallenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
@@ -302,7 +302,7 @@ if (!authenticator) {
 let verification;
 try {
   verification = await verifyAuthenticationResponse({
-    credential: body,
+    response: body,
     expectedChallenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
