@@ -16,7 +16,7 @@ Below are the three platform authenticator vendors and known minimum versions of
 
 **Apple:** iOS 16, macOS 13 (Ventura, Safari-only)
 
-**Google:** TBD
+**Google:** Android 9+
 
 **Microsoft:** TBD
 
@@ -31,7 +31,7 @@ The high-level strategy here is to instruct the **authenticator** to do the foll
 1. **Generate a discoverable credential**. The authenticator must generate and internally store a credential mapped to (`rpID` + `userID`).
 2. **Perform user verification**. The authenticator must provide two authentication factors within a single authenticator interaction.
 
-### generateRegistrationOptions()
+### `generateRegistrationOptions()`
 
 ```ts
 import { generateRegistrationOptions } from '@simplewebauthn/server';
@@ -49,7 +49,7 @@ const options = generateRegistrationOptions({
 
 User verification is `"preferred"` here because it smooths out potential frictions if a user attempts to use passkeys on a device without a biometric sensor. See ["A note about user verification" on passkeys.dev](https://passkeys.dev/docs/use-cases/bootstrapping/#a-note-about-user-verification) for more context. The actual enforcement of user verification being required for proper passwordless support happens below during response verification.
 
-### verifyRegistrationResponse()
+### `verifyRegistrationResponse()`
 
 ```ts
 const verification = verifyRegistrationResponse({
@@ -67,7 +67,7 @@ Signs that a passkey were created include the following values returned from thi
 
 **These values can be stored in the database for a given credential** for later reference, to help with understanding rate of adoption of passkeys by your users and adjust your UX accordingly.
 
-### generateAuthenticationOptions()
+### `generateAuthenticationOptions()`
 
 ```ts
 const options = generateAuthenticationOptions({
@@ -78,7 +78,7 @@ const options = generateAuthenticationOptions({
 
 User verification is `"preferred"` here because it smooths out potential frictions if a user attempts to use passkeys on a device without a biometric sensor. See ["A note about user verification" on passkeys.dev](https://passkeys.dev/docs/use-cases/bootstrapping/#a-note-about-user-verification) for more context. The actual enforcement of user verification being required for proper passwordless support happens below during response verification.
 
-### verifyAuthenticationResponse()
+### `verifyAuthenticationResponse()`
 
 ```ts
 const authVerify = verifyAuthenticationResponse({
@@ -87,15 +87,50 @@ const authVerify = verifyAuthenticationResponse({
 });
 ```
 
+### Remembering challenges
+
+The `generateRegistrationOptions()` and `generateAuthenticationOptions()` methods both return a `challenge` value that will get signed by an authenticator and returned in the authenticator's response. The goal is for these `challenge` values to get passed back into the `verifyRegistrationResponse()` and `verifyAuthenticationResponse()` methods respectively as their `expectedChallenge` arguments.
+
+The question then becomes, "how do I keep track of these challenges between creating the options and verifying the response when the user isn't yet logged in?" This is particularly tricky with passkeys and conditional UI. During this "usernameless" authentication the user is encouraged to present *any* WebAuthn credential they possess for the site, instead of being told the the discrete list of credentials that they're able to use. If the user can't be known ahead of time, then how can the RP tell the user which credentials they can use for authentication?
+
+:::caution
+The following advice is **high-level** and avoids referencing specific frameworks and libraries (beyond SimpleWebAuthn) because every project is different. Please read the suggested course of action below, and then consider how it might be adapted to your project's architecture.
+:::
+
+#### Authentication
+
+One technique for tracking the challenge between options generation and response verification is to start a "session" for any user who views your login page.
+
+First, assign a random `sessionID` HTTP-only cookie when the page first loads. When the user attempts to authenticate, call **server**'s `generateAuthenticationOptions()` like normal and temporarily store the challenge somewhere (I like to use [Redis' setex()](https://redis.io/commands/setex/) and store challenges for five minutes [300000 ms]) with the `sessionID` as the key and `options.challenge` as the value. Return the options to the page and await a response.
+
+When the response comes in, look up the `challenge` by the `sessionID` cookie and attempt verification, with `challenge` passed in as `expectedChallenge` to `verifyAuthenticationResponse()`. **Make sure to delete the challenge so it can't be reused, even if verification fails, to prevent replay attacks!** If the authentication response succeeds then log the user in.
+
+#### Registration
+
+New user registration is a bit unique in that it requires "bootstrapping" the creation of the user's session, ideally after verifying that the new user is not a bot. RP's are thus recommended to seek verification of ownership of a unique "point of contact" that the new user has signed up for outside of your service (the point of contact can also help with account recovery in case of device loss.)
+
+A ["magic link"](https://postmarkapp.com/blog/magic-links) sent to an email address, then, is a particularly simple solution that can perform double duty:
+
+:::info Magic Link Example
+https://example.com/register?token=mHaikFuCzlQSfmVlIhSH6TY2IRwRYMcj
+:::
+
+1. Receiving the magic link confirms that the user is signing up with a valid email account that they have access to, and to which you can send correspondence for account management
+2. Clicking the magic link sends back the random, one-time "authorization code" that initiates a registration ceremony
+
+Once the user clicks the link, you can reasonably assume that the user is not a bot and can therefore register an authenticator to their new account.
+
+Challenge management during registration then looks very similar to the steps outlined above in the **Authentication** section, with one slight change: the "session" would be established just before calling `generateRegistrationOptions()`, **after verifying that the authorization code in the URL is valid and hasn't been used before**.
+
 ## Browser
 
 There isn't a whole lot that changes in how you call the browser methods if you want to support passkeys, as passkeys don't involve any changes in how WebAuthn is ultimately invoked.
 
-### startRegistration()
+### `startRegistration()`
 
 No changes are required.
 
-### startAuthentication()
+### `startAuthentication()`
 
 No changes are required.
 
