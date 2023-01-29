@@ -21,8 +21,8 @@ Don't fret if you don't already have a setup like this! The example project mock
 
 The example server is a Node server, so you'll need the following available on your machine:
 
-- Node v14.0.0+ ([install](https://nodejs.org/))
-  - Install the current LTS release if you're new to all of this
+- Node.js
+  - [Install the current LTS release](https://nodejs.org/en/download/) if you're new to all of this
   - The `npm` (Node Package Manager) executable comes with an installation of Node
 
 ### Downloading the code
