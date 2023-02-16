@@ -459,6 +459,41 @@ const appleCerts: string[] = SettingsService.getRootCertificates({ identifier: '
 
 The returned certificates will be PEM-formatted strings;
 
+## Troubleshooting
+
+Below are errors you may see while using this library, and potential solutions to them:
+
+### "Unrecognized name" error during authentication
+
+Authentication responses may unexpectedly error out during verification. This appears as the throwing of an "Unrecognized name" error from a call to `verifyAuthenticationResponse()` with the following stack trace:
+
+```
+DOMException [NotSupportedError]: Unrecognized name.
+    at new DOMException (node:internal/per_context/domexception:70:5)
+    at __node_internal_ (node:internal/util:477:10)
+    at normalizeAlgorithm (node:internal/crypto/util:220:15)
+    at SubtleCrypto.importKey (node:internal/crypto/webcrypto:503:15)
+    at importKey (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/iso/isoCrypto/importKey.ts:9:27)
+    at verifyOKP (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/iso/isoCrypto/verifyOKP.ts:57:30)
+    at Object.verify (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/iso/isoCrypto/verify.ts:31:21)
+    at verifySignature (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/verifySignature.ts:34:20)
+    at verifyAuthenticationResponse (/Users/swan/Developer/simplewebauthn/packages/server/src/authentication/verifyAuthenticationResponse.ts:206:36)
+    at async /Users/swan/Developer/simplewebauthn/packages/server/345.ts:26:24
+```
+
+This appears to be an issue with some environments running **versions of Node prior to v18 LTS**.
+
+To fix this, update your call to `generateRegistrationOptions()` to exclude `-8` (Ed25519) from the list of algorithms:
+
+```ts
+const options = generateRegistrationOptions({
+  // ...
+  supportedAlgorithmIDs: [-7, -257],
+});
+```
+
+You will then need to re-register any authenticators that generated credentials that caused this error.
+
 ## Additional API Documentation
 
 Lower-level API docs for this package are available here:
