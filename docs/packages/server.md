@@ -459,6 +459,10 @@ const appleCerts: string[] = SettingsService.getRootCertificates({ identifier: '
 
 The returned certificates will be PEM-formatted strings;
 
+## Troubleshooting
+
+Below are errors you may see while using this library, and potential solutions to them:
+
 ## Additional API Documentation
 
 Lower-level API docs for this package are available here:
