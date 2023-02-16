@@ -463,6 +463,35 @@ The returned certificates will be PEM-formatted strings;
 
 Below are errors you may see while using this library, and potential solutions to them:
 
+### "Unrecognized name" error during authentication
+
+It has been observed that some Node environments, running versions of Node prior to v18 LTS, are unable to validate authentication responses from authenticators that generated a credential public key during registration using the `-8` (Ed25519) algorithm.
+
+This will appear as the throwing of an "Unrecognized name" error with the following stack trace:
+
+```
+DOMException [NotSupportedError]: Unrecognized name.
+    at new DOMException (node:internal/per_context/domexception:70:5)
+    at __node_internal_ (node:internal/util:477:10)
+    at normalizeAlgorithm (node:internal/crypto/util:220:15)
+    at SubtleCrypto.importKey (node:internal/crypto/webcrypto:503:15)
+    at importKey (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/iso/isoCrypto/importKey.ts:9:27)
+    at verifyOKP (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/iso/isoCrypto/verifyOKP.ts:57:30)
+    at Object.verify (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/iso/isoCrypto/verify.ts:31:21)
+    at verifySignature (/Users/swan/Developer/simplewebauthn/packages/server/src/helpers/verifySignature.ts:34:20)
+    at verifyAuthenticationResponse (/Users/swan/Developer/simplewebauthn/packages/server/src/authentication/verifyAuthenticationResponse.ts:206:36)
+    at async /Users/swan/Developer/simplewebauthn/packages/server/345.ts:26:24
+```
+
+To fix this, update your call to `generateRegistrationOptions()` to exclude `-8` from the list of algorithms:
+
+```ts
+const options = generateRegistrationOptions({
+  // ...
+  supportedAlgorithmIDs: [-7, -257],
+});
+```
+
 ## Additional API Documentation
 
 Lower-level API docs for this package are available here:
