@@ -465,9 +465,7 @@ Below are errors you may see while using this library, and potential solutions t
 
 ### "Unrecognized name" error during authentication
 
-It has been observed that some Node environments, running versions of Node prior to v18 LTS, are unable to validate authentication responses from authenticators that generated a credential public key during registration using the `-8` (Ed25519) algorithm.
-
-This will appear as the throwing of an "Unrecognized name" error with the following stack trace:
+Authentication responses may unexpectedly error out during verification. This appears as the throwing of an "Unrecognized name" error from a call to `verifyAuthenticationResponse()` with the following stack trace:
 
 ```
 DOMException [NotSupportedError]: Unrecognized name.
@@ -483,7 +481,9 @@ DOMException [NotSupportedError]: Unrecognized name.
     at async /Users/swan/Developer/simplewebauthn/packages/server/345.ts:26:24
 ```
 
-To fix this, update your call to `generateRegistrationOptions()` to exclude `-8` from the list of algorithms:
+This appears to be an issue with some environments running **versions of Node prior to v18 LTS**.
+
+To fix this, update your call to `generateRegistrationOptions()` to exclude `-8` (Ed25519) from the list of algorithms:
 
 ```ts
 const options = generateRegistrationOptions({
@@ -491,6 +491,8 @@ const options = generateRegistrationOptions({
   supportedAlgorithmIDs: [-7, -257],
 });
 ```
+
+You will then need to re-register any authenticators that generated credentials that caused this error.
 
 ## Additional API Documentation
 
