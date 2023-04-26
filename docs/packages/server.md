@@ -39,9 +39,9 @@ type UserModel = {
  */
 type Authenticator = {
   // SQL: Encode to base64url then store as `TEXT`. Index this column
-  credentialID: Buffer;
+  credentialID: Uint8Array;
   // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...
-  credentialPublicKey: Buffer;
+  credentialPublicKey: Uint8Array;
   // SQL: Consider `BIGINT` since some authenticators return atomic timestamps as counters
   counter: number;
   // SQL: `VARCHAR(32)` or similar, longest possible value is currently 12 characters
@@ -420,8 +420,8 @@ Some registration response attestation statements can be validated via root cert
 ```ts
 import { SettingsService } from '@simplewebauthn/server';
 
-// A Buffer, or PEM-formatted certificate string
-const appleCustomRootCert: Buffer | string = '...';
+// A Uint8Array, or PEM-formatted certificate string
+const appleCustomRootCert: Uint8Array | string = '...';
 SettingsService.setRootCertificates({
   identifier: 'apple',
   certificates: [appleCustomRootCert],
