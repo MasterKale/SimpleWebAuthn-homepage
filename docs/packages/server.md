@@ -70,11 +70,6 @@ const origin = `https://${rpID}`;
 
 These will be referenced throughout registrations and authentications to ensure that authenticators generate and return credentials specifically for your server.
 
-:::info
-The following instructions are for setting up SimpleWebAuthn for 2FA support. Guides for "Passwordless"
-and "Usernameless" support are coming soon.
-:::
-
 ## Registration
 
 "Registration" is analogous to new account creation. Registration uses the following exported methods from this package:
