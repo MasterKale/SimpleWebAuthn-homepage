@@ -69,7 +69,7 @@ module.exports = {
     },
     algolia: {
       appId: 'E0FZF1RZXD',
-      apiKey: '1493c1848b6dea84a2a52014d5e68c10',
+      apiKey: '3780e98137ff937b60274da866ac2cc2',
       indexName: 'simplewebauthn',
     },
   },
