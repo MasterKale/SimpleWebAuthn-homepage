@@ -108,6 +108,10 @@ const options = generateRegistrationOptions({
   // Don't prompt users for additional information about the authenticator
   // (Recommended for smoother UX)
   attestationType: 'none',
+  // Specify the authenticator Selection. (Optional)
+  authenticatorSelection: {
+    authenticatorAttachment: 'platform',
+  },
   // Prevent users from re-registering existing authenticators
   excludeCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
