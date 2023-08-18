@@ -488,9 +488,3 @@ const options = generateRegistrationOptions({
 ```
 
 You will then need to re-register any authenticators that generated credentials that caused this error.
-
-## Additional API Documentation
-
-Lower-level API docs for this package are available here:
-
-https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_server.html

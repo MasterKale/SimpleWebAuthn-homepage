@@ -14,9 +14,3 @@ needed to incorporate WebAuthn into a website. The following packages are mainta
 An additional package is also included that contains shared TypeScript definitions:
 
 - [@simplewebauthn/typescript-types](packages/types.md)
-
-**API Documentation**
-
-In-depth, auto-generated API documentation for all of the packages in this project is available
-here:
-https://api-docs.simplewebauthn.dev/

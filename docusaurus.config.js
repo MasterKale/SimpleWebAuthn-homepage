@@ -15,12 +15,6 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/',
-          activeBasePath: 'docs',
-          label: 'Docs',
-          position: 'left',
-        },
-        {
           href: 'https://debugger.simplewebauthn.dev',
           label: 'Debugger',
           position: 'left',

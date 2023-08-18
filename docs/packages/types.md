@@ -12,9 +12,3 @@ This package is available on **npm**:
 ```bash
 npm install --save-dev @simplewebauthn/typescript-types
 ```
-
-## Usage
-
-An up-to-date listing of types contained within this package are available here:
-
-https://api-docs.simplewebauthn.dev/modules/_simplewebauthn_typescript_types.html
