@@ -2,23 +2,34 @@
 title: Server
 ---
 
-## Installing
+## Installation
 
+### Node LTS 16.x or higher
 This package is available on **npm**:
 
 ```bash
 npm install @simplewebauthn/server
 ```
 
-It can then be imported into all types of Node projects thanks to its support for both ES Module and CommonJS import patterns:
+It can then be imported into all types of Node applications thanks to its support for **both CommonJS and [ECMAScript modules (ESM)](https://nodejs.org/api/esm.html#enabling)** projects:
 
 ```ts
-// ES Module (TypeScript, Babel, etc...)
-import SimpleWebAuthnServer from '@simplewebauthn/server';
-
 // CommonJS (NodeJS)
 const SimpleWebAuthnServer = require('@simplewebauthn/server');
+
+// ES Module (NodeJS w/module support, TypeScript, Babel, etc...)
+import SimpleWebAuthnServer from '@simplewebauthn/server';
 ```
+
+### Deno v1.33.x or higher
+
+This package is also available for installation in **Deno** projects from **deno.land/x**:
+
+```ts
+import {...} from 'https://deno.land/x/simplewebauthn/deno/server.ts';
+```
+
+## Additional data structures
 
 Documentation below will refer to the following TypeScript types. These are intended to be inspirational, a simple means of communicating the...types...of values you'll need to be capable of persisting in your database:
 
