@@ -5,7 +5,6 @@ title: Server
 ## Installation
 
 ### Node LTS 16.x or higher
-
 This package is available on **npm**:
 
 ```bash
@@ -16,10 +15,10 @@ It can then be imported into all types of Node applications thanks to its suppor
 
 ```ts
 // CommonJS (NodeJS)
-const SimpleWebAuthnServer = require("@simplewebauthn/server");
+const SimpleWebAuthnServer = require('@simplewebauthn/server');
 
 // ES Module (NodeJS w/module support, TypeScript, Babel, etc...)
-import SimpleWebAuthnServer from "@simplewebauthn/server";
+import SimpleWebAuthnServer from '@simplewebauthn/server';
 ```
 
 ### Deno v1.33.x or higher
@@ -73,9 +72,9 @@ Start by defining some constants that describe your "Relying Party" (RP) server 
 
 ```js
 // Human-readable title for your website
-const rpName = "SimpleWebAuthn Example";
+const rpName = 'SimpleWebAuthn Example';
 // A unique identifier for your website
-const rpID = "localhost";
+const rpID = 'localhost';
 // The URL at which registrations and authentications should occur
 const origin = `https://${rpID}`;
 ```
@@ -90,7 +89,7 @@ These will be referenced throughout registrations and authentications to ensure 
 import {
   generateRegistrationOptions,
   verifyRegistrationResponse,
-} from "@simplewebauthn/server";
+} from '@simplewebauthn/server';
 ```
 
 Registration occurs in two steps:
@@ -119,11 +118,11 @@ const options = await generateRegistrationOptions({
   userName: user.username,
   // Don't prompt users for additional information about the authenticator
   // (Recommended for smoother UX)
-  attestationType: "none",
+  attestationType: 'none',
   // Prevent users from re-registering existing authenticators
-  excludeCredentials: userAuthenticators.map((authenticator) => ({
+  excludeCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
-    type: "public-key",
+    type: 'public-key',
     // Optional
     transports: authenticator.transports,
   })),
@@ -241,7 +240,7 @@ It's also not unexpected for certain high profile authenticators, like Touch ID 
 import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
-} from "@simplewebauthn/server";
+} from '@simplewebauthn/server';
 ```
 
 Just like registration, authentication span two steps:
@@ -264,13 +263,13 @@ const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
 const options = await generateAuthenticationOptions({
   // Require users to use a previously-registered authenticator
-  allowCredentials: userAuthenticators.map((authenticator) => ({
+  allowCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
-    type: "public-key",
+    type: 'public-key',
     // Optional
     transports: authenticator.transports,
   })),
-  userVerification: "preferred",
+  userVerification: 'preferred',
 });
 
 // (Pseudocode) Remember this challenge for this user
@@ -303,9 +302,7 @@ const expectedChallenge: string = getUserCurrentChallenge(user);
 const authenticator = getUserAuthenticator(user, body.id);
 
 if (!authenticator) {
-  throw new Error(
-    `Could not find authenticator ${body.id} for user ${user.id}`
-  );
+  throw new Error(`Could not find authenticator ${body.id} for user ${user.id}`);
 }
 
 let verification;
@@ -352,7 +349,7 @@ saveUpdatedAuthenticatorCounter(authenticator, newCounter);
 :::caution
 **The following functionality is opt-in and is not required for typical use!** SimpleWebAuthn remains focused on simplifying working with the WebAuthn API, and the functionality covered so far will serve the majority of developers' use cases.
 
-Some developers, though, may have more demanding requirements that require a higher degree of control over the types of authenticators users may utilize when registering or authenticating. The features below enable such advanced uses of SimpleWebAuthn.
+Some developers, though, may have more demanding requirements that require a higher degree of control over the types of  authenticators users may utilize when registering or authenticating. The features below enable such advanced uses of SimpleWebAuthn.
 :::
 
 ## MetadataService
@@ -362,7 +359,7 @@ Metadata statements maintained by the FIDO Alliance can be referenced during reg
 SimpleWebauthn includes support for the [FIDO Alliance Metadata Service (version 3.0)](https://fidoalliance.org/metadata/) API via its `MetadataService`:
 
 ```ts
-import { MetadataService } from "@simplewebauthn/server";
+import { MetadataService } from '@simplewebauthn/server';
 ```
 
 This singleton service contains all of the logic necessary to interact with the MDS API, including signed data verification and automatic periodic refreshing of metadata statements.
@@ -376,30 +373,27 @@ Use of MetadataService is _not_ required to use @simplewebauthn/server! This is 
 Simply call `initialize()` to enable `MetadataService` configured to use the official MDS API:
 
 ```js
-import { MetadataService } from "@simplewebauthn/server";
+import { MetadataService } from '@simplewebauthn/server';
 
 MetadataService.initialize().then(() => {
-  console.log("🔐 MetadataService initialized");
+  console.log('🔐 MetadataService initialized');
 });
 ```
 
 `MetadataService` can also be initialized with optional URLs to other MDS-compatible servers, any local metadata statements you may maintain, or both:
 
 ```js
-import { MetadataService, MetadataStatement } from "@simplewebauthn/server";
+import { MetadataService, MetadataStatement } from '@simplewebauthn/server';
 
 const statements: MetadataStatement[] = [];
 
 // Load in statements from JSON files
 try {
-  const mdsMetadataPath = "./metadata-statements";
+  const mdsMetadataPath = './metadata-statements';
   const mdsMetadataFilenames = fs.readdirSync(mdsMetadataPath);
   for (const statementPath of mdsMetadataFilenames) {
-    if (statementPath.endsWith(".json")) {
-      const contents = fs.readFileSync(
-        `${mdsMetadataPath}/${statementPath}`,
-        "utf-8"
-      );
+    if (statementPath.endsWith('.json')) {
+      const contents = fs.readFileSync(`${mdsMetadataPath}/${statementPath}`, 'utf-8');
       statements.push(JSON.parse(contents));
     }
   }
@@ -408,10 +402,10 @@ try {
 }
 
 MetadataService.initialize({
-  mdsServers: ["https://mds-compatible-server.example.com"],
+  mdsServers: ['https://mds-compatible-server.example.com'],
   statements: statements,
 }).then(() => {
-  console.log("🔐 MetadataService initialized");
+  console.log('🔐 MetadataService initialized');
 });
 ```
 
@@ -430,12 +424,12 @@ The `SettingsService` singleton offers various methods for customizing SimpleWeb
 Some registration response attestation statements can be validated via root certificates prescribed by the company responsible for the format. It is possible to use `SettingsService` to register custom root certificates that will be used for validating certificate paths in subsequent registrations with matching attestation formats:
 
 ```ts
-import { SettingsService } from "@simplewebauthn/server";
+import { SettingsService } from '@simplewebauthn/server';
 
 // A Uint8Array, or PEM-formatted certificate string
-const appleCustomRootCert: Uint8Array | string = "...";
+const appleCustomRootCert: Uint8Array | string = '...';
 SettingsService.setRootCertificates({
-  identifier: "apple",
+  identifier: 'apple',
   certificates: [appleCustomRootCert],
 });
 ```
@@ -464,11 +458,9 @@ SimpleWebAuthn includes known root certificates for the following such attestati
 This method returns existing root certificates for a specific identifier:
 
 ```js
-import { SettingsService } from "@simplewebauthn/server";
+import { SettingsService } from '@simplewebauthn/server';
 
-const appleCerts: string[] = SettingsService.getRootCertificates({
-  identifier: "apple",
-});
+const appleCerts: string[] = SettingsService.getRootCertificates({ identifier: 'apple' });
 ```
 
 The returned certificates will be PEM-formatted strings;
