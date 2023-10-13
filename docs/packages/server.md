@@ -498,4 +498,28 @@ const options = generateRegistrationOptions({
 });
 ```
 
-You will then need to re-register any authenticators that generated credentials that caused this error.
+You will then need to re-register any authenticators that generated credentials that cause this error.
+
+### "Signature verification with public key of kty OKP is not supported" error during authentication
+
+Authentication responses may unexpectedly error out during verification. This appears as the throwing of an "Unrecognized name" error from a call to `verifyAuthenticationResponse()` with the following stack trace:
+
+```
+Error: Signature verification with public key of kty OKP is not supported by this method
+    at Object.verify (/xxx/node_modules/@simplewebauthn/server/script/helpers/iso/isoCrypto/verify.js:30:11)
+    at verifySignature (/xxx/node_modules/@simplewebauthn/server/script/helpers/verifySignature.js:25:76)
+    at verifyAuthenticationResponse (/xxx/node_modules/@simplewebauthn/server/script/authentication/verifyAuthenticationResponse.js:162:66)
+```
+
+This is caused by **security key responses in Firefox 118 and earlier being incorrectly composed by the browser** when the security key uses **Ed25519** for its credential keypair.
+
+To fix this, update your call to `generateRegistrationOptions()` to exclude `-8` (Ed25519) from the list of algorithms:
+
+```ts
+const options = generateRegistrationOptions({
+  // ...
+  supportedAlgorithmIDs: [-7, -257],
+});
+```
+
+You will then need to re-register any authenticators that generated credentials that cause this error.
