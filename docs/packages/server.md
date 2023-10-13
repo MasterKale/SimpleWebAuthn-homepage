@@ -502,7 +502,7 @@ You will then need to re-register any authenticators that generated credentials 
 
 ### "Signature verification with public key of kty OKP is not supported" error during authentication
 
-Authentication responses may unexpectedly error out during verification. This appears as the throwing of an "Unrecognized name" error from a call to `verifyAuthenticationResponse()` with the following stack trace:
+Authentication responses may unexpectedly error out during verification. This appears as the throwing of a "Signature verification with public key of kty OKP is not supported" error from a call to `verifyAuthenticationResponse()` with the following stack trace:
 
 ```
 Error: Signature verification with public key of kty OKP is not supported by this method
