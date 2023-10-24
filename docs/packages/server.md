@@ -262,6 +262,7 @@ const user: UserModel = getUserFromDB(loggedInUserId);
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
 const options = generateAuthenticationOptions({
+  rpID,
   // Require users to use a previously-registered authenticator
   allowCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
