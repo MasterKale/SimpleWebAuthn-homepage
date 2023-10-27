@@ -233,14 +233,12 @@ A second `useBrowserAutofill` argument can be set to `true` to set up support fo
 :::info
 The `"webauthn"` value in the `autocomplete` attribute is **required** for autofill to work. `startAuthentication()` will error out if an `<input>` with this autocomplete value cannot be found on the page.
 
-`"webauthn"` **can** be combined with other typical `autocomplete` values, including `"username"` and `"password"`, and the order doesn't matter. The following are all valid:
+`"webauthn"` **can** be combined with other typical `autocomplete` values, including `"username"` and `"current-password"`, but must appear at the end to consistently trigger conditional UI across browsers. The following are all valid:
 
 ```
 autocomplete="webauthn"
-autocomplete="webauthn username"
-autocomplete="webauthn password"
 autocomplete="username webauthn"
-autocomplete="password webauthn"
+autocomplete="current-password webauthn"
 ```
 :::
 
