@@ -111,7 +111,7 @@ const user: UserModel = getUserFromDB(loggedInUserId);
 // registered authenticators
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
-const options = generateRegistrationOptions({
+const options = await generateRegistrationOptions({
   rpName,
   rpID,
   userID: user.id,
@@ -261,7 +261,7 @@ const user: UserModel = getUserFromDB(loggedInUserId);
 // registered authenticators
 const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
 
-const options = generateAuthenticationOptions({
+const options = await generateAuthenticationOptions({
   rpID,
   // Require users to use a previously-registered authenticator
   allowCredentials: userAuthenticators.map(authenticator => ({
@@ -493,7 +493,7 @@ This appears to be an issue with some environments running **versions of Node pr
 To fix this, update your call to `generateRegistrationOptions()` to exclude `-8` (Ed25519) from the list of algorithms:
 
 ```ts
-const options = generateRegistrationOptions({
+const options = await generateRegistrationOptions({
   // ...
   supportedAlgorithmIDs: [-7, -257],
 });
