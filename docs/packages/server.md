@@ -126,6 +126,14 @@ const options = await generateRegistrationOptions({
     // Optional
     transports: authenticator.transports,
   })),
+  // See "Guiding use of authenticators via authenticatorSelection" below
+  authenticatorSelection: {
+    // Defaults
+    residentKey: 'preferred',
+    userVerification: 'preferred',
+    // Optional
+    authenticatorAttachment: 'platform',
+  },
 });
 
 // (Pseudocode) Remember the challenge for this user
@@ -140,6 +148,35 @@ These options can be passed directly into [**@simplewebauthn/browser**'s `startR
 
 Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateRegistrationOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
 
+:::
+
+:::info Guiding use of authenticators via authenticatorSelection
+`generateRegistrationOptions()` also accepts an `authenticatorSelection` option that can be used to fine-tune the registration experience. When unspecified, defaults are provided according to [passkeys best practices](advanced/passkeys.md#generateregistrationoptions). These values can be overridden based on Relying Party needs, however:
+
+#### `residentKey` - one of:
+
+- `'discouraged'`
+  - Won't consume discoverable credential slots on security keys, but also won't generate synced passkeys on Android devices.
+- `'preferred'`
+  - Will always generate synced passkeys on Android devices, but will consume discoverable credential slots on security keys.
+- `'required'`
+  - Same as `'preferred'`
+
+#### `userVerification` - one of:
+
+- `'discouraged'`
+  - Won't perform user verification if interacting with an authenticator won't automatically perform it (i.e. security keys won't prompt for PIN, but interacting with Touch ID on a macOS device will always perform user verification.) User verification will usually be `false`.
+- `'preferred'`
+  - Will perform user verification when possible, but will skip any prompts for PIN or local login password when possible. In these instances user verification can sometimes be `false`.
+- `'required'`
+  - Will always provides multi-factor authentication, at the expense of always requiring some users to enter their local login password during auth. User verification should never be `false`.
+
+#### `authenticatorAttachment` - one of:
+
+- `'cross-platform'`
+  - Browsers will guide users towards registering a security key, or mobile device via hybrid registration.
+- `'platform'`
+  - Browser will guide users to registering the locally integrated hardware authenticator.
 :::
 
 ### 1a. Supported Attestation Formats
@@ -277,7 +314,6 @@ const options = await generateAuthenticationOptions({
   allowCredentials: userAuthenticators.map(authenticator => ({
     id: authenticator.credentialID,
     type: 'public-key',
-    // Optional
     transports: authenticator.transports,
   })),
   userVerification: 'preferred',
