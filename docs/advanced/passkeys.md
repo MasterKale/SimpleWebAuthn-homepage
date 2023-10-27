@@ -36,7 +36,7 @@ The high-level strategy here is to instruct the **authenticator** to do the foll
 ```ts
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 
-const options = generateRegistrationOptions({
+const options = await generateRegistrationOptions({
   // ...
   authenticatorSelection: {
     // "Discoverable credentials" used to be called "resident keys". The
@@ -52,7 +52,7 @@ User verification is `"preferred"` here because it smooths out potential frictio
 ### `verifyRegistrationResponse()`
 
 ```ts
-const verification = verifyRegistrationResponse({
+const verification = await verifyRegistrationResponse({
   // ...
   requireUserVerification: true,
 });
@@ -70,7 +70,7 @@ Signs that a passkey were created include the following values returned from thi
 ### `generateAuthenticationOptions()`
 
 ```ts
-const options = generateAuthenticationOptions({
+const options = await generateAuthenticationOptions({
   // ...
   userVerification: 'preferred',
 });
@@ -81,7 +81,7 @@ User verification is `"preferred"` here because it smooths out potential frictio
 ### `verifyAuthenticationResponse()`
 
 ```ts
-const authVerify = verifyAuthenticationResponse({
+const authVerify = await verifyAuthenticationResponse({
   // ...
   requireUserVerification: true,
 });

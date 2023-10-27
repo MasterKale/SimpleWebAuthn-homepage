@@ -9,7 +9,7 @@ https://www.w3.org/TR/secure-payment-confirmation/
 Secure Payment Confirmation requests can be supported by SimpleWebAuthn by setting the `expectedType` argument to `"payment.get"` when calling **@simplewebauthn/server**'s `verifyAuthenticationResponse()`:
 
 ```ts
-const authVerify = verifyAuthenticationResponse({
+const authVerify = await verifyAuthenticationResponse({
   // ...
   expectedType: 'payment.get',
 });
@@ -18,7 +18,7 @@ const authVerify = verifyAuthenticationResponse({
 If desired, a single call to `verifyAuthenticationResponse()` can support verification of both WebAuthn and Secure Payment Confirmation responses (i.e. output from **@simplewebauthn/browser**'s `startAuthentication()` method) by specifying the following array of possible values:
 
 ```ts
-const authVerify = verifyAuthenticationResponse({
+const authVerify = await verifyAuthenticationResponse({
   // ...
   expectedType: ['webauthn.get', 'payment.get'],
 });
