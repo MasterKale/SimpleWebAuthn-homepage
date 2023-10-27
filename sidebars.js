@@ -11,10 +11,10 @@ module.exports = {
     ],
     'Advanced Guides': [
       'advanced/passkeys',
-      'advanced/example-project',
       'advanced/supported-devices',
-      'advanced/edge-browser',
-      'advanced/safari-browser',
+      'advanced/browser-quirks',
+      'advanced/example-project',
+      'advanced/secure-payment-confirmation',
       'advanced/fido-conformance',
     ],
   },
