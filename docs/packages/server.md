@@ -205,12 +205,22 @@ Assuming `verification.verified` is true then RP's must, at the very least, save
 
 ```ts
 const { registrationInfo } = verification;
-const { credentialPublicKey, credentialID, counter } = registrationInfo;
+const {
+  credentialPublicKey,
+  credentialID,
+  counter,
+  credentialDeviceType,
+  credentialBackedUp,
+  transports,
+} = registrationInfo;
 
 const newAuthenticator: Authenticator = {
   credentialID,
   credentialPublicKey,
   counter,
+  credentialDeviceType,
+  credentialBackedUp,
+  transports,
 };
 
 // (Pseudocode) Save the authenticator info so that we can
@@ -517,7 +527,7 @@ This is caused by **security key responses in Firefox 118 and earlier being inco
 To fix this, update your call to `generateRegistrationOptions()` to exclude `-8` (Ed25519) from the list of algorithms:
 
 ```ts
-const options = generateRegistrationOptions({
+const options = await generateRegistrationOptions({
   // ...
   supportedAlgorithmIDs: [-7, -257],
 });
