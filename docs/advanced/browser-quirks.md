@@ -17,3 +17,21 @@ The Microsoft Edge browser refers to two different browsers: the original releas
 When adding support for WebAuthn, special considerations must be made for **Microsoft Edge Legacy**:
 
 * [The browser global `TextEncoder` is not supported.](https://caniuse.com/textencoder) This means **@simplewebauthn/browser** will not work in this browser without a polyfill for this API. [MDN includes a spec-compliant polyfill](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder#Polyfill) that can be copied into your project. Various browser [polyfill libraries exist on NPM](https://www.npmjs.com/search?q=textencoder%20polyfill%20browser) as well.
+
+## Firefox
+
+WebAuthn responses from security keys that generate keypairs using Ed12259 (i.e. `-8`) can fail response verification during registration due to a bug in the browser itself. This can manifest as the following error message from **@simplewebauthn/server** methods:
+
+```
+Error: Leftover bytes detected while parsing authenticator data
+```
+
+These responses may also fail to be verified by `verifyRegistrationResponse()`, **even when the same server setup and security key are used in a different browser**:
+
+```ts
+const verifiedFirefox = await verifyRegistrationResponse({ ... });
+
+console.log(verifiedFirefox.verified); // false
+```
+
+The issue was caused by a bug in authenticator-rs ([mozilla/authenticator-rs#292](https://github.com/mozilla/authenticator-rs/pull/292)), and according to Mozilla ([Bugzilla Bug 1852812](https://bugzilla.mozilla.org/show_bug.cgi?id=1852812)) **should be resolved as of Firefox 119**.
