@@ -26,4 +26,4 @@ This command generates static content into the `build/` directory and can be ser
 
 ### Deployment
 
-This site is currently deployed through Netlify.
+This site is currently deployed through Netlify. The version of Node used to build the site is specified in **.nvmrc** in the root of this project (and overrides the version specified in **Build & Deploy > Dependency management** in the Netlify control panel.)
