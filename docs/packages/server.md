@@ -516,7 +516,7 @@ The returned certificates will be PEM-formatted strings;
 
 Below are errors you may see while using this library, and potential solutions to them:
 
-### "Unrecognized name" error during authentication
+### DOMException [NotSupportedError]: Unrecognized name.
 
 Authentication responses may unexpectedly error out during verification. This appears as the throwing of an "Unrecognized name" error from a call to `verifyAuthenticationResponse()` with the following stack trace:
 
@@ -547,7 +547,7 @@ const options = await generateRegistrationOptions({
 
 You will then need to re-register any authenticators that generated credentials that cause this error.
 
-### "Signature verification with public key of kty OKP is not supported" error during authentication
+### Error: Signature verification with public key of kty OKP is not supported by this method
 
 Authentication responses may unexpectedly error out during verification. This appears as the throwing of a "Signature verification with public key of kty OKP is not supported" error from a call to `verifyAuthenticationResponse()` with the following stack trace:
 
