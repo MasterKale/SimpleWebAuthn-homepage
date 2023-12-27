@@ -248,7 +248,6 @@ const {
   counter,
   credentialDeviceType,
   credentialBackedUp,
-  transports,
 } = registrationInfo;
 
 const newAuthenticator: Authenticator = {
@@ -257,7 +256,8 @@ const newAuthenticator: Authenticator = {
   counter,
   credentialDeviceType,
   credentialBackedUp,
-  transports,
+  // `body` here is from Step 2
+  transports: body.response.transports,
 };
 
 // (Pseudocode) Save the authenticator info so that we can
