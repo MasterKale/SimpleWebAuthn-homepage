@@ -570,3 +570,42 @@ const options = await generateRegistrationOptions({
 ```
 
 You will then need to re-register any authenticators that generated credentials that cause this error.
+
+### ERROR extractStrings is not a function
+
+Registration responses may unexpectedly error out during verification. This appears as the throwing of an "extractStrings is not a function" error from a call to `verifyRegistrationResponse()` with the following stack trace:
+
+```
+ERROR  extractStrings is not a function
+    at readString (/node_modules/.pnpm/cbor-x@1.5.6/node_modules/cbor-x/dist/node.cjs:520:1)
+    at read (/node_modules/.pnpm/cbor-x@1.5.6/node_modules/cbor-x/dist/node.cjs:343:1)
+    at read (/node_modules/.pnpm/cbor-x@1.5.6/node_modules/cbor-x/dist/node.cjs:363:1)
+    at checkedRead (/node_modules/.pnpm/cbor-x@1.5.6/node_modules/cbor-x/dist/node.cjs:202:1)
+    at Encoder.decode (/node_modules/.pnpm/cbor-x@1.5.6/node_modules/cbor-x/dist/node.cjs:153:1)
+    at Encoder.decodeMultiple (/node_modules/.pnpm/cbor-x@1.5.6/node_modules/cbor-x/dist/node.cjs:170:1)
+    at Object.decodeFirst (/node_modules/.pnpm/@simplewebauthn+server@8.3.5/node_modules/@simplewebauthn/server/script/helpers/iso/isoCBOR.js:30:1)
+    at decodeAttestationObject (/node_modules/.pnpm/@simplewebauthn+server@8.3.5/node_modules/@simplewebauthn/server/script/helpers/decodeAttestationObject.js:12:1)
+    at verifyRegistrationResponse (/node_modules/.pnpm/@simplewebauthn+server@8.3.5/node_modules/@simplewebauthn/server/script/registration/verifyRegistrationResponse.js:100:1)
+    at AuthnService.verifyRegistrationResponse (/home/deploy/mx/modules/authn/authn.service.js:89:1)
+```
+
+This is caused by the `@vercel/ncc` dependency not supporting runtime use of `require()` within other third-party packages used by the project, like **@simplewebauthn/server**'s use of **cbor-x**.
+
+To fix this, add `CBOR_NATIVE_ACCELERATION_DISABLED=true` in your project's env file to disable the use of `require()` in **cbor-x**.
+
+**Alternatively**, the following can be added to your project to inject this value into your project's runtime environment:
+
+```js
+function nodeEnvInjection() {
+  /**
+   * `@vercel/ncc` does not support the use of `require()` so disable its
+   * use in the `@simplewebauthn/server` dependency called `cbor-x`.
+   *
+   * https://github.com/kriszyp/cbor-x/blob/master/node-index.js#L10
+   */
+  process.env['CBOR_NATIVE_ACCELERATION_DISABLED'] = 'true';
+}
+
+// Call this at the start of the project, before any imports
+nodeEnvInjection()
+```
