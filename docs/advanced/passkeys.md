@@ -2,6 +2,8 @@
 title: Passkeys
 ---
 
+## Introduction
+
 Passkeys represent a compelling WebAuthn-based alternative to the timeless combination of "password + second-factor" that we all suffer through.
 
 Passkeys are phishing-resistant, are unique across every website, and can help users maintain account access after device loss.
