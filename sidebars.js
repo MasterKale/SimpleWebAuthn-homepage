@@ -14,8 +14,17 @@ module.exports = {
       'advanced/supported-devices',
       'advanced/browser-quirks',
       'advanced/example-project',
-      'advanced/secure-payment-confirmation',
       'advanced/fido-conformance',
+      {
+        type: 'category',
+        label: '@simplewebauthn/server',
+        description: 'Advanced functionality specific to @simplewebauthn/server',
+        items: [
+          'advanced/server/metadata-service',
+          'advanced/server/settings-service',
+          'advanced/server/secure-payment-confirmation',
+        ],
+      },
     ],
   },
 };
