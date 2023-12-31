@@ -1,5 +1,5 @@
 ---
-title: Server
+title: "@simplewebauthn/server"
 ---
 
 ## Installation

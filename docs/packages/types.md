@@ -1,5 +1,5 @@
 ---
-title: TypeScript Types
+title: "@simplewebauthn/typescript-types"
 ---
 
 **This support package is only useful in projects written in TypeScript!** It contains various type declarations that help developers prepare and handle values when working with methods available in
