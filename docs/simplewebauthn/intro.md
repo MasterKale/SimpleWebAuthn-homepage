@@ -13,4 +13,4 @@ needed to incorporate WebAuthn into a website. The following packages are mainta
 
 An additional package is also included that contains shared TypeScript definitions:
 
-- [@simplewebauthn/typescript-types](packages/types.md)
+- [@simplewebauthn/types](packages/types.md)
