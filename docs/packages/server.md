@@ -34,6 +34,8 @@ import {...} from 'https://deno.land/x/simplewebauthn/deno/server.ts';
 Documentation below will refer to the following TypeScript types. These are intended to be inspirational, a simple means of communicating the...types...of values you'll need to be capable of persisting in your database:
 
 ```ts
+import type { AuthenticatorTransportFuture, CredentialDeviceType } from '@simplewebauthn/types';
+
 type UserModel = {
   id: string;
   username: string;
@@ -61,8 +63,8 @@ type Authenticator = {
   // SQL: `BOOL` or whatever similar type is supported
   credentialBackedUp: boolean;
   // SQL: `VARCHAR(255)` and store string array as a CSV string
-  // Ex: ['usb' | 'ble' | 'nfc' | 'internal']
-  transports?: AuthenticatorTransport[];
+  // Ex: ['ble' | 'cable' | 'hybrid' | 'internal' | 'nfc' | 'smart-card' | 'usb']
+  transports?: AuthenticatorTransportFuture[];
 };
 ```
 
