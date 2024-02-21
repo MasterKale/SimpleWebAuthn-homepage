@@ -53,7 +53,7 @@ type UserModel = {
 type Authenticator = {
   // SQL: Encode to base64url then store as `TEXT`. Index this column
   credentialID: Uint8Array;
-  // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...
+  // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc... Note: if saving as `BYTEA` in postgres, you may first need to convert the Uint8Array to a buffer
   credentialPublicKey: Uint8Array;
   // SQL: Consider `BIGINT` since some authenticators return atomic timestamps as counters
   counter: number;
