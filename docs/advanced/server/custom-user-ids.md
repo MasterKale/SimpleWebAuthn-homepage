@@ -9,3 +9,7 @@ title: Custom User IDs
 ## Introduction
 
 Coming Soon
+
+## Error: String values for \`userID\` are no longer supported
+
+Coming Soon

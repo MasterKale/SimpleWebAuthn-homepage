@@ -490,3 +490,7 @@ function nodeEnvInjection() {
 // Call this at the start of the project, before any imports
 nodeEnvInjection()
 ```
+
+### Error: String values for \`userID\` are no longer supported
+
+See [Advanced Guides > @simplewebauthn/server > Custom User IDs](advanced/server/custom-user-ids.md#error-string-values-for-userid-are-no-longer-supported) for more information.
