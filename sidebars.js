@@ -21,6 +21,7 @@ module.exports = {
         description: 'Advanced functionality specific to @simplewebauthn/server',
         items: [
           'advanced/server/custom-challenges',
+          'advanced/server/custom-user-ids',
           'advanced/server/metadata-service',
           'advanced/server/secure-payment-confirmation',
           'advanced/server/settings-service',
