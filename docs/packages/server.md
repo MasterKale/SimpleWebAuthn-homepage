@@ -43,7 +43,7 @@ import type {
 } from '@simplewebauthn/types';
 
 type UserModel = {
-  _id: any;
+  id: any;
   username: string;
 };
 
@@ -79,7 +79,7 @@ type Passkey = {
 };
 ```
 
-Below is a sample database schema showing how a **passkeys** table can track WebAuthn-specific user IDs while still allowing use of typical internal database user IDs ([click here for an interactive version of the schema](https://dbdiagram.io/d/SimpleWebAuthn-Example-DB-Schema-661a046303593b6b61e34628)):
+Below is a sample database schema showing how a **passkeys** table can track WebAuthn-specific user IDs while still allowing use of typical internal database user IDs through the rest of the site ([click here for an interactive version of the schema](https://dbdiagram.io/d/SimpleWebAuthn-Example-DB-Schema-661a046303593b6b61e34628)):
 
 <img alt="FIDO2 Metadata download button" src={useBaseUrl('img/docs/packages/server-sample-db-schema.png')} />
 
