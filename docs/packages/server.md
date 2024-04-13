@@ -38,7 +38,7 @@ Documentation below will refer to the following TypeScript types. These are inte
 ```ts
 import type {
   AuthenticatorTransportFuture,
-  deviceType,
+  CredentialDeviceType,
   Base64URLString,
 } from '@simplewebauthn/types';
 
@@ -65,7 +65,7 @@ type Passkey = {
   user: UserModel;
   // SQL: Store as `TEXT`. Index this column. A UNIQUE constraint on (webAuthnUserID + user) also
   // achieves maximum user privacy
-  webAuthnUserID: Base64URLString;
+  webauthnUserID: Base64URLString;
   // SQL: Consider `BIGINT` since some authenticators return atomic timestamps as counters
   counter: number;
   // SQL: `VARCHAR(32)` or similar, longest possible value is currently 12 characters
