@@ -2,7 +2,7 @@
 title: Philosophy
 ---
 
-WebAuthn is a browser API that enables the use of physical, cryptographically-secure hardware "authenticators" to provide stronger replacements to passwords or 2FA.
+WebAuthn is a browser API that empowers us all to secure our accounts with a user-friendly experience powered by public-key cryptography.
 
 Website back ends that wish to leverage this technology must be set up to do two things:
 
@@ -18,5 +18,5 @@ On the surface, this is a relatively straightforward dance. Unfortunately the va
 
 **Enter SimpleWebAuthn.**
 
-SimpleWebAuthn attempts to offer a developer-friendly pair of libraries that simplify the above dance. **@simplewebauthn/server** exports a small number of methods requiring a handful of simple inputs that pair with the two primary methods exported by **@simplewebauthn/browser**. No converting back and forth between `Uint8Array` (or was this supposed to be an `ArrayBuffer`...?) and `String`, no worrying about JSON compatibility - **SimpleWebAuthn takes care of it all!**
+SimpleWebAuthn offers a developer-friendly pair of libraries that simplify the above dance. **@simplewebauthn/server** exports a small number of methods requiring a handful of simple inputs that pair with the two primary methods exported by **@simplewebauthn/browser**. No converting back and forth between `Uint8Array` (or was this supposed to be an `ArrayBuffer`...?) and `String`, no worrying about JSON compatibility - **SimpleWebAuthn takes care of it all!**
 

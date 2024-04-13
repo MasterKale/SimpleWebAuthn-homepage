@@ -7,7 +7,7 @@ the Browser and Server packages.
 
 ## Installation
 
-### Node LTS 16.x or higher
+### Node LTS 20.x or higher
 
 This package is available on **npm**:
 

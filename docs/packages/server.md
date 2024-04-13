@@ -2,9 +2,11 @@
 title: "@simplewebauthn/server"
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 ## Installation
 
-### Node LTS 16.x or higher
+### Node LTS 20.x or higher
 This package is available on **npm**:
 
 ```bash
@@ -31,42 +33,57 @@ import {...} from 'https://deno.land/x/simplewebauthn/deno/server.ts';
 
 ## Additional data structures
 
-Documentation below will refer to the following TypeScript types. These are intended to be inspirational, a simple means of communicating the...types...of values you'll need to be capable of persisting in your database:
+Documentation below will refer to the following TypeScript types. These are intended to be inspirational, a simple means of communicating the shape of the values you'll need to be capable of persisting in your database:
 
 ```ts
-import type { AuthenticatorTransportFuture, CredentialDeviceType } from '@simplewebauthn/types';
+import type {
+  AuthenticatorTransportFuture,
+  deviceType,
+  Base64URLString,
+} from '@simplewebauthn/types';
 
 type UserModel = {
-  id: string;
+  _id: any;
   username: string;
-  currentChallenge?: string;
 };
 
 /**
- * It is strongly advised that authenticators get their own DB
- * table, ideally with a foreign key to a specific UserModel.
+ * It is strongly advised that credentials get their own DB
+ * table, ideally with a foreign key somewhere connecting it
+ * to a specific UserModel.
  *
  * "SQL" tags below are suggestions for column data types and
  * how best to store data received during registration for use
  * in subsequent authentications.
  */
-type Authenticator = {
-  // SQL: Encode to base64url then store as `TEXT`. Index this column
-  credentialID: Uint8Array;
+type Passkey = {
+  // SQL: Store as `TEXT`. Index this column
+  id: Base64URLString;
   // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...
-  credentialPublicKey: Uint8Array;
+  publicKey: Uint8Array;
+  // SQL: Foreign Key to an instance of your internal user model
+  user: UserModel;
+  // SQL: Store as `TEXT`. Index this column. A UNIQUE constraint on (webAuthnUserID + user) also
+  // achieves maximum user privacy
+  webAuthnUserID: Base64URLString;
   // SQL: Consider `BIGINT` since some authenticators return atomic timestamps as counters
   counter: number;
   // SQL: `VARCHAR(32)` or similar, longest possible value is currently 12 characters
   // Ex: 'singleDevice' | 'multiDevice'
-  credentialDeviceType: CredentialDeviceType;
+  deviceType: CredentialDeviceType;
   // SQL: `BOOL` or whatever similar type is supported
-  credentialBackedUp: boolean;
+  backedUp: boolean;
   // SQL: `VARCHAR(255)` and store string array as a CSV string
   // Ex: ['ble' | 'cable' | 'hybrid' | 'internal' | 'nfc' | 'smart-card' | 'usb']
   transports?: AuthenticatorTransportFuture[];
 };
 ```
+
+Below is a sample database schema showing how a **passkeys** table can track WebAuthn-specific user IDs while still allowing use of typical internal database user IDs ([click here for an interactive version of the schema](https://dbdiagram.io/d/SimpleWebAuthn-Example-DB-Schema-661a046303593b6b61e34628)):
+
+<img alt="FIDO2 Metadata download button" src={useBaseUrl('img/docs/packages/server-sample-db-schema.png')} />
+
+Keep this table structure in mind as you proceed through the following sections.
 
 ## Identifying your RP
 
@@ -111,22 +128,20 @@ One endpoint (`GET`) needs to return the result of a call to `generateRegistrati
 const user: UserModel = getUserFromDB(loggedInUserId);
 // (Pseudocode) Retrieve any of the user's previously-
 // registered authenticators
-const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
+const userPasskeys: Passkey[] = getUserPasskeys(user);
 
-const options = await generateRegistrationOptions({
+const options: PublicKeyCredentialCreationOptionsJSON = await generateRegistrationOptions({
   rpName,
   rpID,
-  userID: user.id,
   userName: user.username,
   // Don't prompt users for additional information about the authenticator
   // (Recommended for smoother UX)
   attestationType: 'none',
   // Prevent users from re-registering existing authenticators
-  excludeCredentials: userAuthenticators.map(authenticator => ({
-    id: authenticator.credentialID,
-    type: 'public-key',
+  excludeCredentials: userPasskeys.map(passkey => ({
+    id: passkey.id,
     // Optional
-    transports: authenticator.transports,
+    transports: passkey.transports,
   })),
   // See "Guiding use of authenticators via authenticatorSelection" below
   authenticatorSelection: {
@@ -138,19 +153,13 @@ const options = await generateRegistrationOptions({
   },
 });
 
-// (Pseudocode) Remember the challenge for this user
-setUserCurrentChallenge(user, options.challenge);
+// (Pseudocode) Remember these options for the user
+setCurrentRegistrationOptions(user, options);
 
 return options;
 ```
 
 These options can be passed directly into [**@simplewebauthn/browser**'s `startRegistration()`](packages/browser.mdx#startregistration) method.
-
-:::tip Support for custom challenges
-
-Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateRegistrationOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
-
-:::
 
 :::info Guiding use of authenticators via authenticatorSelection
 `generateRegistrationOptions()` also accepts an `authenticatorSelection` option that can be used to fine-tune the registration experience. When unspecified, defaults are provided according to [passkeys best practices](advanced/passkeys.md#generateregistrationoptions). These values can be overridden based on Relying Party needs, however:
@@ -209,13 +218,14 @@ const { body } = req;
 // (Pseudocode) Retrieve the logged-in user
 const user: UserModel = getUserFromDB(loggedInUserId);
 // (Pseudocode) Get `options.challenge` that was saved above
-const expectedChallenge: string = getUserCurrentChallenge(user);
+const currentOptions: PublicKeyCredentialCreationOptionsJSON =
+  getCurrentRegistrationOptions(user);
 
 let verification;
 try {
   verification = await verifyRegistrationResponse({
     response: body,
-    expectedChallenge,
+    expectedChallenge: currentOptions.challenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
   });
@@ -245,33 +255,36 @@ Assuming `verification.verified` is true then RP's must, at the very least, save
 ```ts
 const { registrationInfo } = verification;
 const {
-  credentialPublicKey,
   credentialID,
+  credentialPublicKey,
   counter,
   credentialDeviceType,
   credentialBackedUp,
 } = registrationInfo;
 
-const newAuthenticator: Authenticator = {
-  credentialID,
-  credentialPublicKey,
+const newPasskey: Passkey = {
+  // `user` here is from Step 2
+  user,
+  // Created by `generateRegistrationOptions()` in Step 1
+  webAuthnUserID: currentOptions.user.id,
+  // A unique identifier for the credential
+  id: credentialID,
+  // The public key bytes, used for subsequent authentication signature verification
+  publicKey: credentialPublicKey,
+  // The number of times the authenticator has been used on this site so far
   counter,
-  credentialDeviceType,
-  credentialBackedUp,
+  // Whether the passkey is single-device or multi-device
+  deviceType: credentialDeviceType,
+  // Whether the passkey has been backed up in some way
+  backedUp: credentialBackedUp,
   // `body` here is from Step 2
   transports: body.response.transports,
 };
 
 // (Pseudocode) Save the authenticator info so that we can
 // get it by user ID later
-saveNewUserAuthenticatorInDB(user, newAuthenticator);
+saveNewPasskeyInDB(newPasskey);
 ```
-
-**Values:**
-
-- `credentialID` (`bytes`): A unique identifier for the credential
-- `credentialPublicKey` (`bytes`): The public key bytes, used for subsequent authentication signature verification
-- `counter` (`number`): The number of times the authenticator has been used on this site so far
 
 :::info Regarding `counter`
 Tracking the ["signature counter"](https://www.w3.org/TR/webauthn/#signature-counter) allows Relying Parties to potentially identify misbehaving authenticators, or cloned authenticators. The counter on subsequent authentications should only ever increment; if your stored counter is greater than zero, and a subsequent authentication response's counter is the same or lower, then perhaps the authenticator just used to authenticate is in a compromised state.
@@ -308,21 +321,19 @@ One endpoint (`GET`) needs to return the result of a call to `generateAuthentica
 const user: UserModel = getUserFromDB(loggedInUserId);
 // (Pseudocode) Retrieve any of the user's previously-
 // registered authenticators
-const userAuthenticators: Authenticator[] = getUserAuthenticators(user);
+const userPasskeys: Passkey[] = getUserPasskeys(user);
 
-const options = await generateAuthenticationOptions({
+const options: PublicKeyCredentialRequestOptionsJSON = await generateAuthenticationOptions({
   rpID,
   // Require users to use a previously-registered authenticator
-  allowCredentials: userAuthenticators.map(authenticator => ({
-    id: authenticator.credentialID,
-    type: 'public-key',
-    transports: authenticator.transports,
+  allowCredentials: userPasskeys.map(passkey => ({
+    id: passkey.id,
+    transports: passkey.transports,
   })),
-  userVerification: 'preferred',
 });
 
 // (Pseudocode) Remember this challenge for this user
-setUserCurrentChallenge(user, options.challenge);
+setCurrentAuthenticationOptions(user, options);
 
 return options;
 ```
@@ -345,23 +356,24 @@ const { body } = req;
 // (Pseudocode) Retrieve the logged-in user
 const user: UserModel = getUserFromDB(loggedInUserId);
 // (Pseudocode) Get `options.challenge` that was saved above
-const expectedChallenge: string = getUserCurrentChallenge(user);
-// (Pseudocode} Retrieve an authenticator from the DB that
+const currentOptions: PublicKeyCredentialRequestOptionsJSON =
+  getCurrentAuthenticationOptions(user);
+// (Pseudocode} Retrieve a passkey from the DB that
 // should match the `id` in the returned credential
-const authenticator = getUserAuthenticator(user, body.id);
+const passkey: AuthenticatorDevice = getUserPasskey(user, body.id);
 
-if (!authenticator) {
-  throw new Error(`Could not find authenticator ${body.id} for user ${user.id}`);
+if (!passkey) {
+  throw new Error(`Could not find passkey ${body.id} for user ${user.id}`);
 }
 
 let verification;
 try {
   verification = await verifyAuthenticationResponse({
     response: body,
-    expectedChallenge,
+    expectedChallenge: currentOptions.challenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
-    authenticator,
+    authenticator: passkey,
   });
 } catch (error) {
   console.error(error);
@@ -390,7 +402,7 @@ Assuming `verification.verified` is true, then update the user's authenticator's
 const { authenticationInfo } = verification;
 const { newCounter } = authenticationInfo;
 
-saveUpdatedAuthenticatorCounter(authenticator, newCounter);
+saveUpdatedCounter(passkey, newCounter);
 ```
 
 ## Troubleshooting
