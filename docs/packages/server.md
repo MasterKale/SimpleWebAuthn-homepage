@@ -93,7 +93,7 @@ Start by defining some constants that describe your "Relying Party" (RP) server 
 // Human-readable title for your website
 const rpName = 'SimpleWebAuthn Example';
 // A unique identifier for your website
-const rpID = 'localhost';
+const rpID = 'simplewebauthn.dev';
 // The URL at which registrations and authentications should occur
 const origin = `https://${rpID}`;
 ```
