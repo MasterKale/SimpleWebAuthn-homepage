@@ -92,14 +92,20 @@ Keep this table structure in mind as you proceed through the following sections.
 Start by defining some constants that describe your "Relying Party" (RP) server to authenticators:
 
 ```js
-// Human-readable title for your website
+/**
+ * Human-readable title for your website
+ */
 const rpName = 'SimpleWebAuthn Example';
-// A unique identifier for your website.
-// 'localhost' is okay for local dev
+/**
+ * A unique identifier for your website. 'localhost' is okay for
+ * local dev
+ */
 const rpID = 'simplewebauthn.dev';
-// The URL at which registrations and authentications should occur.
-// 'http://localhost' and 'http://localhost:PORT' are also valid
-// Do NOT include any trailing /
+/**
+ * The URL at which registrations and authentications should occur.
+ * 'http://localhost' and 'http://localhost:PORT' are also valid.
+ * Do NOT include any trailing /
+ */
 const origin = `https://${rpID}`;
 ```
 
