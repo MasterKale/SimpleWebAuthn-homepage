@@ -60,7 +60,7 @@ type Passkey = {
   // SQL: Store as `TEXT`. Index this column
   id: Base64URLString;
   // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...
-  publicKey: Uint8Array;
+  credentialPublicKey: Uint8Array;
   // SQL: Foreign Key to an instance of your internal user model
   user: UserModel;
   // SQL: Store as `TEXT`. Index this column. A UNIQUE constraint on (webAuthnUserID + user) also
