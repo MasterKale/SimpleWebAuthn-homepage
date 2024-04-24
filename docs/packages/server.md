@@ -360,7 +360,7 @@ const currentOptions: PublicKeyCredentialRequestOptionsJSON =
   getCurrentAuthenticationOptions(user);
 // (Pseudocode} Retrieve a passkey from the DB that
 // should match the `id` in the returned credential
-const passkey: AuthenticatorDevice = getUserPasskey(user, body.id);
+const passkey: Passkey = getUserPasskey(user, body.id);
 
 if (!passkey) {
   throw new Error(`Could not find passkey ${body.id} for user ${user.id}`);
@@ -373,7 +373,12 @@ try {
     expectedChallenge: currentOptions.challenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
-    authenticator: passkey,
+    authenticator: {
+      credentialID: passkey.id,
+      credentialPublicKey: passkey.publicKey,
+      counter: passkey.counter,
+      transports: passkey.transports,
+    },
   });
 } catch (error) {
   console.error(error);
