@@ -270,7 +270,7 @@ const newPasskey: Passkey = {
   // A unique identifier for the credential
   id: credentialID,
   // The public key bytes, used for subsequent authentication signature verification
-  publicKey: credentialPublicKey,
+  credentialPublicKey: Array.from(credentialPublicKey),
   // The number of times the authenticator has been used on this site so far
   counter,
   // Whether the passkey is single-device or multi-device
