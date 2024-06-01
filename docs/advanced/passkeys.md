@@ -75,10 +75,19 @@ Signs that a passkey were created include the following values returned from thi
 const options = await generateAuthenticationOptions({
   // ...
   userVerification: 'preferred',
+  allowCredentials: [],
 });
 ```
 
-User verification is `"preferred"` here because it smooths out potential frictions if a user attempts to use passkeys on a device without a biometric sensor. See ["A note about user verification" on passkeys.dev](https://passkeys.dev/docs/use-cases/bootstrapping/#a-note-about-user-verification) for more context. The actual enforcement of user verification being required for proper passwordless support happens below during response verification.
+`userVerification` is `"preferred"` here because it smooths out potential frictions if a user attempts to use passkeys on a device without a biometric sensor. See ["A note about user verification" on passkeys.dev](https://passkeys.dev/docs/use-cases/bootstrapping/#a-note-about-user-verification) for more context. The actual enforcement of user verification being required for proper passwordless support happens below during response verification.
+
+`allowCredentials` can also be set to `[]` to allow the user to choose from any discoverable credentials they have for the site. This "flips the script" a bit on the authentication ceremony by allowing the user to generate a WebAuthn response with a registered passkey to tell the RP which account the user wants to log into **without needing to provide an account identifier beforehand!** After verifying the response and confirming it recognizes the credential then the RP should create a session for the internal user record that is associated with the response's [`id`](https://w3c.github.io/webappsec-credential-management/#dom-credential-id) (and/or [`userHandle`](https://www.w3.org/TR/webauthn-2/#dom-authenticatorassertionresponse-userhandle) when available.)
+
+:::info
+Setting `allowCredentials: []` when calling `generateAuthenticationOptions()` is **OPTIONAL** if you are using **@simplewebauthn/browser**'s `startAuthentication()` method with its second positional `useBrowserAutofill` argument set to `true`; `startAuthentication()` will take care of this for you in this configuration.
+
+See the [Conditional UI section of the docs for `startAuthentication()`](packages/browser.mdx#browser-autofill-aka-conditional-ui) for more information.
+:::
 
 ### `verifyAuthenticationResponse()`
 
