@@ -353,3 +353,26 @@ import { bufferToBase64URLString } from '@simplewebauthn/browser';
 ```
 
 This method is not typically needed when using this library, but is available nonetheless for those who may find utility in such a method.
+
+## Troubleshooting
+
+### `startRegistration()` unexpectedly errors out with `NowAllowedError` after scanning QR code
+
+When a call to `startRegistration()` results in scanning a QR code with a mobile device, scanning the QR code displayed in **Google Chrome** may result in a `NotAllowedError` in the browser and an unexpected error on the mobile device:
+
+```
+NotAllowedError: The operation either timed out or was not allowed. See: https://www.w3.org/TR/webauthn-2/#sctn-privacy-considerations-client.
+    at new r (index.es5.umd.min.js:2:3304)
+    at index.es5.umd.min.js:2:8932
+    at index.es5.umd.min.js:2:10161
+    at index.es5.umd.min.js:2:1934
+    at Object.throw (index.es5.umd.min.js:2:2039)
+    at s (index.es5.umd.min.js:2:808)
+Caused by: DOMException: The operation either timed out or was not allowed. See: https://www.w3.org/TR/webauthn-2/#sctn-privacy-considerations-client.
+```
+
+This can be caused by an empty value string value (i.e. `""`) for `user.displayname` in the options passed to `startRegistration()`.
+
+To fix this, set `user.displayName` to the same value as `user.name` and try again.
+
+This is confirmed Chrome-specific bug that **affects Chrome up through 127**. A bug report for this issue has been logged as https://issues.chromium.org/issues/346835891. These docs will be updated when this issue is resolved and a new version of Chrome improves this behavior.
