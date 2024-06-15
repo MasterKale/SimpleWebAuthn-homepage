@@ -373,6 +373,6 @@ Caused by: DOMException: The operation either timed out or was not allowed. See:
 
 This can be caused by an empty value string value (i.e. `""`) for `user.displayname` in the options passed to `startRegistration()`.
 
-To fix this, set `user.displayName` to the same value as `user.name` and try again.
+To fix this, set `user.displayName` to the same value as `user.name` and try again. If you are using **@simplewebauthn/servers**'s `generateRegistrationOptions()` method then you can set the `userDisplayName` argument to the same value as the `userName` argument to achieve the same result.
 
 This is confirmed Chrome-specific bug that **affects Chrome up through 127**. A bug report for this issue has been logged as https://issues.chromium.org/issues/346835891. These docs will be updated when this issue is resolved and a new version of Chrome improves this behavior.
