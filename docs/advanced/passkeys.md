@@ -56,9 +56,15 @@ User verification is `"preferred"` here because it smooths out potential frictio
 ```ts
 const verification = await verifyRegistrationResponse({
   // ...
-  requireUserVerification: true,
+  requireUserVerification: false,
 });
 ```
+
+:::caution A word of caution about user verification
+`requireUserVerification` is set to `false` above because many websites can be just fine using passkeys without user verification! The phishing resistant properties of WebAuthn elevates passkeys to a higher level of protection than username+password+2fa, and thus passkeys are not necessarily beholden to the same "multiple factors of auth" rules that came before them.
+
+However *some websites*, for various regulatory reasons, may require multiple factors of authentication to be provided. If you are a developer of such a website then you should set `userVerification: 'required'` when calling `generateRegistrationOptions()`, and specify `requireUserVerification: true` when calling `verifyRegistrationResponse()`.
+:::
 
 Make sure to save the `transports` value returned from **@simplewebauthn/browser**'s `startRegistration()` method too. Advanced WebAuthn functionality like cross-device auth (i.e. authenticating into a website displayed in Chrome on Windows by using your iPhone) is hard to design good UX around. You can use the browser to figure out when it is available by including each credential's `transports` in the `allowCredentials` array passed later into `generateAuthenticateOptions()`. They will help the browser figure out when a credential might enable a user to log in using new technology that wasn't available before.
 
@@ -94,9 +100,15 @@ See the [Conditional UI section of the docs for `startAuthentication()`](package
 ```ts
 const authVerify = await verifyAuthenticationResponse({
   // ...
-  requireUserVerification: true,
+  requireUserVerification: false,
 });
 ```
+
+:::caution A word of caution about user verification
+`requireUserVerification` is set to `false` above because many websites can be just fine using passkeys without user verification! The phishing resistant properties of WebAuthn elevates passkeys to a higher level of protection than username+password+2fa, and thus passkeys are not necessarily beholden to the same "multiple factors of auth" rules that came before them.
+
+However *some websites*, for various regulatory reasons, may require multiple factors of authentication to be provided. If you are a developer of such a website then you should set `userVerification: 'required'` when calling `generateRegistrationOptions()`, and specify `requireUserVerification: true` when calling `verifyRegistrationResponse()`.
+:::
 
 ### Remembering challenges
 
