@@ -519,6 +519,32 @@ function nodeEnvInjection() {
 nodeEnvInjection()
 ```
 
+### Error: No data
+
+Calls to `verifyAuthenticationResponse()` may unexpectedly error out with `Error: No data` in projects that store credential public keys as `Binary` data types in [MongoDB](https://www.mongodb.com):
+
+```
+Error: No data
+    at Module.decodePartialCBOR (file:///path/to/app/node_modules/@levischuck/tiny-cbor/esm/cbor/cbor.js:351:15)
+    at Module.decodeFirst (file:///path/to/app/node_modules/@simplewebauthn/server/esm/helpers/iso/isoCBOR.js:22:30)
+    at decodeCredentialPublicKey (file:///path/to/app/node_modules/@simplewebauthn/server/esm/helpers/decodeCredentialPublicKey.js:3:65)
+    at verifySignature (file:///path/to/app/node_modules/@simplewebauthn/server/esm/helpers/verifySignature.js:17:25)
+    at verifyAuthenticationResponse (file:///path/to/app/node_modules/@simplewebauthn/server/esm/authentication/verifyAuthenticationResponse.js:154:25)
+    at async file:///path/to/app/dist/controller/auth.controller.js:202:28
+```
+
+To fix this, massage the `Binary` public key bytes into an instance of `Uint8Array` that `verifyAuthenticationResponse()` expects:
+
+```js
+const verification = await verifyAuthenticationResponse({
+  // ...
+  authenticator: {
+    // ...
+    credentialPublicKey: new Uint8Array(credentialPublicKey.buffer),
+  },
+});
+```
+
 ### Error: String values for \`userID\` are no longer supported
 
 See [Advanced Guides > @simplewebauthn/server > Custom User IDs](advanced/server/custom-user-ids.md#error-string-values-for-userid-are-no-longer-supported) for more information.
