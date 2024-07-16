@@ -107,7 +107,7 @@ const authVerify = await verifyAuthenticationResponse({
 :::caution A word of caution about user verification
 `requireUserVerification` is set to `false` above because many websites can be just fine using passkeys without user verification! The phishing resistant properties of WebAuthn elevates passkeys to a higher level of protection than username+password+2fa, and thus passkeys are not necessarily beholden to the same "multiple factors of auth" rules that came before them.
 
-However *some websites*, for various regulatory reasons, may require multiple factors of authentication to be provided. If you are a developer of such a website then you should set `userVerification: 'required'` when calling `generateRegistrationOptions()`, and specify `requireUserVerification: true` when calling `verifyRegistrationResponse()`.
+However *some websites*, for various regulatory reasons, may require multiple factors of authentication to be provided. If you are a developer of such a website then you should set `userVerification: 'required'` when calling `generateAuthenticationOptions()`, and specify `requireUserVerification: true` when calling `verifyAuthenticationResponse()`.
 :::
 
 ### Remembering challenges
