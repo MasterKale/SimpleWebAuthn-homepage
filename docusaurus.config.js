@@ -60,6 +60,8 @@ module.exports = {
       copyright: `
         <strong>Copyright © ${new Date().getFullYear()} Matthew Miller. Built with Docusaurus.</strong>
         <br>
+        <span><a href="https://github.com/MasterKale/SimpleWebAuthn?tab=readme-ov-file#sponsors">With thanks to Platinum Sponsor Okta</a></span>
+        <br>
         <sub>FIDO® is a trademark (registered in numerous countries) of FIDO Alliance, Inc.</sub>
       `,
     },
