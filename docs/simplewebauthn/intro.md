@@ -3,8 +3,6 @@ title: Introduction
 slug: /
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
-
 ## Overview
 
 The SimpleWebAuthn project contains two complimentary libraries to help reduce the amount of work
@@ -16,13 +14,3 @@ needed to incorporate WebAuthn into a website. The following packages are mainta
 An additional package is also included that contains shared TypeScript definitions:
 
 - [@simplewebauthn/types](packages/types.md)
-
-## Sponsors
-
-Thank you very much to those below who sponsor this project. Your contributions help keep the open-source dream alive 🙇
-
-Interested in sponsoring this project? See here for more info: https://github.com/sponsors/MasterKale
-
-### Platinum Sponsor
-
-<img alt="Okta logo" src={useBaseUrl('img/docs/sponsors/okta_small.png')} />
