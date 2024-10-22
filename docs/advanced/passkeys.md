@@ -153,6 +153,10 @@ There isn't a whole lot that changes in how you call the browser methods if you 
 
 No changes are required.
 
+...Unless you are interested in leveraging automatic passkey registration, a.k.a. "Conditional Create". Conditional Create will attempt to register a passkey with a user's password manager after a successful password authentication, assuming the password manager is also a passkey provider. This will allow the user to use a passkey instead for subsequent authentications.
+
+See the [Auto Register section of the docs for `startRegistration()`](packages/browser.mdx#auto-upgrade-conditional-create) for more information.
+
 ### `startAuthentication()`
 
 No changes are required.

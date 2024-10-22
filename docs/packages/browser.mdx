@@ -130,6 +130,44 @@ That said, this general sequence of events should be easily adaptable to the fro
 </script>
 ```
 
+### Auto Register (Conditional Create)
+
+In supported browsers, calling `startRegistration({ ..., useAutoRegister: true })` **after a successful non-passkey authentication** can trigger the silent creation of a passkey. If the password manager that was just used for password autofill is also a passkey provider then the browser will attempt to work with it to register a passkey without any modal UI shown to the user:
+
+```html
+<!-- completedPasswordLogin.html -->
+<body>
+  <!-- Typical landing page the user ends up on after login goes here -->
+
+  <script>
+    const { startRegistration } = SimpleWebAuthnBrowser;
+
+    /**
+     * Get options then call `startRegistration()`. Errors should be ignored
+     * as auto upgrade is considered "opportunistic" and can fail more easily
+     * than other such WebAuthn calls if the browser is not satisfied that all
+     * requirements have been met.
+     */
+    fetch('/generate-registration-options')
+      .then(resp => resp.json())
+      .then((optionsJSON) => {
+        // Note the `startRegistration: true` argument here
+        startRegistration({ optionsJSON, startRegistration: true })
+          .then(regResp => sendToServerForVerification)
+          .catch(err => handleError);
+      });
+  </script>
+</body>
+```
+
+If successful, `startRegistration({ ..., useAutoRegister: true })` will resolve with a typical registration response.
+
+:::info
+The `up` (User Presence) bit in this response is likely to be false! Be sure to specify `requireUserPresence: false` when passing this response into [@simplewebauthn/server's `verifyRegistrationResponse()`](packages/server.md#2-verify-registration-response) to account for this.
+:::
+
+Successful use of Auto Register can be considered "upgrading" a user to be able to use their new passkey for subsequent authentications.
+
 ### `startAuthentication()`
 
 "Authentication" is analogous to existing account login. Authentication in the front end uses the following methods from this package:
