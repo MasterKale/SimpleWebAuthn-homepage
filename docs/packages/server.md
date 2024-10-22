@@ -4,6 +4,10 @@ title: "@simplewebauthn/server"
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
+## Current version
+
+The content below should be accurate for **@simplewebauthn/server@^11.0.0**. Please open an issue [here](https://github.com/MasterKale/SimpleWebAuthn-homepage/issues) to report any inaccuracies.
+
 ## Installation
 
 ### Node LTS 20.x or higher
