@@ -266,9 +266,7 @@ Assuming `verification.verified` is true then RP's must, at the very least, save
 ```ts
 const { registrationInfo } = verification;
 const {
-  credentialID,
-  credentialPublicKey,
-  counter,
+  credential,
   credentialDeviceType,
   credentialBackedUp,
 } = registrationInfo;
@@ -279,17 +277,17 @@ const newPasskey: Passkey = {
   // Created by `generateRegistrationOptions()` in Step 1
   webAuthnUserID: currentOptions.user.id,
   // A unique identifier for the credential
-  id: credentialID,
+  id: credential.id,
   // The public key bytes, used for subsequent authentication signature verification
-  publicKey: credentialPublicKey,
+  publicKey: credential.publicKey,
   // The number of times the authenticator has been used on this site so far
-  counter,
+  counter: credential.counter,
+  // How the browser can talk with this credential's authenticator
+  transports: credential.transports,
   // Whether the passkey is single-device or multi-device
   deviceType: credentialDeviceType,
   // Whether the passkey has been backed up in some way
   backedUp: credentialBackedUp,
-  // `body` here is from Step 2
-  transports: body.response.transports,
 };
 
 // (Pseudocode) Save the authenticator info so that we can
@@ -384,9 +382,9 @@ try {
     expectedChallenge: currentOptions.challenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
-    authenticator: {
-      credentialID: passkey.id,
-      credentialPublicKey: passkey.publicKey,
+    credential: {
+      id: passkey.id,
+      publicKey: passkey.publicKey,
       counter: passkey.counter,
       transports: passkey.transports,
     },
