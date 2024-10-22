@@ -249,6 +249,19 @@ autocomplete="current-password webauthn"
 ```
 :::
 
+:::info
+If you **absolutely** know that a suitable `<input>` element as described above exists somewhere in the DOM (e.g. inside a [web component's shadow DOM](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM)), but `startAuthentication()` raises an error that such an element cannot be found, then you can also specify `verifyBrowserAutofillInput: false` when calling this method to bypass the error:
+
+```js
+startAuthentication({
+  optionsJSON,
+  useBrowserAutofill: true,
+  verifyBrowserAutofillInput: false,
+})
+  .then(...)
+```
+:::
+
 :::caution
 **Guidance from platform vendors indicates that it is important to initialize WebAuthn's Conditional UI experience as soon as possible.** Placing this logic in `<head>` should give browsers enough time to query authenticators for any discoverable credentials to display to the user. It may also work to delay painting UI For N milliseconds to achieve the same thing in something like a single-page app that would trigger this experience some time after page load. It's still early days for this capability, though, and different browsers may have different quirks while the feature evolves.
 
