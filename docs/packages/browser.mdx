@@ -88,11 +88,12 @@ That said, this general sequence of events should be easily adaptable to the fro
     // GET registration options from the endpoint that calls
     // @simplewebauthn/server -> generateRegistrationOptions()
     const resp = await fetch('/generate-registration-options');
+    const optionsJSON = await resp.json();
 
     let attResp;
     try {
       // Pass the options to the authenticator and wait for a response
-      attResp = await startRegistration(await resp.json());
+      attResp = await startRegistration({ optionsJSON });
     } catch (error) {
       // Some basic error handling
       if (error.name === 'InvalidStateError') {
@@ -173,11 +174,12 @@ That said, this general sequence of events should be easily adaptable to the fro
     // GET authentication options from the endpoint that calls
     // @simplewebauthn/server -> generateAuthenticationOptions()
     const resp = await fetch('/generate-authentication-options');
+    const optionsJSON = await resp.json();
 
     let asseResp;
     try {
       // Pass the options to the authenticator and wait for a response
-      asseResp = await startAuthentication(await resp.json());
+      asseResp = await startAuthentication({ optionsJSON });
     } catch (error) {
       // Some basic error handling
       elemError.innerText = error;
@@ -220,9 +222,10 @@ A second `useBrowserAutofill` argument can be set to `true` to set up support fo
     const { startAuthentication } = SimpleWebAuthnBrowser;
 
     fetch('/generate-authentication-options')
-      .then((options) => {
-        // Note the `true` argument here
-        startAuthentication(options, true)
+      .then(resp => resp.json())
+      .then((optionsJSON) => {
+        // Note the `useBrowserAutofill: true` argument here
+        startAuthentication({ optionsJSON, useBrowserAutofill: true })
           .then(authResp => sendToServerForVerificationAndLogin)
           .catch(err => handleError);
       });
