@@ -23,7 +23,7 @@ When adding support for WebAuthn, special considerations must be made for **Micr
 
 ## Firefox
 
-WebAuthn responses from security keys that generate keypairs using Ed12259 (i.e. `-8`) can fail response verification during registration due to a bug in the browser itself. This can manifest as the following error message from **@simplewebauthn/server** methods:
+WebAuthn responses from security keys that generate keypairs using Ed25519 (i.e. `-8`) can fail response verification during registration due to a bug in the browser itself. This can manifest as the following error message from **@simplewebauthn/server** methods:
 
 ```
 Error: Leftover bytes detected while parsing authenticator data
