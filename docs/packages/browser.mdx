@@ -211,9 +211,9 @@ That said, this general sequence of events should be easily adaptable to the fro
 </script>
 ```
 
-#### Browser autofill, a.k.a. Conditional UI
+### Browser Autofill (Conditional UI)
 
-A second `useBrowserAutofill` argument can be set to `true` to set up support for credential selection via the browser's native autofill popup:
+Calling `startAuthentication({ ..., useBrowserAutofill: true })` will set up support for credential selection via the browser's native autofill popup:
 
 ```html
 <head>

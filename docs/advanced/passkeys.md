@@ -92,7 +92,7 @@ const options = await generateAuthenticationOptions({
 :::info
 Setting `allowCredentials: []` when calling `generateAuthenticationOptions()` is **OPTIONAL** if you are using **@simplewebauthn/browser**'s `startAuthentication()` method with its second positional `useBrowserAutofill` argument set to `true`; `startAuthentication()` will take care of this for you in this configuration.
 
-See the [Conditional UI section of the docs for `startAuthentication()`](packages/browser.mdx#browser-autofill-aka-conditional-ui) for more information.
+See the [Conditional UI section of the docs for `startAuthentication()`](packages/browser.mdx#browser-autofill-conditional-ui) for more information.
 :::
 
 ### `verifyAuthenticationResponse()`
@@ -157,6 +157,6 @@ No changes are required.
 
 No changes are required.
 
-...Unless you are interested in leveraging a new capability coming to WebAuthn in almost all modern browsers that's known as "Conditional UI". Conditional UI gives the browser a chance to find and suggest to the user credentials that they can select to then present to you for authentication, all via the browser's native autofill API.
+...Unless you are interested in leveraging browser autofill for passkey authentication, a.k.a. "Conditional UI". Conditional UI gives the browser a chance to find and suggest to the user credentials that they can select to then present to you for authentication, all via the browser's native autofill API.
 
-If this interests you, then please see the [Conditional UI section of the docs for `startAuthentication()`](packages/browser.mdx#browser-autofill-aka-conditional-ui) as there is a bit of setup required to get it all working.
+If this interests you, then please see the [Browser Autofill section of the docs for `startAuthentication()`](packages/browser.mdx#browser-autofill-conditional-ui) as there is a bit of setup required to get it all working.
