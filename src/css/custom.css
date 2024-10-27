@@ -34,3 +34,11 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   border: 1px solid var(--ifm-color-emphasis-300);
   border-radius: var(--ifm-pagination-nav-border-radius);
 }
+
+.sponsor-logo img {
+  border: 0;
+}
+
+footer sub {
+  display: block;
+}

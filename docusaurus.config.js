@@ -59,8 +59,8 @@ module.exports = {
       ],
       copyright: `
         <strong>Copyright © ${new Date().getFullYear()} Matthew Miller. Built with Docusaurus.</strong>
-        <br>
         <sub>FIDO® is a trademark (registered in numerous countries) of FIDO Alliance, Inc.</sub>
+        <sub><a href="https://a0.to/signup/simplewebauthn">Sponsored by Auth0 by Okta</a></sub>
       `,
     },
     prism: {
