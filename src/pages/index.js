@@ -30,8 +30,8 @@ const features = [
   },
   {
     title: 'FIDO® Conformant',
-    imageUrl: 'img/FIDO_logo_black_RGB.png',
-    imageUrlDark: 'img/FIDO_logo_white_RGB.png',
+    imageUrl: 'img/FIDO_Passkey_logo_dark.png',
+    imageUrlDark: 'img/FIDO_Passkey_logo_light.png',
     description: (
       <>
         SimpleWebAuthn passes FIDO® Conformance Server Tests with flying colors! You can rest easy
