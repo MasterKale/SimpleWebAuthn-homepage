@@ -429,7 +429,7 @@ NotAllowedError: The operation either timed out or was not allowed. See: https:/
 Caused by: DOMException: The operation either timed out or was not allowed. See: https://www.w3.org/TR/webauthn-2/#sctn-privacy-considerations-client.
 ```
 
-This can be caused by an empty value string value (i.e. `""`) for `user.displayname` in the options passed to `startRegistration()`.
+This can be caused by an empty value string value (i.e. `""`) for `user.displayName` in the options passed to `startRegistration()`.
 
 To fix this, set `user.displayName` to the same value as `user.name` and try again. If you are using **@simplewebauthn/servers**'s `generateRegistrationOptions()` method then you can set the `userDisplayName` argument to the same value as the `userName` argument to achieve the same result.
 
