@@ -152,7 +152,7 @@ In supported browsers, calling `startRegistration({ ..., useAutoRegister: true }
       .then(resp => resp.json())
       .then((optionsJSON) => {
         // Note the `startRegistration: true` argument here
-        startRegistration({ optionsJSON, startRegistration: true })
+        startRegistration({ optionsJSON, useAutoRegister: true })
           .then(regResp => sendToServerForVerification)
           .catch(err => handleError);
       });
