@@ -151,8 +151,8 @@ In supported browsers, calling `startRegistration({ ..., useAutoRegister: true }
     fetch('/generate-registration-options')
       .then(resp => resp.json())
       .then((optionsJSON) => {
-        // Note the `startRegistration: true` argument here
-        startRegistration({ optionsJSON, startRegistration: true })
+        // Note the `useAutoRegister: true` argument here
+        startRegistration({ optionsJSON, useAutoRegister: true })
           .then(regResp => sendToServerForVerification)
           .catch(err => handleError);
       });
