@@ -2,27 +2,19 @@
 title: "@simplewebauthn/types"
 ---
 
-**This support package is only useful in projects written in TypeScript!** It contains various type declarations that help developers prepare and handle values when working with methods available in
-the Browser and Server packages.
+:::danger Deprecation notice
+It is no longer necessary to install this package if you are running v13+ of either **@simplewebauthn/browser** or **@simplewebauthn/server**. The types that were maintained in this package will be exported directly from those packages going forward. The last published version of @simplewebauthn/types remains available on [NPM](https://www.npmjs.com/package/@simplewebauthn/types/v/12.0.0) and [JSR](https://jsr.io/@simplewebauthn/types@12.0.0) but will no longer be updated going forward.
 
-## Current version
-
-The documentation below should be accurate for **@simplewebauthn/types@^11.0.0**. Please open an issue [here](https://github.com/MasterKale/SimpleWebAuthn-homepage/issues) to report any inaccuracies.
-
-## Installation
-
-### Node LTS 20.x or higher
-
-This package is available on **npm**:
-
-```bash
-npm install --save-dev @simplewebauthn/types
-```
-
-### Deno v1.33.x or higher
-
-This package is also available for installation in **Deno** projects from **deno.land/x**:
-
+**Before:**
 ```ts
-import type {...} from 'https://deno.land/x/simplewebauthn/deno/types.ts';
+import type { WebAuthnCredential } from '@simplewebauthn/types';
 ```
+
+**After:**
+```ts
+import { ..., type WebAuthnCredential } from '@simplewebauthn/server';
+```
+```ts
+import { ..., type WebAuthnCredential } from '@simplewebauthn/browser';
+```
+:::
