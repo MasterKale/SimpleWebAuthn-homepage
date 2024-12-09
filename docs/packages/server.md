@@ -206,6 +206,24 @@ These options can be passed directly into [**@simplewebauthn/browser**'s `startR
   - Browsers will guide users towards registering a security key, or mobile device via hybrid registration.
 - `'platform'`
   - Browser will guide users to registering the locally integrated hardware authenticator.
+
+#### Fine-tuning the registration experience with `preferredAuthenticatorType`
+
+[WebAuthn hints](https://w3c.github.io/webauthn/#dom-publickeycredentialrequestoptions-hints) allow a Relying Party to further refine the registration experience compared to specifying a value for `authenticatorSelection.authenticatorAttachment` as detailed above. SimpleWebAuthn enables use of hints via the `preferredAuthenticatorType` argument that can be passed into `generateRegistrationOptions()`:
+
+**`preferredAuthenticatorType`:**
+
+- `'securityKey'`
+  - A security key, like a [YubiKey 5](https://www.yubico.com/products/yubikey-5-overview/), [Feitian K40](https://www.ftsafe.com/Products/FIDO/NFC), and other such FIDO2-compatible USB tokens
+- `'localDevice'`
+  - Typically the platform authenticator available on the device that they are logging in from
+- `'remoteDevice'`
+  - A platform authenticator with access to a valid passkey but that is **not** on the device the user is logging in from (a.k.a. "hybrid auth" a.k.a. "the one that shows a QR code")
+
+When this value is specified, browsers that support hints will try to tailor their experience to encourage registration of an authenticator of the specified type. **Hints are a suggestion**, though, and browsers will often allow a user to ultimately choose a different type of authenticator to register. RPs should be prepared for this possibility when using this.
+
+:::important
+Setting a value for `preferredAuthenticatorType` will overwrite any value that may have been specified for `authenticatorSelection.authenticatorAttachment`! This is to help maintain backwards compatibility with browsers that may not yet know about hints.
 :::
 
 ### 1a. Supported Attestation Formats
