@@ -6,34 +6,36 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Current version
 
-The content below should be accurate for **@simplewebauthn/server@^11.0.0**. Please open an issue [here](https://github.com/MasterKale/SimpleWebAuthn-homepage/issues) to report any inaccuracies.
+The content below should be accurate for **@simplewebauthn/server@^13.0.0**. Please open an issue [here](https://github.com/MasterKale/SimpleWebAuthn-homepage/issues) to report any inaccuracies.
 
 ## Installation
 
-### Node LTS 20.x or higher
-This package is available on **npm**:
+This package can be installed from **[NPM](https://www.npmjs.com/package/@simplewebauthn/server)**
+and **[JSR](https://jsr.io/@simplewebauthn/server)**:
 
-```bash
+### Node LTS 20.x and higher
+
+```sh
 npm install @simplewebauthn/server
 ```
 
-It can then be imported into all types of Node applications thanks to its support for **both CommonJS and [ECMAScript modules (ESM)](https://nodejs.org/api/esm.html#enabling)** projects:
+### Deno v1.43 and higher
 
-```ts
-// CommonJS (NodeJS)
-const SimpleWebAuthnServer = require('@simplewebauthn/server');
-
-// ES Module (NodeJS w/module support, TypeScript, Babel, etc...)
-import SimpleWebAuthnServer from '@simplewebauthn/server';
+```sh
+deno add jsr:@simplewebauthn/server
 ```
 
-### Deno v1.33.x or higher
+## Types
 
-This package is also available for installation in **Deno** projects from **deno.land/x**:
+This package exports almost all of its types for TypeScript projects to import. For example:
 
 ```ts
-import {...} from 'https://deno.land/x/simplewebauthn/deno/server.ts';
+import type { WebAuthnCredential } from '@simplewebauthn/server';
+// -or-
+import { ..., type WebAuthnCredential } from '@simplewebauthn/server';
 ```
+
+See the [auto-generated API docs for this project on JSR](https://jsr.io/@simplewebauthn/server/doc) for a comprehensive list of available imports.
 
 ## Additional data structures
 
@@ -44,7 +46,7 @@ import type {
   AuthenticatorTransportFuture,
   CredentialDeviceType,
   Base64URLString,
-} from '@simplewebauthn/types';
+} from '@simplewebauthn/server';
 
 type UserModel = {
   id: any;

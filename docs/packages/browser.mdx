@@ -6,39 +6,70 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Current version
 
-The content below should be accurate for **@simplewebauthn/browser@^11.0.0**. Please open an issue [here](https://github.com/MasterKale/SimpleWebAuthn-homepage/issues) to report any inaccuracies.
+The content below should be accurate for **@simplewebauthn/browser@^13.0.0**. Please open an issue [here](https://github.com/MasterKale/SimpleWebAuthn-homepage/issues) to report any inaccuracies.
 
 ## Installation
 
-### npm
+This package can be installed from **[NPM](https://www.npmjs.com/package/@simplewebauthn/browser)**
+and **[JSR](https://jsr.io/@simplewebauthn/browser)**:
 
-This package is available on **npm** for use in projects that contain a build step, like
-in a single-page application:
+### Node LTS 20.x and higher
 
-```bash
+```sh
 npm install @simplewebauthn/browser
 ```
 
-It can then be imported as usual:
+### Deno v1.43 and higher
 
-```js
-import SimpleWebAuthnBrowser from '@simplewebauthn/browser';
+```sh
+deno add jsr:@simplewebauthn/browser
 ```
 
 ### UMD
 
-The Browser package can also be installed using a traditional `<script>` tag. Copy-paste the code below into your HTML page's `<head>` element to begin:
+This package can also be installed via **unpkg** by including the following script in your page's
+`<head>` element. The library's methods will be available on the global **`SimpleWebAuthnBrowser`**
+object.
+
+:::info
+The only difference between the two packages below is that the ES5 bundle includes some polyfills for older browsers. This adds some bundle size overhead, but _does_ enable use of `browserSupportsWebAuthn()` in older browsers to show appropriate UI when WebAuthn is unavailable.
+:::
+
+:::warning Use a subresource integrity checksum
+If you are using a UMD bundle in production, it is **highly** recommend that you...
+
+1. Visit the URL in either `<script>` tag below to get the exact-version URL that it redirects you to.
+2. Enter that versioned URL into the [SRI Hash Generator](https://www.srihash.org/) to create a version of that script tag that includes a subresource integrity checksum, to ensure you are always getting the exact, unmodified version of that file that you requested.
+:::
+
+#### ES2021
+
+If you only need to support modern browsers, include the `ES2021` version:
 
 ```html
 <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
 ```
 
-**NOTE:** If using this in production, we recommend that you...
+#### ES5
 
-1. Visit the URL in the above `<script>` tag to get the exact-version URL that it redirects you to.
-2. Enter that versioned URL into the [SRI Hash Generator](https://www.srihash.org/) to create a version of that script tag that includes a subresource integrity checksum, to ensure you are always getting the exact, unmodified version of that file that you requested.
+If you need to support WebAuthn feature detection in deprecated browsers like IE11 and Edge Legacy,
+include the `ES5` version:
 
-The library's methods will be available on the global `SimpleWebAuthnBrowser` object.
+```html
+<script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.es5.umd.min.js"></script>
+```
+
+## Types
+
+This package exports almost all of its types for TypeScript projects to import. For example:
+
+```ts
+import type { WebAuthnCredential } from '@simplewebauthn/browser';
+// -or-
+import { ..., type WebAuthnCredential } from '@simplewebauthn/browser';
+```
+
+See the [auto-generated API docs for this project on JSR](https://jsr.io/@simplewebauthn/browser/doc) for a comprehensive list of available imports.
 
 ## Methods
 
