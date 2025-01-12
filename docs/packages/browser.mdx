@@ -465,3 +465,25 @@ This can be caused by an empty value string value (i.e. `""`) for `user.displayN
 To fix this, set `user.displayName` to the same value as `user.name` and try again. If you are using **@simplewebauthn/servers**'s `generateRegistrationOptions()` method then you can set the `userDisplayName` argument to the same value as the `userName` argument to achieve the same result.
 
 This is confirmed Chrome-specific bug that **affects Chrome up through 127**. A bug report for this issue has been logged as https://issues.chromium.org/issues/346835891. These docs will be updated when this issue is resolved and a new version of Chrome improves this behavior.
+
+### TypeError: Cannot read properties of undefined (reading 'challenge')
+
+As of SimpleWebAuthn v11.0.0 both the `startRegistration()` and `startAuthentication()` accept a single object argument, with various options specified as properties in that argument. This error is likely caused by passing in options directly (the old way), without wrapping them in an object and specifying them as `optionsJSON` as expected.
+
+To fix this, update method calls to pass in options within an object instead:
+
+```ts
+// Before
+const response = await startRegistration(options, ...);
+
+// After
+const response = await startRegistration({ optionsJSON: options, ... });
+```
+
+```ts
+// Before
+const response = await startAuthentication(options, ...);
+
+// After
+const response = await startAuthentication({ optionsJSON: options, ... });
+```
