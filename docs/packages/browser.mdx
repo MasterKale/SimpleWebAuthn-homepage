@@ -468,7 +468,7 @@ This is confirmed Chrome-specific bug that **affects Chrome up through 127**. A 
 
 ### TypeError: Cannot read properties of undefined (reading 'challenge')
 
-As of SimpleWebAuthn v11.0.0 both the `startRegistration()` and `startAuthentication()` accept a single object argument, with various options specified as properties in that argument. This error is likely caused by passing in options directly (the old way), without wrapping them in an object and specifying them as `optionsJSON` as expected.
+As of SimpleWebAuthn v11.0.0 both the `startRegistration()` and `startAuthentication()` accept a single object argument, with various options specified as properties in that argument. If you see this error, or were otherwise directed here after calling either of these methods, it is likely caused by passing in options directly (the old way), without wrapping them in an object and specifying them as `optionsJSON` as expected.
 
 To fix this, update method calls to pass in options within an object instead:
 
