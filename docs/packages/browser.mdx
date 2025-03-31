@@ -423,15 +423,19 @@ These advanced types of authenticators are typically embedded into a user's comp
 
 ## Helpers
 
+Below are various methods and classes intended to help Relying Parties work with this library.
+These methods are not typically needed when using this library, but they have been made available
+nonetheless for those projects that may need it.
+
 ### `base64URLStringToBuffer()`
 
 This method helps convert a base64url-encoded `string` into a `Uint8Array`:
 
 ```js
 import { base64URLStringToBuffer } from '@simplewebauthn/browser';
-```
 
-This method is not typically needed when using this library, but has been made available nonetheless for those who may need it.
+const valueBytes: ArrayBuffer = base64URLStringToBuffer('...');
+```
 
 ### `bufferToBase64URLString()`
 
@@ -439,9 +443,78 @@ This method helps convert a `Uint8Array` into a base64url-encoded `string`:
 
 ```js
 import { bufferToBase64URLString } from '@simplewebauthn/browser';
+
+const valueBase64URL: string = bufferToBase64URLString(new Uint8Array(...));
 ```
 
-This method is not typically needed when using this library, but is available nonetheless for those who may find utility in such a method.
+### `WebAuthnAbortService`
+
+`startRegistration()` and `startAuthentication()` coordinate cancellation of existing WebAuthn
+calls via an internal `WebAuthnAbortService` class singleton. Whenever either of these methods is
+called, **any preceding call to WebAuthn triggered by this library is automatically cancelled** to
+avoid issues with browsers that may object to a page attempting to make multiple, simultaneous
+calls to WebAuthn.
+
+However, this singleton has been exposed as a helper to enable certain types of projects, like
+Single-Page Applications (SPA), to manually trigger cancellation of a pending WebAuthn request as
+needed (e.g. client-side routing away from a login page needs to cancel any pending WebAuthn calls):
+
+```js
+import {
+  startAuthentication,
+  WebAuthnAbortService,
+  WebAuthnError,
+} from '@simplewebauthn/browser';
+
+// On mount, the component triggers conditional UI
+useEffect(() => {
+  try {
+    const response = await startAuthentication({ ..., useBrowserAutofill: true });
+  } catch (err) {
+    if (err instanceof WebAuthnError && err.code === 'ERROR_CEREMONY_ABORTED') {
+      // Error can safely be ignored
+    } else {
+      // Something else went wrong
+    }
+  }
+}, []);
+
+function handleLeavePage() {
+  // Cancel the pending WebAuthn request before leaving the login page
+  WebAuthnAbortService.cancelCeremony();
+}
+```
+
+### `WebAuthnError`
+
+The `WebAuthnError` class is used to wrap errors that are raised when calling WebAuthn via
+`startRegistration()` and `startAuthentication()`. Projects can import this error to perform
+`instanceof` checks when catching errors to discern SimpleWebAuthn library errors from other errors
+that may arise.
+
+An instance of this error has the same `name` property as the WebAuthn error it is wrapping, but
+has a custom `message` property that tries to better communicate what may have caused the error.
+A corresponding `code` property is also set on it to programmatically work with library-identified
+error causes.
+
+Finally, the `cause` ([MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause))
+property is set to the original `Error` raised by the call to `navigator.credentials.create()`
+or `navigator.credentials.get()` so that Relying Party developers can directly access the raw
+WebAuthn error.
+
+```js
+import { startRegistration, WebAuthnError } from '@simplewebauthn/browser';
+
+try {
+  const response = await startRegistration({ ... });
+} catch (err) {
+  if (err instanceof WebAuthnError) {
+    // See `name`, `message`, `code`, and `cause` for more info
+  } else {
+    // Something else went wrong
+  }
+}
+```
 
 ## Troubleshooting
 
