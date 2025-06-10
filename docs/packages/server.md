@@ -351,8 +351,9 @@ Each of these steps need their own API endpoints:
 One endpoint (`GET`) needs to return the result of a call to `generateAuthenticationOptions()`:
 
 ```ts
-// (Pseudocode) Retrieve the logged-in user
-const user: UserModel = getUserFromDB(loggedInUserId);
+// (Pseudocode) Retrieve the user record for the account identifier (email, username, etc...) that
+// the unauthenticated user entered
+const user: UserModel = getUserFromDBByUsername(submittedUsername);
 // (Pseudocode) Retrieve any of the user's previously-
 // registered authenticators
 const userPasskeys: Passkey[] = getUserPasskeys(user);
@@ -387,8 +388,9 @@ The second endpoint (`POST`) should accept the value returned by [**@simplewebau
 ```ts
 const { body } = req;
 
-// (Pseudocode) Retrieve the logged-in user
-const user: UserModel = getUserFromDB(loggedInUserId);
+// (Pseudocode) Retrieve the user record for the account identifier (email, username, etc...) that
+// the unauthenticated user entered
+const user: UserModel = getUserFromDBByUsername(submittedUsername);
 // (Pseudocode) Get `options.challenge` that was saved above
 const currentOptions: PublicKeyCredentialRequestOptionsJSON =
   getCurrentAuthenticationOptions(user);

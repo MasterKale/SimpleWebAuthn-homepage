@@ -48,7 +48,7 @@ import { isoBase64URL } from '@simplewebauthn/server/helpers';
 const options = await generateAuthenticationOptions({ ... });
 
 // Remember the plain challenge
-inMemoryUserDeviceDB[loggedInUserId].currentChallenge = options.challenge;
+setCurrentChallenge(unauthenticatedSessionID, options.challenge);
 
 // Add a simple amount of data to be signed using whatever
 // data structure is most appropriate
@@ -61,7 +61,7 @@ options.challenge = isoBase64URL.fromString(JSON.stringify({
 After the WebAuthn ceremony is completed, call `verifyRegistrationResponse()` or `verifyAuthenticationResponse()` and pass in a function for `expectedChallenge` that accepts a `challenge` string and returns a `boolean`. This will need to perform the reverse of the logic used above to ensure that "`actualChallenge`" is the expected challenge:
 
 ```js
-const expectedChallenge = inMemoryUserDeviceDB[loggedInUserId].currentChallenge;
+const expectedChallenge = getCurrentChallenge(unauthenticatedSessionID);
 
 const verification = await verifyAuthenticationResponse({
   // ...
