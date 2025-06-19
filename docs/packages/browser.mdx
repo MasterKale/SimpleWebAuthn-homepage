@@ -65,7 +65,11 @@ This package exports almost all of its types for TypeScript projects to import. 
 
 ```ts
 import type { WebAuthnCredential } from '@simplewebauthn/browser';
-// -or-
+```
+
+or
+
+```ts
 import { ..., type WebAuthnCredential } from '@simplewebauthn/browser';
 ```
 
@@ -77,7 +81,7 @@ The following methods are exported from **@simplewebauthn/browser**:
 
 ### `startRegistration()`
 
-"Registration" is analogous to new account creation. The front end uses the following methods from this package to accomplish this:
+`Registration` is analogous to new account creation. The front end uses the following methods from this package to accomplish this:
 
 ```js
 import { startRegistration } from '@simplewebauthn/browser';
@@ -201,7 +205,7 @@ Successful use of Auto Register can be considered "upgrading" a user to be able 
 
 ### `startAuthentication()`
 
-"Authentication" is analogous to existing account login. Authentication in the front end uses the following methods from this package:
+`Authentication` is analogous to existing account login. Authentication in the front end uses the following methods from this package:
 
 ```js
 import { startAuthentication } from '@simplewebauthn/browser';
