@@ -30,14 +30,13 @@ The example server is a Node server, so you'll need the following available on y
 First and foremost, get the SimpleWebAuthn code downloaded to your machine. You can [click here to download](https://github.com/MasterKale/SimpleWebAuthn/archive/master.zip) a ZIP file containing a current snapshot of the codebase, or clone it with `git`:
 
 ```bash
-$> git clone https://github.com/MasterKale/SimpleWebAuthn.git
+git clone https://github.com/MasterKale/SimpleWebAuthn.git
 ```
 
 After unzipping or cloning the codebase, `cd` to it in a terminal before continuing:
 
 ```bash
-$> cd SimpleWebAuthn
-./SimpleWebAuthn/ $>
+cd SimpleWebAuthn
 ```
 
 ### Installing dependencies
@@ -45,14 +44,13 @@ $> cd SimpleWebAuthn
 First, navigate to the example project directory:
 
 ```bash
-./SimpleWebAuthn/ $> cd example
-./example/ $>
+cd example
 ```
 
 Next, install dependencies with `npm`:
 
 ```bash
-./example/ $> npm install
+npm install
 ```
 
 ### Starting the server
@@ -60,7 +58,7 @@ Next, install dependencies with `npm`:
 Once the two files above are in-place, you can start the server:
 
 ```bash
-./example/ $> npm start
+npm start
 ```
 
 The example server should now be available at [http://localhost:8000](http://localhost:8000)!
@@ -91,7 +89,7 @@ WebAuthn must be run from a [secure context](https://developer.mozilla.org/en-US
 4. Run the following `certbot` command and follow its instructions to generate SSL certificates for **dev.example.com**:
 
 ```bash
-$> sudo certbot --manual -d dev.example.com --preferred-challenges dns certonly
+sudo certbot --manual -d dev.example.com --preferred-challenges dns certonly
 ```
 
 :::info
@@ -115,7 +113,7 @@ const rpID = 'dev.example.com';
 9. Once everything is in place, start the server:
 
 ```sh
-./example $> npm start
+npm start
 ```
 
 Assuming everything is in place, the server will then be accessible at https://dev.example.com.
