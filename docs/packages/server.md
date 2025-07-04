@@ -31,7 +31,8 @@ This package exports almost all of its types for TypeScript projects to import. 
 
 ```ts
 import type { WebAuthnCredential } from '@simplewebauthn/server';
-// -or-
+```
+```ts
 import { ..., type WebAuthnCredential } from '@simplewebauthn/server';
 ```
 
