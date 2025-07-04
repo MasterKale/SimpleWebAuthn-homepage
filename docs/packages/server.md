@@ -373,7 +373,7 @@ setCurrentAuthenticationOptions(user, options);
 return options;
 ```
 
-These options can be passed directly into [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.mdx#startAuthentication) method.
+These options can be passed directly into [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.mdx#startauthentication) method.
 
 :::tip Support for custom challenges
 
@@ -383,7 +383,7 @@ Power users can optionally generate and pass in their own unique challenges as `
 
 ### 2. Verify authentication response
 
-The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.mdx#startAuthentication) method and then verify it:
+The second endpoint (`POST`) should accept the value returned by [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.mdx#startauthentication) method and then verify it:
 
 ```ts
 const { body } = req;

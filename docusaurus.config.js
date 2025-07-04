@@ -6,6 +6,17 @@ module.exports = {
   favicon: 'img/logo_favicon.png',
   organizationName: 'MasterKale', // Usually your GitHub org/user name.
   projectName: 'SimpleWebAuthn', // Usually your repo name.
+
+  /* Try to keep track of when links break */
+  onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'throw',
+
+  /* Prepare for Docusaurus v4 */
+  future: {
+    experimental_faster: true,
+    v4: true,
+  },
+
   themeConfig: {
     navbar: {
       title: 'SimpleWebAuthn',
@@ -33,30 +44,6 @@ module.exports = {
       ],
     },
     footer: {
-      links: [
-        // {
-        //   title: 'Docs',
-        //   items: [
-        //     {
-        //       label: '@simplewebauthn/browser',
-        //       to: 'docs/browser/',
-        //     },
-        //     {
-        //       label: '@simplewebauthn/server',
-        //       to: 'docs/server/',
-        //     },
-        //   ],
-        // },
-        // {
-        //   title: 'More',
-        //   items: [
-        //     {
-        //       label: 'GitHub',
-        //       href: 'https://github.com/MasterKale/SimpleWebAuthn',
-        //     },
-        //   ],
-        // },
-      ],
       copyright: `
         <strong>Copyright © ${new Date().getFullYear()} Matthew Miller. Built with Docusaurus.</strong>
         <sub>FIDO® is a trademark of FIDO Alliance, Inc.</sub>
@@ -75,7 +62,7 @@ module.exports = {
   },
   presets: [
     [
-      '@docusaurus/preset-classic',
+      'classic',
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
