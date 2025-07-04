@@ -6,6 +6,13 @@ module.exports = {
   favicon: 'img/logo_favicon.png',
   organizationName: 'MasterKale', // Usually your GitHub org/user name.
   projectName: 'SimpleWebAuthn', // Usually your repo name.
+
+  /* Prepare for Docusaurus v4 */
+  future: {
+    experimental_faster: true,
+    v4: true,
+  },
+
   themeConfig: {
     navbar: {
       title: 'SimpleWebAuthn',
@@ -88,11 +95,4 @@ module.exports = {
       },
     ],
   ],
-  future: {
-    experimental_faster: true,
-    v4: {
-      removeLegacyPostBuildHeadAttribute: true,
-      useCssCascadeLayers: true,
-    },
-  },
 };
