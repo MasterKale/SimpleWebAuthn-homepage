@@ -55,7 +55,7 @@ import { base64URLStringToBuffer } from '@simplewebauthn/browser';
 const prfSaltBytes: ArrayBuffer = base64URLStringToBuffer(prfSaltBase64URL);
 ```
 
-## More PRF Info
+## More Info
 
 To learn more about how to use PRF, please [consult the WebAuthn
 spec](https://w3c.github.io/webauthn/#prf-extension).
