@@ -14,7 +14,6 @@ module.exports = {
       'advanced/example-project',
       'advanced/fido-conformance',
       'advanced/passkeys',
-      'advanced/prf',
       'advanced/supported-devices',
       {
         type: 'category',
@@ -28,6 +27,15 @@ module.exports = {
           'advanced/server/settings-service',
         ],
       },
+      {
+        type: 'category',
+        label: 'Danger Zone',
+        description: 'Uses of WebAuthn that come with major caveats',
+        collapsed: true,
+        items: [
+          'advanced/prf',
+        ],
+      }
     ],
   },
 };
