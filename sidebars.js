@@ -14,6 +14,7 @@ module.exports = {
       'advanced/example-project',
       'advanced/fido-conformance',
       'advanced/passkeys',
+      'advanced/prf',
       'advanced/supported-devices',
       {
         type: 'category',
