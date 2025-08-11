@@ -27,6 +27,15 @@ module.exports = {
           'advanced/server/settings-service',
         ],
       },
+      {
+        type: 'category',
+        label: 'Danger Zone',
+        description: 'Uses of WebAuthn that come with major caveats',
+        collapsed: true,
+        items: [
+          'advanced/prf',
+        ],
+      }
     ],
   },
 };
