@@ -564,9 +564,9 @@ To fix this, massage the `Binary` public key bytes into an instance of `Uint8Arr
 ```js
 const verification = await verifyAuthenticationResponse({
   // ...
-  authenticator: {
+  credential: {
     // ...
-    credentialPublicKey: new Uint8Array(credentialPublicKey.buffer),
+    publicKey: new Uint8Array(credentialPublicKey.buffer),
   },
 });
 ```
