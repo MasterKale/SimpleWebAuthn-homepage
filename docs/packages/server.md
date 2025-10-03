@@ -574,3 +574,44 @@ const verification = await verifyAuthenticationResponse({
 ### Error: String values for \`userID\` are no longer supported
 
 See [Advanced Guides > @simplewebauthn/server > Custom User IDs](advanced/server/custom-user-ids.md#error-string-values-for-userid-are-no-longer-supported) for more information.
+
+### TypeError: Cannot read properties of undefined (reading 'counter')
+
+As of SimpleWebAuthn v11.0.0 the `verifyAuthenticationResponse()` method expects a `credential` argument of type `WebAuthnCredential` that contains values like the credential ID, public key, and counter needed to verify the response. In prior versions, this argument was called `authenticator` of the now defunct type `AuthenticatorDevice`. If you see this error it is likely caused by `authenticator` not being refactored into the new `credential` argument.
+
+To fix this issue, update the call to `verifyAuthenticationResponse()` to replace `authenticator` with `credential` of type `WebAuthnCredential`:
+
+#### Before
+```ts
+import { AuthenticatorDevice } from '@simplewebauthn/types';
+
+const authenticator: AuthenticatorDevice = {
+  credentialID: ...,
+  credentialPublicKey: ...,
+  counter: 0,
+  transports: [...],
+};
+
+const verification = await verifyAuthenticationResponse({
+  // ...
+  authenticator,
+});
+```
+
+#### After
+
+```ts
+import { WebAuthnCredential } from '@simplewebauthn/server';
+
+const credential: WebAuthnCredential = {
+  id: ...,
+  publicKey: ...,
+  counter: 0,
+  transports: [...],
+};
+
+const verification = await verifyAuthenticationResponse({
+  // ...
+  credential,
+});
+```
