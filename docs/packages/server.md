@@ -604,10 +604,10 @@ const verification = await verifyAuthenticationResponse({
 import { WebAuthnCredential } from '@simplewebauthn/server';
 
 const credential: WebAuthnCredential = {
-  id: ...,
-  publicKey: ...,
-  counter: 0,
-  transports: [...],
+  id: ...,            // Same as authenticator.credentialID
+  publicKey: ...,     // Same as authenticator.credentialPublicKey
+  counter: 0,         // Same as authenticator.counter
+  transports: [...],  // Same as authenticator.transports
 };
 
 const verification = await verifyAuthenticationResponse({
