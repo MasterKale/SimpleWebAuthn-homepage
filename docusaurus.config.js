@@ -32,7 +32,7 @@ module.exports = {
           position: 'left',
         },
         {
-          href: 'https://debugger.simplewebauthn.dev',
+          href: 'https://tools.passkeys.dev/responsedecoder',
           label: 'Debugger',
           position: 'left',
         },
