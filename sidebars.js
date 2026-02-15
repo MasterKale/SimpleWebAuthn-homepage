@@ -10,11 +10,11 @@ module.exports = {
       'packages/types',
     ],
     'Advanced Guides': [
-      'advanced/browser-quirks',
+      'advanced/passkeys',
       'advanced/example-project',
       'advanced/fido-conformance',
-      'advanced/passkeys',
       'advanced/supported-devices',
+      'advanced/browser-quirks',
       {
         type: 'category',
         label: '@simplewebauthn/server',
