@@ -559,7 +559,7 @@ Error: No data
     at async file:///path/to/app/dist/controller/auth.controller.js:202:28
 ```
 
-To fix this, massage the `Binary` public key bytes into an instance of `Uint8Array` that `verifyAuthenticationResponse()` expects:
+To fix this issue, convert the `Binary` public key bytes into an instance of `Uint8Array` that `verifyAuthenticationResponse()` expects:
 
 ```js
 const verification = await verifyAuthenticationResponse({
