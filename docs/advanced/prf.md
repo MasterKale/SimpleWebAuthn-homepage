@@ -16,7 +16,7 @@ full liability rests on your shoulders.
 If you read the following and believe it to be an unsatisfactory explanation of how to use PRF then
 that is intentional. There are no plans to make PRF simpler to use using SimpleWebAuthn because of
 the footgun described above. **Passkeys are an authentication technology first and foremost**, and
-SimpleWebAuthn prioritizes simplifying these use cases any other use of WebAuthn.
+SimpleWebAuthn prioritizes simplifying these use cases over any other use of WebAuthn.
 :::
 
 WebAuthn's **pseudo-random function** extension (`prf`) can be used to reliably request a sequence
