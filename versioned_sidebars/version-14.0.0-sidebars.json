@@ -1,0 +1,41 @@
+{
+  "docsSidebar": {
+    "SimpleWebAuthn": [
+      "simplewebauthn/intro",
+      "simplewebauthn/philosophy"
+    ],
+    "Packages": [
+      "packages/browser",
+      "packages/server",
+      "packages/types"
+    ],
+    "Advanced Guides": [
+      "advanced/passkeys",
+      "advanced/example-project",
+      "advanced/fido-conformance",
+      "advanced/supported-devices",
+      "advanced/browser-quirks",
+      {
+        "type": "category",
+        "label": "@simplewebauthn/server",
+        "description": "Advanced functionality specific to @simplewebauthn/server",
+        "items": [
+          "advanced/server/custom-challenges",
+          "advanced/server/custom-user-ids",
+          "advanced/server/metadata-service",
+          "advanced/server/secure-payment-confirmation",
+          "advanced/server/settings-service"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Danger Zone",
+        "description": "Uses of WebAuthn that come with major caveats",
+        "collapsed": true,
+        "items": [
+          "advanced/prf"
+        ]
+      }
+    ]
+  }
+}
