@@ -4,10 +4,6 @@ title: "@simplewebauthn/server"
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-## Current version
-
-The content below should be accurate for **@simplewebauthn/server@^13.0.0**. Please open an issue [here](https://github.com/MasterKale/SimpleWebAuthn-homepage/issues) to report any inaccuracies.
-
 ## Installation
 
 This package can be installed from **[NPM](https://www.npmjs.com/package/@simplewebauthn/server)**
