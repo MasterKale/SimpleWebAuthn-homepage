@@ -43,6 +43,10 @@ module.exports = {
           position: 'left',
         },
         {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
+        {
           href: 'https://github.com/MasterKale/SimpleWebAuthn',
           label: 'GitHub',
           position: 'right',
@@ -74,6 +78,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
           sidebarCollapsed: false,
+          includeCurrentVersion: false,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
