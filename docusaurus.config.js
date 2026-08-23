@@ -9,12 +9,18 @@ module.exports = {
 
   /* Try to keep track of when links break */
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'throw',
 
   /* Prepare for Docusaurus v4 */
   future: {
-    experimental_faster: true,
+    faster: true,
     v4: true,
+  },
+
+  /* Markdown settings */
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'throw'
+    },
   },
 
   themeConfig: {
