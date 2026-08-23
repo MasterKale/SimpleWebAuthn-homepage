@@ -270,7 +270,7 @@ try {
 const { verified } = verification;
 ```
 
-:::tip Support for multiple origins and RP IDs
+:::tip[Support for multiple origins and RP IDs]
 SimpleWebAuthn optionally supports verifying registrations from multiple origins and RP IDs! Simply pass in an **array** of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
 :::
 
@@ -317,7 +317,7 @@ const newPasskey: Passkey = {
 saveNewPasskeyInDB(newPasskey);
 ```
 
-:::info Regarding `counter`
+:::info[Regarding `counter`]
 Tracking the ["signature counter"](https://www.w3.org/TR/webauthn/#signature-counter) allows Relying Parties to potentially identify misbehaving authenticators, or cloned authenticators. The counter on subsequent authentications should only ever increment; if your stored counter is greater than zero, and a subsequent authentication response's counter is the same or lower, then perhaps the authenticator just used to authenticate is in a compromised state.
 
 It's also not unexpected for certain high profile authenticators, like Touch ID on macOS, to always return `0` (zero) for the signature counter. In this case there is nothing an RP can really do to detect a cloned authenticator, especially in the context of [multi-device credentials](https://fidoalliance.org/apple-google-and-microsoft-commit-to-expanded-support-for-fido-standard-to-accelerate-availability-of-passwordless-sign-ins/).
@@ -372,7 +372,7 @@ return options;
 
 These options can be passed directly into [**@simplewebauthn/browser**'s `startAuthentication()`](packages/browser.mdx#startauthentication) method.
 
-:::tip Support for custom challenges
+:::tip[Support for custom challenges]
 
 Power users can optionally generate and pass in their own unique challenges as `challenge` when calling `generateAuthenticationOptions()`. In this scenario `options.challenge` still needs to be saved to be used in verification as described below.
 
@@ -428,7 +428,7 @@ appropriate UI:
 return { verified };
 ```
 
-:::tip Support for multiple origins and RP IDs
+:::tip[Support for multiple origins and RP IDs]
 SimpleWebAuthn optionally supports verifying authentications from multiple origins and RP IDs! Simply pass in an array of possible origins and IDs for `expectedOrigin` and `expectedRPID` respectively.
 :::
 

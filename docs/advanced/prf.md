@@ -2,7 +2,7 @@
 title: PRF
 ---
 
-:::danger Proceed with extreme caution
+:::danger[Proceed with extreme caution]
 Use of WebAuthn's `prf` extension **dangerously** ties vital encryption information to a user's
 passkey. If a user inadvertently deletes their passkey, **they will lose all access to their
 information** that your website chose to encrypt with that passkey's PRF seed. There is nothing

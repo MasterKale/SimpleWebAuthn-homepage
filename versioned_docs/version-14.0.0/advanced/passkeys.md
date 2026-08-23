@@ -60,7 +60,7 @@ const verification = await verifyRegistrationResponse({
 });
 ```
 
-:::caution A word of caution about user verification
+:::caution[A word of caution about user verification]
 `requireUserVerification` is set to `false` above because many websites can be just fine using passkeys without user verification! The phishing resistant properties of WebAuthn elevates passkeys to a higher level of protection than username+password+2fa, and thus passkeys are not necessarily beholden to the same "multiple factors of auth" rules that came before them.
 
 However *some websites*, for various regulatory reasons, may require multiple factors of authentication to be provided. If you are a developer of such a website then you should set `userVerification: 'required'` when calling `generateRegistrationOptions()`, and specify `requireUserVerification: true` when calling `verifyRegistrationResponse()`.
@@ -104,7 +104,7 @@ const authVerify = await verifyAuthenticationResponse({
 });
 ```
 
-:::caution A word of caution about user verification
+:::caution[A word of caution about user verification]
 `requireUserVerification` is set to `false` above because many websites can be just fine using passkeys without user verification! The phishing resistant properties of WebAuthn elevates passkeys to a higher level of protection than username+password+2fa, and thus passkeys are not necessarily beholden to the same "multiple factors of auth" rules that came before them.
 
 However *some websites*, for various regulatory reasons, may require multiple factors of authentication to be provided. If you are a developer of such a website then you should set `userVerification: 'required'` when calling `generateAuthenticationOptions()`, and specify `requireUserVerification: true` when calling `verifyAuthenticationResponse()`.
@@ -134,7 +134,7 @@ New user registration is a bit unique in that it requires "bootstrapping" the cr
 
 A ["magic link"](https://postmarkapp.com/blog/magic-links) sent to an email address, then, is a particularly simple solution that can perform double duty:
 
-:::info Magic Link Example
+:::info[Magic Link Example]
 https://example.com/register?token=mHaikFuCzlQSfmVlIhSH6TY2IRwRYMcj
 :::
 
