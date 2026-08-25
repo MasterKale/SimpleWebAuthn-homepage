@@ -485,6 +485,28 @@ import { bufferToBase64URLString } from '@simplewebauthn/browser';
 const valueBase64URL: string = bufferToBase64URLString(new Uint8Array(...));
 ```
 
+### `getBrowserCapabilities()`
+
+This helper method wraps WebAuthn's [`PublicKeyCredential.getClientCapabilities()`](https://w3c.github.io/webauthn/#sctn-getClientCapabilities) feature detection method:
+
+```ts
+import { getBrowserCapabilities } from '@simplewebauthn/browser';
+```
+
+`getBrowserCapabilities()` returns an `Object` containing keys that correspond to [WebAuthn `ClientCapability` enums](https://w3c.github.io/webauthn/#enum-clientCapability). This method takes additional steps to determine support for a capability if a browser reports an "unknown" level of support for it via `PublicKeyCredential.getClientCapabilities()` but there exists an alternative WebAuthn API that also potentially reports the feature's availability.
+
+Instead of `true`/`false`/`undefined`, capabilities are mapped to one of the following `string` values:
+
+- **`"supported"`**: The browser supports the capability
+- **`"unsupported"`**: The browser does not support the capability
+- **`"unknown"`**: The browser may or may not support the capability, try it and see
+
+:::info
+If a WebAuthn client other than the browser is handling WebAuthn API calls (e.g. a password manager's browser extension) then this method will report that client's capabilities instead (assuming that client has implemented `PublicKeyCredential.getClientCapabilities()`.)
+:::
+
+Most Relying Parties should not typically need to use this method. However, more complex Relying Parties _can_ use it to perform finer-grained feature detection than that offered by the simpler use of [`browserSupportsPasskeys()`](#browsersupportspasskeys) to achieve more nuanced user experiences.
+
 ### `WebAuthnAbortService`
 
 `startRegistration()` and `startAuthentication()` coordinate cancellation of existing WebAuthn
