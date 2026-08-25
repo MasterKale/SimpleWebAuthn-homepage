@@ -350,7 +350,7 @@ The selection of a credential from this popup will resolve the Promise returned 
 
 ### `browserSupportsWebAuthn()`
 
-This helper method is included in this package to help preemptively check for the browser's ability to make WebAuthn API calls:
+This method is included in this package to help preemptively check for the browser's ability to make WebAuthn API calls:
 
 ```js
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
@@ -361,7 +361,6 @@ import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 ```html
 <script>
   const elemBegin = document.getElementById('btnBegin');
-  const elemSuccess = document.getElementById('success');
   const elemError = document.getElementById('error');
 
   const { browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
@@ -375,6 +374,48 @@ import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
   // ...snip...
 </script>
 ```
+
+### `browserSupportsPasskeys()`
+
+This method performs more robust WebAuthn support detection by also checking for typical passkey-related WebAuthn features:
+
+```ts
+import { browserSupportsPasskeys } from '@simplewebauthn/browser';
+```
+
+`browserSupportsPasskeys()` goes further than [`browserSupportsWebAuthn()`](#browsersupportswebauthn) by pairing a check that WebAuthn is supported with [WebAuthn's `PublicKeyCredential.getClientCapabilities()` method](https://w3c.github.io/webauthn/#sctn-getClientCapabilities) to check that the browser and/or platform is capable of at least one of the following:
+
+- Talking to a local user-verifying platform authenticator
+- Talking to a platform authenticator on another device using the `"hybrid"` transport
+
+Building on the example above, a bit of refactor is required because `browserSupportsPasskeys()` is asynchronous:
+
+```html
+<script>
+  const elemBegin = document.getElementById('btnBegin');
+  const elemError = document.getElementById('error');
+
+  const { browserSupportsPasskeys } = SimpleWebAuthnBrowser;
+
+  async function onPageLoad() {
+    if (!(await browserSupportsPasskeys())) {
+      elemBegin.style.display = 'none';
+      elemError.innerText = 'It seems this browser does not support passkeys...';
+      return;
+    }
+
+    // ...snip...
+  }
+
+  onPageLoad();
+</script>
+```
+
+:::tip
+
+`browserSupportsPasskeys()` can be considered a replacement for [`browserSupportsWebAuthn()`](#browsersupportswebauthn) as the former enforces that the latter is true. Additionally, the presence of WebAuthn support without the additional passkey-related WebAuthn features that `browserSupportsPasskeys()` checks for represents a WebAuthn runtime environment that is unlikely to yield a satisfactory passkey registration or authentication user experience.
+
+:::
 
 ### `browserSupportsWebAuthnAutofill()`
 
