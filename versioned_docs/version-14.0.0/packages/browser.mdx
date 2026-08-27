@@ -501,6 +501,18 @@ Instead of `true`/`false`/`undefined`, capabilities are mapped to one of the fol
 - **`"unsupported"`**: The browser does not support the capability
 - **`"unknown"`**: The browser may or may not support the capability, try it and see
 
+```ts
+const {
+  conditionalGet,
+  hybridTransport,
+  passkeyPlatformAuthenticator,
+} = await getBrowserCapabilities();
+
+console.log(hybridTransport); // 'supported'
+console.log(conditionalGet); // 'unsupported'
+console.log(passkeyPlatformAuthenticator); // 'unknown'
+```
+
 :::info
 If a WebAuthn client other than the browser is handling WebAuthn API calls (e.g. a password manager's browser extension) then this method will report that client's capabilities instead (assuming that client has implemented `PublicKeyCredential.getClientCapabilities()`.)
 :::
