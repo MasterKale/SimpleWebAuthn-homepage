@@ -80,7 +80,8 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
           sidebarCollapsed: false,
-          includeCurrentVersion: isDevelopment,
+          // TODO: Re-enable this before merging the v14 PR
+          // includeCurrentVersion: isDevelopment,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
