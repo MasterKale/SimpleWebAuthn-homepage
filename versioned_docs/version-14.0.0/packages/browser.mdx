@@ -489,6 +489,30 @@ These advanced types of authenticators are typically embedded into a user's comp
 </script>
 ```
 
+### `sendSignal()`
+
+This single method simplifies the use of [WebAuthn's multiple Signal API methods](https://w3c.github.io/webauthn/#sctn-signal-methods) to broadcast passkey state changes from you, as the Relying Party, back to the credential manager responsible for your user's passkeys:
+
+**Node/Deno**
+```ts
+import { sendSignal } from '@simplewebauthn/browser';
+```
+**UMD**
+```js
+const { sendSignal } = SimpleWebAuthnBrowser;
+```
+
+Sending signals can help a Relying Party achieve the following for their users:
+
+- Prevent users from seeing passkeys in browser and/or platform UI that will never be honored for authentication
+- Keep user identifiers up-to-date (email, username, etc...) in browser, platform, and/or credential manager UI during a WebAuthn ceremony
+
+:::warning[On the (un)reliability of sending signals]
+WebAuthn signals are considered "fire and forget" - that is, there is no guarantee that sending a signal will see that signal make its way to a user's credential manager via the browser and/or platform. "Success" may require sending a signal multiple times throughout a user's interaction with your site before a signal is received by the user's credential manager. And by design, Relying Parties receive [no feedback on the ultimate success or failure](https://w3c.github.io/webauthn/#sctn-signal-methods:~:text=Furthermore%2C%20in%20order%20to%20avoid%20revealing%20information%20about%20a%20user%E2%80%99s%20credentials%20without%20user%20consent%2C%20signal%20methods%20do%20not%20indicate%20whether%20the%20operation%20succeeded.%20A%20successfully%20resolved%20promise%20only%20means%20that%20the%20options%20object%20was%20well%20formed.) of sending a signal.
+
+**`sendSignal()` is subject to these same limitations.** There is nothing that SimpleWebAuthn can do to make signals more reliable. That said, continue reading for advice on the best times to send a particular signal via `sendSignal()` for the greatest chances of success.
+:::
+
 ## Helpers
 
 Below are various methods and classes intended to help Relying Parties work with this library.
