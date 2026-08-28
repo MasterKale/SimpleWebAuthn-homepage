@@ -695,10 +695,7 @@ function handleLeavePage() {
 
 ### `WebAuthnError`
 
-The `WebAuthnError` class is used to wrap errors that are raised when calling WebAuthn via
-`startRegistration()` and `startAuthentication()`. Projects can import this error to perform
-`instanceof` checks when catching errors to discern SimpleWebAuthn library errors from other errors
-that may arise.
+The `WebAuthnError` class is used to wrap errors that are raised when calling WebAuthn API methods via [`startRegistration()`](#startregistration), [`startAuthentication()`](#startauthentication), or [`sendSignal()`](#sendsignal). Projects can import this error to perform `instanceof` checks when catching errors to discern SimpleWebAuthn library errors from other errors that may arise.
 
 An instance of this error has the same `name` property as the WebAuthn error it is wrapping, but
 has a custom `message` property that tries to better communicate what may have caused the error.
