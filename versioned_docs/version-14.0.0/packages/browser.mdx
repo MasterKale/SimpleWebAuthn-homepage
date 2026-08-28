@@ -558,6 +558,27 @@ await sendSignal(opts);
 
 Credential managers that have a passkey for (`rpID` + `userID`), but the passkey ID is not found in `allAcceptedCredentialIds`, may choose to hide or delete the passkey because it will not be accepted for use by the Relying Party.
 
+#### Current User Details {/* #sendsignal-current-user-details */}
+
+This signal communicates a change in the **authenticated** user's name and/or display name.
+
+It is a good idea for a Relying Party to periodically send this signal, for example **after every successful authentication** and **immediately after the user's user name and/or display name is changed**:
+
+```ts
+import { sendSignal, type SendSignalCurrentUserDetailsOpts } from '@simplewebauthn/browser';
+
+const opts: SendSignalCurrentUserDetailsOpts = {
+  signalName: 'currentUserDetails',
+  rpID: 'example.com',
+  userID: 'Lrk2ki-arSSFcm6PPlMKEQ',
+  userName: 'newUsername@example.com',
+  userDisplayName: 'NewUsername (Prod)',
+};
+await sendSignal(opts);
+```
+
+This can help browsers and platforms display the most up-to-date information about the user during a passkey authentication instead of always showing whatever value was set at the time of registration.
+
 ## Helpers
 
 Below are various methods and classes intended to help Relying Parties work with this library.
