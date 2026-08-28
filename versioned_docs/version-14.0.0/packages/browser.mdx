@@ -579,6 +579,22 @@ await sendSignal(opts);
 
 This can help browsers and platforms display the most up-to-date information about the user during a passkey authentication instead of always showing whatever value was set at the time of registration.
 
+#### Generating options with @simplewebauthn/server {/* #sendsignal-generating-options-with-simplewebauthnserver */}
+
+The WebAuthn Signal APIs were all intentionally designed to accept **options that are JSON-serializable**, avoiding `ArrayBuffer` values for Base64URL-encoded `string` values instead. This means that **@simplewebauthn/server** does _not_ have a corresponding `sendSignal()` options generation method.
+
+Instead, **the same types** that @simplewebauthn/browser uses for the various `sendSignal()` options can be **imported directly from @simplewebauthn/server** too:
+
+```ts
+import type {
+  SendSignalAllAcceptedCredentialsOpts,
+  SendSignalCurrentUserDetailsOpts,
+  SendSignalUnknownCredentialOpts,
+} from '@simplewebauthn/server';
+```
+
+These types can then be used to define project-specific options generation logic on the server that yields values that can be easily passed to the browser as JSON and then passed into `sendSignal()` without modification.
+
 ## Helpers
 
 Below are various methods and classes intended to help Relying Parties work with this library.
