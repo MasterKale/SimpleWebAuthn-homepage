@@ -1,3 +1,5 @@
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 module.exports = {
   title: 'SimpleWebAuthn',
   tagline: 'A collection of TypeScript-first libraries for simpler WebAuthn integration. Supports modern browsers and Node.',
@@ -78,7 +80,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
           sidebarCollapsed: false,
-          includeCurrentVersion: false,
+          includeCurrentVersion: isDevelopment,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
