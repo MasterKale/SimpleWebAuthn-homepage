@@ -534,6 +534,30 @@ await sendSignal(opts);
 
 The credential manager responsible for the credential can hide or delete the credential so that the user does not see it in the future as an option to sign in with.
 
+#### All Accepted Credentials {/* #sendsignal-all-accepted-credentials */}
+
+This signal communicates the current list of passkeys the Relying Party will recognize for use by the **authenticated** user on the next login.
+
+It is a good idea for a Relying Party to **periodically** send this signal, for example **after every successful authentication**:
+
+```ts
+import { sendSignal, type SendSignalAllAcceptedCredentialsOpts } from '@simplewebauthn/browser';
+
+const opts: SendSignalAllAcceptedCredentialsOpts = {
+  signalName: 'allAcceptedCredentials',
+  rpID: 'example.com',
+  userID: 'Lrk2ki-arSSFcm6PPlMKEQ',
+  allAcceptedCredentialIDs: ['d77Hxqvltn66l7hegq_E3Q', 'nz_ajzNrMq3KfPrkOt3lHQ'],
+};
+await sendSignal(opts);
+```
+
+:::warning[A word of caution about `userID`]
+`userID` above **must** be set to the same value for the currently authenticated user as `options.user.id` was in [the options returned from **@simplewebauthn/server**'s `generateRegistrationOptions()`](server.md#1-generate-registration-options) when the passkeys in `allAcceptedCredentialIDs` were generated.
+:::
+
+Credential managers that have a passkey for (`rpID` + `userID`), but the passkey ID is not found in `allAcceptedCredentialIds`, may choose to hide or delete the passkey because it will not be accepted for use by the Relying Party.
+
 ## Helpers
 
 Below are various methods and classes intended to help Relying Parties work with this library.
