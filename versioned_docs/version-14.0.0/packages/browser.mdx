@@ -513,6 +513,27 @@ WebAuthn signals are considered "fire and forget" - that is, there is no guarant
 **`sendSignal()` is subject to these same limitations.** There is nothing that SimpleWebAuthn can do to make signals more reliable. That said, continue reading for advice on the best times to send a particular signal via `sendSignal()` for the greatest chances of success.
 :::
 
+The following WebAuthn signals can be sent using `sendSignal()`:
+
+#### Unknown Credential {/* #sendsignal-unknown-credential */}
+
+This signal communicates that the credential that the user just tried to register, or to authenticate with, was not one that the Relying Party recognizes.
+
+It is a good idea for a Relying Party to send this signal **immediately after the use of an unrecognized credential**. For example, after rejecting the output from [`startRegistration()`](#startregistration) due to unsatisfied RP-specific authenticator registration policy; or after rejecting the output from [`startAuthentication()`](#startauthentication) because the user deleted the corresponding passkey from their Relying Party user account settings page:
+
+```ts
+import { sendSignal, type SendSignalUnknownCredentialOpts } from '@simplewebauthn/browser';
+
+const opts: SendSignalUnknownCredentialOpts = {
+  signalName: 'unknownCredential',
+  rpID: 'example.com',
+  credentialID: 'aPH2yv3TIBVZbj2wJ30Kmw',
+};
+await sendSignal(opts);
+```
+
+The credential manager responsible for the credential can hide or delete the credential so that the user does not see it in the future as an option to sign in with.
+
 ## Helpers
 
 Below are various methods and classes intended to help Relying Parties work with this library.
