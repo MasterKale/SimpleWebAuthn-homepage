@@ -8,9 +8,13 @@ title: Cross-Origin Support
 
 ## Introduction
 
-Some passkey-supporting Relying Parties may wish to be embedded in another web page to facilitate passkey usage for that site. A common example of this is in e-commerce flows, where the user may appear to be signing in to https://example.com with a passkey, but the use of a passkey for authentication is actually being facilitated by a widget in an `<iframe>` that is hosted by the e-commerce platform that Example.com is choosing to host their storefront with.
+Some passkey-supporting Relying Parties may wish to be embedded in another website to facilitate passkey usage while the user is on that other site. A common example of this is in e-commerce flows, where the user may appear to be signing in to https://example.com with a passkey. However the user is _actually_ using a passkey to sign into the e-commerce platform that Example.com is choosing to host their storefront with via a "widget" on https://example.com that is an `<iframe>` pointing to an e-commerce platform URL.
 
 ## Authentication
+
+:::danger[Embedded Relying Parties Face Extra Risks]
+A Relying Party that wishes to facilitate passkey authentication while being embedded in another site **must** take extra steps to secure their authentication flow. See https://web.dev/articles/webauthn-within-iframe for advice on how to support being an embedded Relying Party, as well as for defense-in-depth guidance to lock down passkey authentications to only allowed cross-origin sites.
+:::
 
 **For the Relying Party being embedded in another site**, [`verifyAuthenticationResponse()`](packages/server.md#2-verify-authentication-response) can be called with an `expectedTopOrigin` argument set to an origin string (or array of such strings) for site(s) at which passkey ceremonies can occur using passkeys scoped to the embedded Relying Party:
 
