@@ -8,7 +8,7 @@ title: Cross-Origin Support
 
 ## Introduction
 
-Some passkey-supporting Relying Parties may wish to be embedded in another website to facilitate passkey usage while the user is on that other site. A common example of this is in e-commerce flows, where the user may appear to be signing in to https://example.com with a passkey. However the user is _actually_ using a passkey to sign into the e-commerce platform that Example.com is choosing to host their storefront with via a "widget" on https://example.com that is an `<iframe>` pointing to an e-commerce platform URL.
+Some passkey-supporting Relying Parties may wish to be embedded in other websites to facilitate passkey usage while the user is on that other site. A common example of this is in e-commerce flows, where the user may appear to be signing in to https://example.com with a passkey. However the user is _actually_ using a passkey to sign into the e-commerce platform that Example.com is choosing to host their storefront on. This occurs via a "widget" within https://example.com that is an `<iframe>` pointing to an e-commerce platform's URL.
 
 ## Authentication
 
