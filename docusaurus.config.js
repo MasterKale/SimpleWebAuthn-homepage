@@ -1,4 +1,9 @@
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = (
+  // Docusaurus, locally
+  process.env.NODE_ENV === 'development'
+  // Netlify, in CI for PR preview builds
+  || process.env.CONTEXT === 'deploy-preview'
+);
 
 module.exports = {
   title: 'SimpleWebAuthn',
@@ -80,8 +85,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
           sidebarCollapsed: false,
-          // TODO: Re-enable this before merging the v14 PR
-          // includeCurrentVersion: isDevelopment,
+          includeCurrentVersion: isDevelopment,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
