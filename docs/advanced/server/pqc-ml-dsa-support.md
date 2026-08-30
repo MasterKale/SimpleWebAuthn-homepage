@@ -4,7 +4,7 @@ title: PQC ML-DSA Support
 
 ## Introduction
 
-**Post-Quantum Cryptography (PQC)** algorithms are new cryptographic standards designed to protect digital communications against future quantum computers. WebAuthn implementations today rely on "classical" signature algorithms like ES256 and RS256, which quantum computers will eventually become capable of breaking by deriving a private key from its public key to forge passkey authentication responses.
+**Post-Quantum Cryptography (PQC)** algorithms are new cryptographic standards designed to protect digital communications against future quantum computers. WebAuthn implementations today rely on "classical" signature algorithms like ES256 and RS256, which quantum computers will eventually become capable of breaking by quickly deriving a private key from its public key to forge passkey authentication responses.
 
 Migrating users from classical passkeys to ones that leverage the PQC **ML-DSA** signature algorithm ensures long-term protection against these kinds of attacks. Relying Parties that wish to transition their users to ML-DSA passkeys can follow the steps below to begin requesting and verifying such passkeys in supported runtimes.
 
