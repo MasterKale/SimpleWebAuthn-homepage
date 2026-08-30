@@ -24,6 +24,7 @@ module.exports = {
           'advanced/server/custom-challenges',
           'advanced/server/custom-user-ids',
           'advanced/server/metadata-service',
+          'advanced/server/pqc-ml-dsa-support',
           'advanced/server/secure-payment-confirmation',
           'advanced/server/settings-service',
         ],
