@@ -41,6 +41,10 @@ Caused by: NotSupportedError: Unrecognized algorithm name
 
 When the runtime supports ML-DSA-44 for signature verification, [`generateRegistrationOptions()`](packages/server.md#1-generate-registration-options) will **automatically include ML-DSA-44** as the most preferred algorithm in the default list of [passkey public key credential algorithms](https://w3c.github.io/webauthn/#dom-publickeycredentialcreationoptions-pubkeycredparams). Note that this behavior will **not** overwrite the value of `supportedAlgorithmIDs` if it is set when calling `generateRegistrationOptions()`.
 
+:::tip[Detecting runtime ML-DSA support]
+It's not required, but [`SettingsService.runtimeSupportsPQC()`](advanced/server/settings-service.md#runtimesupportspqc) can be called manually at any time to check if the runtime supports use of ML-DSA algorithms. It's the same method that `generateRegistrationOptions()` uses to determine when to include ML-DSA-44 as a default algorithm.
+:::
+
 To request the use of other PQC algorithms, like ML-DSA-65 and/or ML-DSA-87, first define an array of [COSE algorithm IDs](https://www.iana.org/assignments/cose#algorithms) sorted from most preferred to least preferred. For ease of use, the `COSEALG` enum exported from `@simplewebauthn/server/helpers` contains many common algorithm IDs in a more readable format than their numeric values:
 
 ```ts

@@ -55,3 +55,15 @@ const appleCerts: string[] = SettingsService.getRootCertificates({ identifier: '
 ```
 
 The returned certificates will be PEM-formatted strings.
+
+## `runtimeSupportsPQC()`
+
+This method returns a boolean indicating if the runtime supports use of ML-DSA-44:
+
+```ts
+import { SettingsService } from '@simplewebauthn/server';
+
+const canUsePQC: boolean = SettingsService.runtimeSupportsPQC();
+```
+
+This is a strong signal that the runtime generally supports ML-DSA-65 and ML-DSA-87 operations as well. Runtime support is determined on startup, when `SettingsService` is automatically initialized.
