@@ -15,28 +15,6 @@ PQC algorithm support is available in the following runtimes targeted by SimpleW
 - **Node:** v24.7.0 and up
 - **Deno:** v2.8.2 and up
 
-If support for ML-DSA is not available in the runtime, the library will identify this in the error that is raised:
-
-```
-Error: This runtime's WebCrypto.subtle does not support use of
-ML-DSA-44. See the `cause` property of this error for more info
-      throw new Error(
-            ^
-    at verifyAKP (...)
-    at eventLoopTick (ext:core/01_core.js:179:7)
-    at async verifyAuthenticationResponse (...)
-    at async ...
-Caused by: NotSupportedError: Unrecognized algorithm name
-    at normalizeAlgorithm (ext:deno_crypto/00_crypto.js:269:11)
-    at normalizeAlgorithm (ext:deno_crypto/00_crypto.js:241:12)
-    at SubtleCrypto.importKey (ext:deno_crypto/00_crypto.js:975:33)
-    at importJWKKey (...)
-    at eventLoopTick (ext:core/01_core.js:179:7)
-    at async verifyAKP (...)
-    at async verifyAuthenticationResponse (...)
-    at async ...
-```
-
 ## Requesting ML-DSA passkeys
 
 When the runtime supports ML-DSA-44 for signature verification, [`generateRegistrationOptions()`](packages/server.md#1-generate-registration-options) will **automatically include ML-DSA-44** as the most preferred algorithm in the default list of [passkey public key credential algorithms](https://w3c.github.io/webauthn/#dom-publickeycredentialcreationoptions-pubkeycredparams). Note that this behavior will **not** overwrite the value of `supportedAlgorithmIDs` if it is set when calling `generateRegistrationOptions()`.
