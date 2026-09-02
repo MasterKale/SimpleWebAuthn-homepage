@@ -6,8 +6,8 @@ WebAuthn is a browser API that empowers us all to secure our accounts with a use
 
 Website back ends that wish to leverage this technology must be set up to do two things:
 
-1. Provide to the front end a specific collection of values that authenticators will understand for "registration" and "authentication".
-2. Parse the responses from these authenticators.
+1. Provide to the front end a specific collection of values that the hardware authenticator will understand for "registration" and "authentication".
+2. Parse responses from hardware authenticators.
 
 Website front ends have their own part to play in the process:
 
@@ -18,5 +18,5 @@ On the surface, this is a relatively straightforward dance. Unfortunately the va
 
 **Enter SimpleWebAuthn.**
 
-SimpleWebAuthn offers a developer-friendly pair of libraries that simplify the above dance. **@simplewebauthn/server** exports methods requiring a handful of simple inputs that pair with the two primary methods exported by **@simplewebauthn/browser**. No converting back and forth between `Uint8Array` (or was this supposed to be an `ArrayBuffer`...?) and `string`, no worrying about JSON compatibility - **SimpleWebAuthn takes care of it all!**
+SimpleWebAuthn offers a developer-friendly pair of libraries that simplify the above dance. **@simplewebauthn/server** exports a small number of methods requiring a handful of simple inputs that pair with the two primary methods exported by **@simplewebauthn/browser**. No converting back and forth between `Uint8Array` (or was this supposed to be an `ArrayBuffer`...?) and `String`, no worrying about JSON compatibility - **SimpleWebAuthn takes care of it all!**
 

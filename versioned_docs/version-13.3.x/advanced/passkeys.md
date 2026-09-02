@@ -164,7 +164,3 @@ No changes are required.
 ...Unless you are interested in leveraging browser autofill for passkey authentication, a.k.a. "Conditional UI". Conditional UI gives the browser a chance to find and suggest to the user credentials that they can select to then present to you for authentication, all via the browser's native autofill API.
 
 If this interests you, then please see the [Browser Autofill section of the docs for `startAuthentication()`](packages/browser.mdx#browser-autofill-conditional-ui) as there is a bit of setup required to get it all working.
-
-### `browserSupportsPasskeys()`
-
-See the [docs for `browserSupportsPasskeys()`](packages/browser.mdx#browsersupportspasskeys) for information on how this method can be used instead of [`browserSupportsWebAuthn()`](packages/browser.mdx#browsersupportswebauthn) to ensure that the browser and/or platform support critical passkey-related WebAuthn features.

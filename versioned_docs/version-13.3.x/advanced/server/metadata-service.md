@@ -69,51 +69,6 @@ Once `MetadataService` is initialized, `verifyRegistrationResponse()` will refer
 Make sure to set `attestationType` to `"direct"` when calling `generateRegistrationOptions()` to leverage the full power of metadata statements!
 :::
 
-### Logging
-
-The `logger` argument can be populated when calling `initialize()` to capture status output emitted by `MetadataService` in a project-specific way. This involves creating a logger that matches the `SimpleWebAuthnLogger` interface:
-
-```ts
-import { MetadataService } from '@simplewebauthn/server';
-import { type SimpleWebAuthnLogger } from '@simplewebauthn/server/helpers';
-
-// A custom logger in its simplest form
-const logger: SimpleWebAuthnLogger = {
-  debug: console.log,
-  info: console.log,
-  warn: console.warn,
-  error: console.error,
-};
-
-MetadataService.initialize({ logger }).then(() => {
-  console.log('🔐 MetadataService initialized');
-});
-```
-
-Each of the log levels is of type `(message: string, ...args: unknown[]) => void` so any function that matches this call signature can be used. If logging is captured via a third-party SaaS API, for example, a custom `debug` handler could look something like this:
-
-```ts
-function handleLogDebug(message: string, ...args: unknown[]): void {
-  CustomLoggingSDK.log('DEBUG', message, ...args);
-}
-
-const logger: SimpleWebAuthnLogger = {
-  debug: handleLogDebug,
-}
-```
-
-:::tip[Partially defining your logger]
-`SimpleWebAuthnLogger` does not require every logging level to be defined! If it only makes sense in your project to log Debug- and Error-level messages then only define handlers for `debug` and `error`.
-:::
-
-`MetadataService` logging output during initialization will generally look like this:
-
-```
-MetadataService is REFRESHING
-Cached 100 statements from 1 metadata server(s)
-MetadataService is READY
-```
-
 ## `verifyMDSBlob()`
 
 Some projects that wish to use `MetadataService` may have restrictions preventing runtime network requests to FIDO MDS for fresh data. In these cases it becomes necessary to pull down the MDS data (a "blob" in MDS parlance), verify its integrity, then cache the metadata statements within for loading later as the `statements` argument when `MetadataService` is initialized.

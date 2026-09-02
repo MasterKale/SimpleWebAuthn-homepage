@@ -9,13 +9,13 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 This package can be installed from **[NPM](https://www.npmjs.com/package/@simplewebauthn/server)**
 and **[JSR](https://jsr.io/@simplewebauthn/server)**:
 
-### Node LTS 22.x and higher
+### Node LTS 20.x and higher
 
 ```sh
 npm install @simplewebauthn/server
 ```
 
-### Deno v2.4.x and higher
+### Deno v1.43 and higher
 
 ```sh
 deno add jsr:@simplewebauthn/server

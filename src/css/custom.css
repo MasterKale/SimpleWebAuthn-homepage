@@ -15,6 +15,7 @@
   --ifm-color-primary-lighter: #a970e0;
   --ifm-color-primary-lightest: #bf94e8;
   --ifm-code-font-size: 95%;
+  --ifm-toc-padding-horizontal: 0.4rem;
 }
 
 /* Works well with the `prism-react-renderer/themes/github` dark theme */

@@ -9,13 +9,13 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 This package can be installed from **[NPM](https://www.npmjs.com/package/@simplewebauthn/browser)**
 and **[JSR](https://jsr.io/@simplewebauthn/browser)**:
 
-### Node LTS 22.x and higher
+### Node LTS 20.x and higher
 
 ```sh
 npm install @simplewebauthn/browser
 ```
 
-### Deno v2.4.x and higher
+### Deno v1.43 and higher
 
 ```sh
 deno add jsr:@simplewebauthn/browser
@@ -70,19 +70,14 @@ See the [auto-generated API docs for this project on JSR](https://jsr.io/@simple
 
 ## Methods
 
-The following methods represent the "core" methods exported from **@simplewebauthn/browser**:
+The following methods are exported from **@simplewebauthn/browser**:
 
 ### `startRegistration()`
 
 "Registration" is analogous to new account creation. The front end uses the following methods from this package to accomplish this:
 
-**Node/Deno**
 ```js
 import { startRegistration } from '@simplewebauthn/browser';
-```
-**UMD**
-```js
-const { startRegistration } = SimpleWebAuthnBrowser;
 ```
 
 The front end's primary job during registration is the following:
@@ -205,13 +200,8 @@ Successful use of Auto Register can be considered "upgrading" a user to be able 
 
 "Authentication" is analogous to existing account login. Authentication in the front end uses the following methods from this package:
 
-**Node/Deno**
 ```js
 import { startAuthentication } from '@simplewebauthn/browser';
-```
-**UMD**
-```js
-const { startAuthentication } = SimpleWebAuthnBrowser;
 ```
 
 The front end's primary job during authentication is the following:
@@ -358,131 +348,12 @@ When supported, users can quickly authenticate by selecting a credential when in
 
 The selection of a credential from this popup will resolve the Promise returned by `startAuthentication()`, at which point the response can be submitted to the server for verification like usual. If verification succeeds, then the user can be logged in.
 
-### `sendSignal()`
-
-This single method simplifies the use of [WebAuthn's multiple Signal API methods](https://w3c.github.io/webauthn/#sctn-signal-methods) to broadcast passkey state changes from you, as the Relying Party, back to the credential manager responsible for your user's passkeys:
-
-**Node/Deno**
-```ts
-import { sendSignal } from '@simplewebauthn/browser';
-```
-**UMD**
-```js
-const { sendSignal } = SimpleWebAuthnBrowser;
-```
-
-Sending signals can help a Relying Party achieve the following for their users:
-
-- Prevent users from seeing passkeys in browser and/or platform UI that will never be honored for authentication
-- Keep user identifiers up-to-date (email, username, etc...) in browser, platform, and/or credential manager UI during a WebAuthn ceremony
-
-:::warning[On the (un)reliability of sending signals]
-WebAuthn signals are considered "fire and forget" - that is, there is no guarantee that sending a signal will see that signal make its way to a user's credential manager via the browser and/or platform. "Success" may require sending a signal multiple times throughout a user's interaction with your site before a signal is received by the user's credential manager. And by design, Relying Parties receive [no feedback on the ultimate success or failure](https://w3c.github.io/webauthn/#sctn-signal-methods:~:text=Furthermore%2C%20in%20order%20to%20avoid%20revealing%20information%20about%20a%20user%E2%80%99s%20credentials%20without%20user%20consent%2C%20signal%20methods%20do%20not%20indicate%20whether%20the%20operation%20succeeded.%20A%20successfully%20resolved%20promise%20only%20means%20that%20the%20options%20object%20was%20well%20formed.) of sending a signal.
-
-**`sendSignal()` is subject to these same limitations.** There is nothing that SimpleWebAuthn can do to make signals more reliable. That said, continue reading for advice on the best times to send a particular signal via `sendSignal()` for the greatest chances of success.
-:::
-
-The following WebAuthn signals can be sent using `sendSignal()`:
-
-#### Unknown Credential {/* #sendsignal-unknown-credential */}
-
-This signal communicates that the credential that the user just tried to register, or to authenticate with, was not one that the Relying Party recognizes.
-
-It is a good idea for a Relying Party to send this signal **immediately after the use of an unrecognized credential**. For example, after rejecting the output from [`startRegistration()`](#startregistration) due to unsatisfied RP-specific authenticator registration policy; or after rejecting the output from [`startAuthentication()`](#startauthentication) because the user deleted the corresponding passkey from their Relying Party user account settings page:
-
-```ts
-import { sendSignal, type SendSignalUnknownCredentialOpts } from '@simplewebauthn/browser';
-
-const opts: SendSignalUnknownCredentialOpts = {
-  signalName: 'unknownCredential',
-  rpID: 'example.com',
-  credentialID: 'aPH2yv3TIBVZbj2wJ30Kmw',
-};
-await sendSignal(opts);
-```
-
-The credential manager responsible for the credential can hide or delete the credential so that the user does not see it in the future as an option to sign in with.
-
-#### All Accepted Credentials {/* #sendsignal-all-accepted-credentials */}
-
-This signal communicates the current list of passkeys the Relying Party will recognize for use by the **authenticated** user on the next login.
-
-It is a good idea for a Relying Party to **periodically** send this signal, for example **after every successful authentication**:
-
-```ts
-import { sendSignal, type SendSignalAllAcceptedCredentialsOpts } from '@simplewebauthn/browser';
-
-const opts: SendSignalAllAcceptedCredentialsOpts = {
-  signalName: 'allAcceptedCredentials',
-  rpID: 'example.com',
-  userID: 'Lrk2ki-arSSFcm6PPlMKEQ',
-  allAcceptedCredentialIDs: ['d77Hxqvltn66l7hegq_E3Q', 'nz_ajzNrMq3KfPrkOt3lHQ'],
-};
-await sendSignal(opts);
-```
-
-:::warning[A word of caution about `userID`]
-`userID` above **must** be set to the same value for the currently authenticated user as `options.user.id` was in [the options returned from **@simplewebauthn/server**'s `generateRegistrationOptions()`](server.md#1-generate-registration-options) when the passkeys in `allAcceptedCredentialIDs` were generated.
-:::
-
-Credential managers that have a passkey for (`rpID` + `userID`), but the passkey ID is not found in `allAcceptedCredentialIds`, may choose to hide or delete the passkey because it will not be accepted for use by the Relying Party.
-
-#### Current User Details {/* #sendsignal-current-user-details */}
-
-This signal communicates a change in the **authenticated** user's name and/or display name.
-
-It is a good idea for a Relying Party to periodically send this signal, for example **after every successful authentication** and **immediately after the user's user name and/or display name is changed**:
-
-```ts
-import { sendSignal, type SendSignalCurrentUserDetailsOpts } from '@simplewebauthn/browser';
-
-const opts: SendSignalCurrentUserDetailsOpts = {
-  signalName: 'currentUserDetails',
-  rpID: 'example.com',
-  userID: 'Lrk2ki-arSSFcm6PPlMKEQ',
-  userName: 'newUsername@example.com',
-  userDisplayName: 'NewUsername (Prod)',
-};
-await sendSignal(opts);
-```
-
-:::warning[A word of caution about `userID`]
-`userID` above **must** be set to the same value for the currently authenticated user as `options.user.id` was in [the options returned from **@simplewebauthn/server**'s `generateRegistrationOptions()`](server.md#1-generate-registration-options) when the passkeys in `allAcceptedCredentialIDs` were generated.
-:::
-
-This can help browsers and platforms display the most up-to-date information about the user during a passkey authentication instead of always showing whatever value was set at the time of registration.
-
-#### Generating options with @simplewebauthn/server {/* #sendsignal-generating-options-with-simplewebauthnserver */}
-
-The WebAuthn Signal APIs were all intentionally designed to accept **options that are JSON-serializable**, avoiding `ArrayBuffer` values for Base64URL-encoded `string` values instead. This means that **@simplewebauthn/server** does _not_ have a corresponding `sendSignal()` options generation method.
-
-Instead, **the same types** that @simplewebauthn/browser uses for the various `sendSignal()` options can be **imported directly from @simplewebauthn/server** too:
-
-```ts
-import type {
-  SendSignalAllAcceptedCredentialsOpts,
-  SendSignalCurrentUserDetailsOpts,
-  SendSignalUnknownCredentialOpts,
-} from '@simplewebauthn/server';
-```
-
-These types can then be used to define project-specific options generation logic on the server that yields values that can be easily passed to the browser as JSON and then passed into `sendSignal()` without modification.
-
-## Feature Detection
-
-The following methods assist in detecting browser and/or OS support for passkeys:
-
 ### `browserSupportsWebAuthn()`
 
-This method is included in this package to help preemptively check for the browser's ability to make WebAuthn API calls:
+This helper method is included in this package to help preemptively check for the browser's ability to make WebAuthn API calls:
 
-**Node/Deno**
 ```js
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
-```
-**UMD**
-```js
-const { browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 ```
 
 `startRegistration()` and `startAuthentication()` both call this method internally. In some scenarios, though, it may be more desirable to hide UI when the page loads and a call to `browserSupportsWebAuthn()` returns false:
@@ -490,6 +361,7 @@ const { browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 ```html
 <script>
   const elemBegin = document.getElementById('btnBegin');
+  const elemSuccess = document.getElementById('success');
   const elemError = document.getElementById('error');
 
   const { browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
@@ -504,64 +376,12 @@ const { browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 </script>
 ```
 
-### `browserSupportsPasskeys()`
-
-This method performs more robust WebAuthn support detection by also checking for typical passkey-related WebAuthn features:
-
-**Node/Deno**
-```ts
-import { browserSupportsPasskeys } from '@simplewebauthn/browser';
-```
-**UMD**
-```js
-const { browserSupportsPasskeys } = SimpleWebAuthnBrowser;
-```
-
-`browserSupportsPasskeys()` goes further than [`browserSupportsWebAuthn()`](#browsersupportswebauthn) by pairing a check that WebAuthn is supported with [WebAuthn's `PublicKeyCredential.getClientCapabilities()` method](https://w3c.github.io/webauthn/#sctn-getClientCapabilities) to check that the browser and/or platform is capable of at least one of the following:
-
-- Talking to a local user-verifying platform authenticator
-- Talking to a platform authenticator on another device using the `"hybrid"` transport
-
-Building on the example above, a bit of refactor is required because `browserSupportsPasskeys()` is asynchronous:
-
-```html
-<script>
-  const elemBegin = document.getElementById('btnBegin');
-  const elemError = document.getElementById('error');
-
-  const { browserSupportsPasskeys } = SimpleWebAuthnBrowser;
-
-  async function onPageLoad() {
-    if (!(await browserSupportsPasskeys())) {
-      elemBegin.style.display = 'none';
-      elemError.innerText = 'It seems this browser does not support passkeys...';
-      return;
-    }
-
-    // ...snip...
-  }
-
-  onPageLoad();
-</script>
-```
-
-:::tip
-
-`browserSupportsPasskeys()` can be considered a replacement for [`browserSupportsWebAuthn()`](#browsersupportswebauthn) as the former enforces that the latter is true. Additionally, the presence of WebAuthn support without the additional passkey-related WebAuthn features that `browserSupportsPasskeys()` checks for represents a WebAuthn runtime environment that is unlikely to yield a satisfactory passkey registration or authentication user experience.
-
-:::
-
 ### `browserSupportsWebAuthnAutofill()`
 
 This helper method checks for a browser's support for "[Conditional UI](https://github.com/w3c/webauthn/wiki/Explainer:-WebAuthn-Conditional-UI)". When this feature is present, the browser is capable of presenting a list of the user's discoverable credentials in the browser's native autofill prompt.
 
-**Node/Deno**
 ```js
 import { browserSupportsWebAuthnAutofill } from '@simplewebauthn/browser';
-```
-**UMD**
-```js
-const { browserSupportsWebAuthnAutofill } = SimpleWebAuthnBrowser;
 ```
 
 This method is automatically called by `startAuthentication()` when `true` is passed as a second argument, but it may still be independently useful in, for example, single-page applications that may seek to initiate authentication after page load.
@@ -570,13 +390,8 @@ This method is automatically called by `startAuthentication()` when `true` is pa
 
 "Platform authenticators" are known by most users by their brand names: **Touch ID**, **Face ID**, **Windows Hello**...this asynchronous method helps you identify opportunities in which these types of authenticators can be used by your users:
 
-**Node/Deno**
 ```js
 import { platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
-```
-**UMD**
-```js
-const { platformAuthenticatorIsAvailable } = SimpleWebAuthnBrowser;
 ```
 
 These advanced types of authenticators are typically embedded into a user's computer or phone and offer quick confirmation of a user's identity via biometric scan or PIN fallback. As a result of their convenience, you may wish to prioritize user registration of such authenticators when one is available for use:
@@ -629,40 +444,6 @@ import { bufferToBase64URLString } from '@simplewebauthn/browser';
 const valueBase64URL: string = bufferToBase64URLString(new Uint8Array(...));
 ```
 
-### `getBrowserCapabilities()`
-
-This helper method wraps WebAuthn's [`PublicKeyCredential.getClientCapabilities()`](https://w3c.github.io/webauthn/#sctn-getClientCapabilities) feature detection method:
-
-```ts
-import { getBrowserCapabilities } from '@simplewebauthn/browser';
-```
-
-`getBrowserCapabilities()` returns an `Object` containing keys that correspond to [WebAuthn `ClientCapability` enums](https://w3c.github.io/webauthn/#enum-clientCapability). This method takes additional steps to determine support for a capability if a browser reports an "unknown" level of support for it via `PublicKeyCredential.getClientCapabilities()` but there exists an alternative WebAuthn API that also potentially reports the feature's availability.
-
-Instead of `true`/`false`/`undefined`, capabilities are mapped to one of the following `string` values:
-
-- **`"supported"`**: The browser supports the capability
-- **`"unsupported"`**: The browser does not support the capability
-- **`"unknown"`**: The browser may or may not support the capability, try it and see
-
-```ts
-const {
-  conditionalGet,
-  hybridTransport,
-  passkeyPlatformAuthenticator,
-} = await getBrowserCapabilities();
-
-console.log(hybridTransport); // 'supported'
-console.log(conditionalGet); // 'unsupported'
-console.log(passkeyPlatformAuthenticator); // 'unknown'
-```
-
-:::info
-If a WebAuthn client other than the browser is handling WebAuthn API calls (e.g. a password manager's browser extension) then this method will report that client's capabilities instead (assuming that client has implemented `PublicKeyCredential.getClientCapabilities()`.)
-:::
-
-Most Relying Parties should not typically need to use this method. However, more complex Relying Parties _can_ use it to perform finer-grained feature detection than that offered by the simpler use of [`browserSupportsPasskeys()`](#browsersupportspasskeys) to achieve more nuanced user experiences.
-
 ### `WebAuthnAbortService`
 
 `startRegistration()` and `startAuthentication()` coordinate cancellation of existing WebAuthn
@@ -703,7 +484,10 @@ function handleLeavePage() {
 
 ### `WebAuthnError`
 
-The `WebAuthnError` class is used to wrap errors that are raised when calling WebAuthn API methods via [`startRegistration()`](#startregistration), [`startAuthentication()`](#startauthentication), or [`sendSignal()`](#sendsignal). Projects can import this error to perform `instanceof` checks when catching errors to discern SimpleWebAuthn library errors from other errors that may arise.
+The `WebAuthnError` class is used to wrap errors that are raised when calling WebAuthn via
+`startRegistration()` and `startAuthentication()`. Projects can import this error to perform
+`instanceof` checks when catching errors to discern SimpleWebAuthn library errors from other errors
+that may arise.
 
 An instance of this error has the same `name` property as the WebAuthn error it is wrapping, but
 has a custom `message` property that tries to better communicate what may have caused the error.

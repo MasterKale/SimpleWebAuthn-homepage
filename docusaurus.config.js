@@ -1,3 +1,10 @@
+const isDevelopment = (
+  // Docusaurus, locally
+  process.env.NODE_ENV === 'development'
+  // Netlify, in CI for PR preview builds
+  || process.env.CONTEXT === 'deploy-preview'
+);
+
 module.exports = {
   title: 'SimpleWebAuthn',
   tagline: 'A collection of TypeScript-first libraries for simpler WebAuthn integration. Supports modern browsers and Node.',
@@ -9,12 +16,18 @@ module.exports = {
 
   /* Try to keep track of when links break */
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'throw',
 
   /* Prepare for Docusaurus v4 */
   future: {
-    experimental_faster: true,
+    faster: true,
     v4: true,
+  },
+
+  /* Markdown settings */
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'throw'
+    },
   },
 
   themeConfig: {
@@ -35,6 +48,10 @@ module.exports = {
           href: 'https://tools.passkeys.dev/responsedecoder',
           label: 'Debugger',
           position: 'left',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
         },
         {
           href: 'https://github.com/MasterKale/SimpleWebAuthn',
@@ -68,6 +85,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/MasterKale/SimpleWebAuthn-homepage/edit/master',
           sidebarCollapsed: false,
+          includeCurrentVersion: isDevelopment,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
