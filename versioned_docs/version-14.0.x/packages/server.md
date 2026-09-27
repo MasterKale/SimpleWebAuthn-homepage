@@ -63,7 +63,7 @@ type Passkey = {
   // SQL: Store as `TEXT`. Index this column
   id: Base64URLString;
   // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...
-  //      Caution: Node ORM's may map this to a Buffer on retrieval,
+  //      Caution: Node ORMs may map this to a Buffer on retrieval,
   //      convert to Uint8Array as necessary
   publicKey: Uint8Array;
   // SQL: Foreign Key to an instance of your internal user model
