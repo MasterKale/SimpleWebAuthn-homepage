@@ -7,7 +7,6 @@ module.exports = {
     Packages: [
       'packages/browser',
       'packages/server',
-      'packages/types',
     ],
     'Advanced Guides': [
       'advanced/passkeys',
