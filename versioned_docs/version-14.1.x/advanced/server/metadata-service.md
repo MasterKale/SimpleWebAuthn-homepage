@@ -163,7 +163,7 @@ await MetadataService.initialize({
 
 ## Convenience Metadata Service
 
-The FIDO Alliance also offers a **Convenience Metadata Service**. This API offers a strict subset of values from entries in its Metadata Service. These values, like localized passkey provider names, and light and dark iconography, can be used by Relying Parties to assign useful nicknames to users' newly registered passkeys and to show meaningful passkey provider brand icons in passkey management UI.
+The FIDO Alliance also offers a **Convenience Metadata Service**. This API offers a streamlined subset of values from entries found in the larger Metadata Service. These values, like localized passkey provider names, and light and dark iconography, can be used by Relying Parties to assign useful nicknames to users' newly registered passkeys and to show meaningful passkey provider brand icons in passkey management UI.
 
 **@simplewebauthn/server** includes support for the [FIDO Alliance Convenience Metadata Service](https://fidoalliance.org/metadata/) API via its `ConvenienceMetadataService`:
 
@@ -178,11 +178,11 @@ await ConvenienceMetadataService.initialize();
 
 ```ts
 await ConvenienceMetadataService.initialize({
-  // An empty array here prevents any network traffic
+  // An empty array here prevents any network traffic during initialization
   mdsServers: [],
-  // JSON document(s) loaded from the local filesystem
+  // Pass in JSON document(s) loaded from the local filesystem
   payloads: [{ /* ... */ }],
-  // Some logging setup that's specific to your deployment
+  // Set up some logging that's specific to your deployment
   logging: {
     debug: console.log,
     info: console.log,
@@ -193,10 +193,10 @@ await ConvenienceMetadataService.initialize({
 ```
 
 :::warning
-Nothing provided by the FIDO Convenience Metadata Service is cryptographically verifiable by design. **Therefore values provided by `ConvenienceMetadataService` cannot be used to assert any security properties of a registered passkey!** They must only be used to display nicer UI to users.
+Nothing provided by the FIDO Convenience Metadata Service is cryptographically verifiable by design. **Therefore values provided by `ConvenienceMetadataService` cannot be used to assert any security properties of a registered passkey!** This service must only be used to display nicer UI to users.
 :::
 
-When this service is initialized, calls to `verifyRegistrationResponse()` will include convenience metadata assuming the AAGUID returned in the response has been registered with the FIDO Convenience Metadata Service:
+When `ConvenienceMetadataService` is initialized, calls to `verifyRegistrationResponse()` will include convenience metadata assuming the AAGUID returned in the response has been registered with the FIDO Convenience Metadata Service:
 
 ```ts
 import { ConvenienceMetadataService, verifyRegistrationResponse } from '@simplewebauthn/server';
@@ -239,7 +239,11 @@ console.log(passkeyProviderMetadata);
 // }
 ```
 
-Calls to `passkeyProviderMetadata()` will also automatically refresh data from the Convenience Metadata Service. `ConvenienceMetadataService` will attempt to refresh metadata every 24 hours. If an error occurs while refreshing data, `ConvenienceMetadataService` will wait three hours before trying again.
+:::tip
+`getProviderMetadata()` has also been added to `MetadataService`! It is **not** necessary to initialize `ConvenienceMetadataService` to use `MetadataService.getProviderMetadata()` for those projects already using `MetadataService`.
+:::
+
+Calls to `getProviderMetadata()` will also automatically refresh data from the Convenience Metadata Service. `ConvenienceMetadataService` will attempt to refresh metadata every 24 hours. If an error occurs while refreshing data, `ConvenienceMetadataService` will wait three hours before trying again.
 
 ### Rendering names
 
